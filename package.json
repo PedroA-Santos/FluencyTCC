@@ -1,5 +1,8 @@
 {
     "scripts": {
         "start": "concurrently \"npm run start --prefix backend\" \"npm run start --prefix frontend\""
+    },
+    "dependencies": {
+        "mysql2": "^3.12.0"
     }
 }
