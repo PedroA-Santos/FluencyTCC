@@ -6,7 +6,15 @@ const cors = require("cors");
 const db = require("./db");
 
 
-app.use(cors());
+const usuarioRoutes = require("./routes/usuarioRoutes");
+
+
+app.use(cors(
+    //origin: "http://localhost:3000", // Permite apenas o frontend acessar
+));
+
+app.use("/usuario", usuarioRoutes);
+
 
 app.use(express.json());
 
