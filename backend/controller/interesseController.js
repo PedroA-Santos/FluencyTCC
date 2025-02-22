@@ -60,7 +60,7 @@ exports.postInteresse = async (req, res) => {
 
 
     try {
-        const response = await interesseModel.post({ interesse });
+        const response = await interesseModel.post(interesse);
         res.status(201).json({ message: "Interesse criado com sucesso", response });
 
     } catch (error) {
@@ -85,10 +85,10 @@ exports.putInteresse = async (req, res) => {
         return res.status(400).json({ message: "Todos os campos são obrigatórios" })
     }
     try {
-        const response = await interesseModel.put({ interesse, id });
+        const response = await interesseModel.put(interesse, id);
 
         if (response.affectedRows === 0) {
-            return res.status(404).json({ message: "Cliente não encontrado." })
+            return res.status(404).json({ message: "Interesse não encontrado." })
 
         }
 

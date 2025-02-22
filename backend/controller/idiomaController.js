@@ -61,7 +61,7 @@ exports.postIdioma = async (req, res) => {
 
 
     try {
-        const response = await idiomaModel.post({ idioma });
+        const response = await idiomaModel.post(idioma);
         res.status(201).json({ message: "Idioma criado com sucesso", response });
 
     } catch (error) {
@@ -76,7 +76,7 @@ exports.putIdioma = async (req, res) => {
     const { id } = req.params;
     const { idioma } = req.body;
 
-    const camposValidados = validarCampos({ idioma });
+    const camposValidados = validarCampos(idioma);
 
     if (!id || isNaN(Number(id))) {
         return res.status(400).json({ message: "ID inválido ou ausente." });
