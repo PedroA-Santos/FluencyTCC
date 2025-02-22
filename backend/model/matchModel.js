@@ -1,7 +1,6 @@
 const db = require('../db');
 
 
-
 exports.list = () => {
 
     return new Promise((resolve, reject) => {
@@ -13,6 +12,7 @@ exports.list = () => {
     })
 
 }
+
 
 exports.listById = (id) => {
     return new Promise((resolve, reject) => {
@@ -37,7 +37,6 @@ exports.post = (usuario1_id, usuario2_id, idioma_comum, status) => {
     })
 
 }
-
 
 
 exports.put = (usuario1_id, usuario2_id, idioma_comum, status, id) => {
