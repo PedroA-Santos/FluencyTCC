@@ -7,13 +7,14 @@ const db = require("./db");
 
 
 const usuarioRoutes = require("./routes/usuarioRoutes");
-
+const idiomaRoutes = require("./routes/idiomaRoutes");
 
 app.use(cors(
     //origin: "http://localhost:3000", // Permite apenas o frontend acessar
 ));
 
 app.use("/usuario", usuarioRoutes);
+app.use("/idioma", idiomaRoutes);
 
 
 app.use(express.json());
