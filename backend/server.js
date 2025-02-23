@@ -8,7 +8,8 @@ const db = require("./db");
 
 const usuarioRoutes = require("./routes/usuarioRoutes");
 const idiomaRoutes = require("./routes/idiomaRoutes");
-const interesseRoutes = require("./routes/idiomaRoutes");
+const interesseRoutes = require("./routes/interesseRoutes");
+const matchRoutes = require("./routes/matchRoutes");
 
 app.use(cors(
     //origin: "http://localhost:3000", // Permite apenas o frontend acessar
@@ -17,6 +18,7 @@ app.use(cors(
 app.use("/usuario", usuarioRoutes);
 app.use("/idioma", idiomaRoutes);
 app.use("/interesse", interesseRoutes);
+app.use("/match", matchRoutes);
 
 
 app.use(express.json());
