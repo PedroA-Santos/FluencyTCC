@@ -8,7 +8,7 @@ exports.listAll = async (req, res) => {
         const mensagens = await mensagemModel.list();
 
         if (mensagens.length === 0) {
-            return res.status(404).json({ message: "Nenhum match encontrado" });
+            return res.status(404).json({ message: "Nenhuma mensagem encontrada" });
         }
 
         return res.status(200).json(mensagens);
@@ -57,7 +57,7 @@ exports.postMensagem = async (req, res) => {
 
 
     try {
-        const response = await mensagemModel.post(match_id, remetente_id, destinatario_id, conteudo);
+        const response = await mensagemModel.post({ match_id, remetente_id, destinatario_id, conteudo });
         res.status(201).json({ message: "Mensagem criada com sucesso", response });
 
     } catch (error) {

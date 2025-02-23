@@ -3,15 +3,15 @@ const router = Router();
 const mensagemController = require("../controller/mensagemController");
 
 
-router.get("/", mensagemController.listAll);
+router.get("/mensagens/", mensagemController.listAll);
 
-router.get("/:id", mensagemController.listById);
+router.get("/mensagens/:id", mensagemController.listById);
 
-router.post("/", mensagemController.postMensagem);
+router.post("/:match_id/mensagens", mensagemController.postMensagem);
 
-router.put("/:id", mensagemController.putMensagem);
+router.put("/mensagens/:id", mensagemController.putMensagem);
 
-router.delete("/:id", mensagemController.deleteMensagem);
+router.delete("/mensagens/:id", mensagemController.deleteMensagem);
 
 
 

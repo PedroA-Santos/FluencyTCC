@@ -55,9 +55,9 @@ exports.listById = async (req, res) => {
 exports.postOfensivas = async (req, res) => {
 
 
-    const { usuario_id, idioma_id, dias_seguidos, ultima_atividade } = req.body;
+    const { usuario_id, idioma_id, dias_seguidos } = req.body;
 
-    const camposValidados = validarCampos({ usuario_id, idioma_id, dias_seguidos, ultima_atividade });
+    const camposValidados = validarCampos({ usuario_id, idioma_id, dias_seguidos });
 
 
     if (!camposValidados) {
@@ -67,7 +67,7 @@ exports.postOfensivas = async (req, res) => {
 
     try {
 
-        const response = await ofensivasModel.post(usuario_id, idioma_id, dias_seguidos, ultima_atividade);
+        const response = await ofensivasModel.post({ usuario_id, idioma_id, dias_seguidos });
 
         return res.status(201).json({ message: "ofensiva do usuário criado com sucesso", response });
 
@@ -82,13 +82,13 @@ exports.postOfensivas = async (req, res) => {
 
 exports.putOfensivas = async (req, res) => {
     const { id } = req.params;
-    const { usuario_id, idioma_id, dias_seguidos, ultima_atividade } = req.body;
+    const { usuario_id, idioma_id, dias_seguidos } = req.body;
 
     if (!id || isNaN(Number(id))) {
         return res.status(400).json({ message: "ID inválido ou ausente." });
     }
 
-    const camposValidados = validarCampos({ usuario_id, idioma_id, dias_seguidos, ultima_atividade });
+    const camposValidados = validarCampos({ usuario_id, idioma_id, dias_seguidos });
 
     if (!camposValidados) {
         return res.status(400).json({ message: "Todos os campos são obrigatórios" })
@@ -97,7 +97,7 @@ exports.putOfensivas = async (req, res) => {
 
 
     try {
-        const response = await ofensivasModel.put(id, usuario_id, idioma_id, dias_seguidos, ultima_atividade);
+        const response = await ofensivasModel.put({ id, usuario_id, idioma_id, dias_seguidos });
 
 
         if (response.affectedRows === 0) {

@@ -18,11 +18,11 @@ exports.listFindById = (id) => {
     });
 };
 
-exports.post = (usuario_id, idioma_id, dias_seguidos, ultima_atividade) => {
+exports.post = ({ usuario_id, idioma_id, dias_seguidos }) => {
     return new Promise((resolve, reject) => {
         db.query(
-            `INSERT INTO ofensivas (usuario_id, idioma_id, dias_seguidos, ultima_atividade) VALUES (?, ?,?,?)`,
-            [usuario_id, idioma_id, dias_seguidos, ultima_atividade],
+            `INSERT INTO ofensivas (usuario_id, idioma_id, dias_seguidos, ultima_atividade) VALUES (?, ?, ?, CURRENT_TIMESTAMP)`,
+            [usuario_id, idioma_id, dias_seguidos],
             (err, results) => {
                 if (err) return reject(err);
                 resolve(results);
@@ -32,11 +32,11 @@ exports.post = (usuario_id, idioma_id, dias_seguidos, ultima_atividade) => {
 };
 
 
-exports.put = (id, usuario_id, idioma_id, dias_seguidos, ultima_atividade) => {
+exports.put = ({ id, usuario_id, idioma_id, dias_seguidos }) => {
     return new Promise((resolve, reject) => {
         db.query(
-            `UPDATE ofensivas SET usuario_id = ?, idioma_id = ?, dias_seguidos = ?, ultima_atividade = ? WHERE id = ?`,
-            [usuario_id, idioma_id, dias_seguidos, ultima_atividade, id],
+            `UPDATE ofensivas SET usuario_id = ?, idioma_id = ?, dias_seguidos = ?, ultima_atividade = CURRENT_TIMESTAMP WHERE id = ?`,
+            [usuario_id, idioma_id, dias_seguidos, id],
             (err, results) => {
                 if (err) return reject(err);
                 resolve(results);

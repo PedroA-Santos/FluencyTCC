@@ -24,7 +24,7 @@ exports.listById = (id) => {
 }
 
 
-exports.post = (match_id, remetente_id, destinatario_id, conteudo) => {
+exports.post = ({ match_id, remetente_id, destinatario_id, conteudo }) => {
 
     return new Promise((resolve, reject) => {
         db.query(`INSERT INTO mensagens (match_id, remetente_id, destinatario_id, conteudo) VALUES (?, ?, ?, ?)`,
@@ -38,7 +38,7 @@ exports.post = (match_id, remetente_id, destinatario_id, conteudo) => {
 }
 
 
-exports.put = (match_id, remetente_id, destinatario_id, conteudo, id) => {
+exports.put = ({ match_id, remetente_id, destinatario_id, conteudo, id }) => {
     return new Promise((resolve, reject) => {
         db.query(`UPDATE mensagens SET match_id = ?, remetente_id = ?, destinatario_id = ?, conteudo = ? WHERE id = ? `,
             [match_id, remetente_id, destinatario_id, conteudo, id],

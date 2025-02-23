@@ -55,7 +55,7 @@ exports.postMatch = async (req, res) => {
 
 
     try {
-        const response = await matchModel.post(usuario1_id, usuario2_id, idioma_comum, status);
+        const response = await matchModel.post({ usuario1_id, usuario2_id, idioma_comum, status });
         res.status(201).json({ message: "Match criado com sucesso", response });
 
     } catch (error) {

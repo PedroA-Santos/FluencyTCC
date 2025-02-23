@@ -25,7 +25,7 @@ app.use("/usuario", usuarioRoutes);
 app.use("/idioma", idiomaRoutes);
 app.use("/interesse", interesseRoutes);
 app.use("/match", matchRoutes);
-app.use("/mensagem", mensagemRoutes);
+app.use("/chat", mensagemRoutes); //está com o nome chat apenas para melhor organização
 app.use("/ofensivas", ofensivasRoutes);
 app.use("/usuarioInteresses", usuarioInteressesRoutes);
 app.use("/usuarioIdiomas", usuarioIdiomasRoutes);
