@@ -1,4 +1,4 @@
-const usuarioIdiomaModel = require('../model/usuariosIdiomasModel');
+const usuarioIdiomaModel = require('../model/usuarioIdiomasModel');
 const { validarCampos } = require('../utils/validarCampos')
 
 

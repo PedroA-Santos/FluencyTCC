@@ -1,5 +1,5 @@
 usuarioModel = require("../model/usuarioModel");
-const { validarCampos } = require("")
+const { validarCampos } = require("../utils/validarCampos")
 
 exports.listAll = async (req, res) => {
     try {
@@ -15,7 +15,7 @@ exports.listAll = async (req, res) => {
     }
 }
 
-exports.listbyId = async (req, res) => {
+exports.listById = async (req, res) => {
     const { id } = req.params;
 
     if (!id || isNaN(Number(id))) {
@@ -60,6 +60,8 @@ exports.postUsuario = async (req, res) => {
 exports.putUsuario = async (req, res) => {
     const { id } = req.params;
     const { username, email, senha, bio, foto_perfil } = req.body;
+    console.log(id, username, email, senha, bio, foto_perfil);
+    
 
     if (!id || isNaN(Number(id))) {
         return res.status(400).json({ message: "ID invalido ou ausente" });
@@ -73,7 +75,7 @@ exports.putUsuario = async (req, res) => {
     try {
         const response = await usuarioModel.put({ username, email, senha, bio, foto_perfil, id });
 
-        if (result.affectedRows === 0) {
+        if (response.affectedRows === 0) {
             return res.status(404).json({ message: "Usuário não encontrado." });
         }
 

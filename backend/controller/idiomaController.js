@@ -76,6 +76,10 @@ exports.putIdioma = async (req, res) => {
     const { id } = req.params;
     const { idioma } = req.body;
 
+    console.log('====================================');
+    console.log(id, idioma);
+    console.log('====================================');
+
     const camposValidados = validarCampos(idioma);
 
     if (!id || isNaN(Number(id))) {
@@ -89,7 +93,7 @@ exports.putIdioma = async (req, res) => {
         const response = await idiomaModel.put({ idioma, id });
 
         if (response.affectedRows === 0) {
-            return res.status(404).json({ message: "Cliente não encontrado." })
+            return res.status(404).json({ message: "Idioma não encontrado." })
 
         }
 

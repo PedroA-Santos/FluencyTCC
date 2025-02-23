@@ -15,9 +15,11 @@ const ofensivasRoutes = require("./routes/ofensivasRoutes");
 const usuarioInteressesRoutes = require("./routes/usuarioInteressesRoutes");
 const usuarioIdiomasRoutes = require("./routes/usuarioIdiomasRoutes");
 
-app.use(cors(
-    //origin: "http://localhost:3000", // Permite apenas o frontend acessar
-));
+app.use(cors({
+    origin: "http://localhost:3000", // Permite apenas o frontend acessar
+}));
+
+app.use(express.json());
 
 app.use("/usuario", usuarioRoutes);
 app.use("/idioma", idiomaRoutes);
@@ -30,7 +32,6 @@ app.use("/usuarioIdiomas", usuarioIdiomasRoutes);
 
 
 
-app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Hello from the backend!');

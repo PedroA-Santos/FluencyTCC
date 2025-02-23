@@ -52,7 +52,7 @@ exports.listById = async (req, res) => {
 
 
 
-exports.postUsuariointeresse = async (req, res) => {
+exports.postUsuarioInteresse = async (req, res) => {
 
 
     const { usuario_id, interesse_id } = req.body;

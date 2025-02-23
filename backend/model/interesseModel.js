@@ -27,7 +27,7 @@ exports.post = (interesse) => {
     });
 };
 
-exports.put = (interesse, id) => {
+exports.put = ({ interesse, id }) => {
     return new Promise((resolve, reject) => {
         db.query(`UPDATE interesses SET interesse = ? WHERE id = ?`, [interesse, id], (err, results) => {
             if (err) return reject(err);

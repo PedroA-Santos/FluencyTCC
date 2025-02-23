@@ -25,7 +25,7 @@ exports.listById = (id) => {
 }
 
 
-exports.post = (usuario1_id, usuario2_id, idioma_comum, status) => {
+exports.post = ({ usuario1_id, usuario2_id, idioma_comum, status }) => {
 
     return new Promise((resolve, reject) => {
         db.query(`INSERT INTO  (usuario1_id, usuario2_id, idioma_comum, status) VALUES (?, ?, ?, ?)`,
@@ -39,7 +39,7 @@ exports.post = (usuario1_id, usuario2_id, idioma_comum, status) => {
 }
 
 
-exports.put = (usuario1_id, usuario2_id, idioma_comum, status, id) => {
+exports.put = ({ usuario1_id, usuario2_id, idioma_comum, status }) => {
     return new Promise((resolve, reject) => {
         db.query(`UPDATE matches SET usuario1_id = ?, usuario2_id = ?, idioma_comum = ?, status = ? WHERE id = ? `, [usuario1_id, usuario2_id, idioma_comum, status, id], (err, results) => {
             if (err) return reject(err)

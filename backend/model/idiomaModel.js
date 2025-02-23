@@ -40,9 +40,13 @@ exports.post = (idioma) => {
 
 
 
-exports.put = (idioma, id) => {
+exports.put = ({ idioma, id }) => {
+    
+    
     return new Promise((resolve, reject) => {
-        db.query(`UPDATE idiomas SET idioma = ? WHERE id = ? `, [idioma, id], (err, results) => {
+        db.query(`UPDATE idiomas SET idioma = ? WHERE id = ?;`,
+            [idioma, id],
+            (err, results) => {
             if (err) return reject(err)
             resolve(results);
 
