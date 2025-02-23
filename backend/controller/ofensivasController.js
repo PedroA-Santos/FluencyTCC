@@ -118,7 +118,7 @@ exports.putOfensivas = async (req, res) => {
 
 
 
-exports.deleteofensivas = async (req, res) => {
+exports.deleteOfensivas = async (req, res) => {
 
 
     const { id } = req.params;

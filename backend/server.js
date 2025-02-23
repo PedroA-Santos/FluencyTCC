@@ -11,6 +11,7 @@ const idiomaRoutes = require("./routes/idiomaRoutes");
 const interesseRoutes = require("./routes/interesseRoutes");
 const matchRoutes = require("./routes/matchRoutes"); 
 const mensagemRoutes = require("./routes/mensagemRoutes"); 
+const ofensivasRoutes = require("./routes/ofensivasRoutes"); 
 
 app.use(cors(
     //origin: "http://localhost:3000", // Permite apenas o frontend acessar
@@ -21,6 +22,7 @@ app.use("/idioma", idiomaRoutes);
 app.use("/interesse", interesseRoutes);
 app.use("/match", matchRoutes);
 app.use("/mensagem", mensagemRoutes);
+app.use("/ofensivas", ofensivasRoutes);
 
 
 
