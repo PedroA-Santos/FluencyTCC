@@ -96,7 +96,7 @@ exports.putMensagem = async (req, res) => {
 }
 
 
-exports.deleteMatch = async (req, res) => {
+exports.deleteMensagem = async (req, res) => {
 
     const { id } = req.params;
 
