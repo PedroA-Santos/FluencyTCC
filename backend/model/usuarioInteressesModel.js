@@ -18,7 +18,7 @@ exports.listFindById = (id) => {
     });
 };
 
-exports.post = (usuario_id, interesse_id) => {
+exports.post = ({ usuario_id, interesse_id }) => {
     return new Promise((resolve, reject) => {
         db.query(
             `INSERT INTO usuarios_interesses (usuario_id, interesse_id) VALUES (?, ?)`,
@@ -32,7 +32,7 @@ exports.post = (usuario_id, interesse_id) => {
 };
 
 
-exports.put = (usuario_id, interesse_id, id) => {
+exports.put = ({ usuario_id, interesse_id, id }) => {
     return new Promise((resolve, reject) => {
         db.query(
             `UPDATE usuarios_interesses SET usuario_id = ?, interesse_id = ? WHERE id = ?`,

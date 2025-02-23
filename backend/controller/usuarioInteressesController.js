@@ -67,7 +67,7 @@ exports.postUsuarioInteresse = async (req, res) => {
 
     try {
 
-        const response = await usuarioInteresseModel.post(usuario_id, interesse_id);
+        const response = await usuarioInteresseModel.post({ usuario_id, interesse_id });
 
         return res.status(201).json({ message: "interesse do usuário criado com sucesso", response });
 
@@ -97,7 +97,7 @@ exports.putUsuarioInteresse = async (req, res) => {
 
 
     try {
-        const response = await usuarioInteresseModel.put(usuario_id, interesse_id, id);
+        const response = await usuarioInteresseModel.put({ usuario_id, interesse_id, id });
 
         if (response.affectedRows === 0) {
             return res.status(404).json({ message: "interesse do usuário não encontrado." })

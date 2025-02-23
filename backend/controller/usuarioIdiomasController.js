@@ -67,7 +67,7 @@ exports.postUsuarioIdioma = async (req, res) => {
 
     try {
 
-        const response = await usuarioIdiomaModel.post(usuario_id, idioma_id, nivel);
+        const response = await usuarioIdiomaModel.post({ usuario_id, idioma_id, nivel });
 
         return res.status(201).json({ message: "Idioma do usuário criado com sucesso", response });
 
@@ -97,7 +97,7 @@ exports.putUsuarioIdioma = async (req, res) => {
 
 
     try {
-        const response = await usuarioIdiomaModel.put(usuario_id, idioma_id, nivel);
+        const response = await usuarioIdiomaModel.put({ usuario_id, idioma_id, nivel, id });
 
         if (response.affectedRows === 0) {
             return res.status(404).json({ message: "idioma do usuário não encontrado." })

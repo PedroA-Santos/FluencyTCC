@@ -18,7 +18,7 @@ exports.listFindById = (id) => {
     });
 };
 
-exports.post = (usuario_id, idioma_id, nivel) => {
+exports.post = ({ usuario_id, idioma_id, nivel }) => {
     return new Promise((resolve, reject) => {
         db.query(
             `INSERT INTO usuarios_idiomas (usuario_id, idioma_id, nivel) VALUES (?, ?, ?)`,
@@ -31,7 +31,7 @@ exports.post = (usuario_id, idioma_id, nivel) => {
     });
 };
 
-exports.put = (usuario_id, idioma_id, nivel, id) => {
+exports.put = ({ usuario_id, idioma_id, nivel, id }) => {
     return new Promise((resolve, reject) => {
         db.query(
             `UPDATE usuarios_idiomas SET usuario_id = ?, idioma_id = ?, nivel = ? WHERE id = ?`,
