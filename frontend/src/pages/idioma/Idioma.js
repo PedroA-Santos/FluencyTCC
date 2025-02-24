@@ -5,7 +5,7 @@ function Idioma() {
 
     return (
         <div>
-            <h1>IDIOMAS </h1>
+            <h1>Idiomas </h1>
         </div>
     )
 }
