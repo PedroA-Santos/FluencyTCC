@@ -11,7 +11,7 @@ const Navbar = () => {
                 <li><Link to="/chat">chat</Link></li>
                 <li><Link to="/interesse">interesse</Link></li>
                 <li><Link to="/login">login</Link></li>
-                <li><Link to="/usuario">perfil</Link></li>
+                <li><Link to="/perfil">perfil</Link></li>
                 <li><Link to="/usuario">usuario</Link></li>
             </ul>
         </nav>
