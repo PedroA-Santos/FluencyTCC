@@ -37,9 +37,9 @@ exports.listById = async (req, res) => {
 }
 
 exports.postUsuario = async (req, res) => {
-    const { username, email, senha, bio, foto_perfil } = req.body;
+    const { username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil } = req.body;
 
-    const camposValidos = validarCampos({ username, email, senha });
+    const camposValidos = validarCampos({ username, email, senha, idioma_nativo_id, genero_id });
 
     if (!camposValidos) {
         return res.status(400).json({ message: "Username, email e senhea são obrigatórios." });
@@ -48,7 +48,7 @@ exports.postUsuario = async (req, res) => {
     try {
         //não esquecer de criptografar a senha do usuario
 
-        const response = await usuarioModel.post({ username, email, senha, bio, foto_perfil });
+        const response = await usuarioModel.post({ username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil });
 
         res.status(201).json({ message: "Usuario cadastrado com sucesso", response })
     } catch (error) {
@@ -59,21 +59,20 @@ exports.postUsuario = async (req, res) => {
 
 exports.putUsuario = async (req, res) => {
     const { id } = req.params;
-    const { username, email, senha, bio, foto_perfil } = req.body;
-    console.log(id, username, email, senha, bio, foto_perfil);
+    const { username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil } = req.body;
     
 
     if (!id || isNaN(Number(id))) {
         return res.status(400).json({ message: "ID invalido ou ausente" });
     }
 
-    const camposValidos = validarCampos({ username, email, senha });
+    const camposValidos = validarCampos({ username, email, senha, idioma_nativo_id, genero_id });
 
     if (!camposValidos) {
         return res.status(400).json({ message: "Username, email e senhea são obrigatórios." });
     }
     try {
-        const response = await usuarioModel.put({ username, email, senha, bio, foto_perfil, id });
+        const response = await usuarioModel.put({ username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, id });
 
         if (response.affectedRows === 0) {
             return res.status(404).json({ message: "Usuário não encontrado." });

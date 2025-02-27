@@ -36,8 +36,8 @@ exports.listFindById = (id) => {
 
 exports.post = ({ username, email, senha, bio, foto_perfil }) => {
     return new Promise((resolve, reject) => {
-        db.query('INSERT INTO usuarios (username, email, senha, bio, foto_perfil) VALUES (?, ?, ?, ?, ?);',
-            [username, email, senha, bio, foto_perfil],
+        db.query('INSERT INTO usuarios (username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil) VALUES (?, ?, ?, ?, ?, ?, ?);',
+            [username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil],
             (err, results) => {
                 if (err) return reject(err);
                 resolve(results);
@@ -46,10 +46,10 @@ exports.post = ({ username, email, senha, bio, foto_perfil }) => {
     })
 }
 
-exports.put = ({ username, email, senha, bio, foto_perfil, id }) => {
+exports.put = ({ username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, id }) => {
     return new Promise((resolve, reject) => {
-        db.query('UPDATE usuarios SET username = ?, email = ?, senha = ?, bio = ?, foto_perfil = ? WHERE id = ?',
-        [username, email, senha, bio, foto_perfil, id],
+        db.query('UPDATE usuarios SET username = ?, email = ?, senha = ?, idioma_nativo_id = ?, genero_id = ?, bio = ?, foto_perfil = ? WHERE id = ?',
+        [username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, id],
             (err, results) => {
                 if (err) return reject(err);
                 resolve(results);
