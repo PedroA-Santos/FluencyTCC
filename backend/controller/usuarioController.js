@@ -3,7 +3,7 @@ const { validarCampos } = require("../utils/validarCampos")
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-require('dotenv')
+require('dotenv').config();
 
 const secretKey = process.env.SECRET_KEY;
 
