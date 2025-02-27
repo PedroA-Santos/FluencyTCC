@@ -1,5 +1,11 @@
-usuarioModel = require("../model/usuarioModel");
+const usuarioModel = require("../model/usuarioModel");
 const { validarCampos } = require("../utils/validarCampos")
+
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require('dotenv').config();
+
+const secretKey = process.env.SECRET_KEY;
 
 exports.listAll = async (req, res) => {
     try {
@@ -41,19 +47,41 @@ exports.postUsuario = async (req, res) => {
 
     const camposValidos = validarCampos({ username, email, senha, idioma_nativo_id, genero_id });
 
-    if (!camposValidos) {
-        return res.status(400).json({ message: "Username, email e senhea são obrigatórios." });
+    // Validação básica de email para não ter email incorreto 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: "Formato de email inválido." });
     }
 
     try {
-        //não esquecer de criptografar a senha do usuario
+        // Verificar se o email já está cadastrado
+        const usuarioExistente = await usuarioModel.listByEmail(email);
+        if (usuarioExistente) {
+            return res.status(409).json({ message: "Este email já está cadastrado." });
+        }
 
         const response = await usuarioModel.post({ username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil });
+        // Criptografar a senha
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(senha, saltRounds);
 
-        res.status(201).json({ message: "Usuario cadastrado com sucesso", response })
+        // Criar o usuário
+        const novoUsuario = await usuarioModel.post({
+            username,
+            email,
+            senha: hashedPassword,
+            bio,
+            foto_perfil
+        });
+
+        return res.status(201).json({
+            message: "Usuário cadastrado com sucesso",
+            usuario: { id: novoUsuario.id, username, email, bio, foto_perfil }
+        });
+
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Erro ao cadastrar usuario." });
+        console.error("Erro ao cadastrar usuário:", error);
+        return res.status(500).json({ message: "Erro ao cadastrar usuário." });
     }
 };
 
@@ -105,3 +133,43 @@ exports.deleteUsuario = async (req, res) => {
         res.status(500).json({ message: "Erro ao excluir usuario" })
     }
 }
+
+
+
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Os campos email e senha são obrigatórios." });
+    }
+
+    try {
+        const user = await usuarioModel.listByEmail(email);
+
+        if (!user) {
+            return res.status(401).json({ message: "Email ou senha incorretos." });
+        }
+
+        const senhaValida = await bcrypt.compare(password, user.senha);
+
+        if (!senhaValida) {
+            return res.status(401).json({ message: "Email ou senha incorretos." });
+        }
+
+        const token = jwt.sign(
+            { id: user.id, email: user.email },
+            secretKey,
+            { expiresIn: "1h" }
+        );
+
+        return res.status(200).json({
+            message: "Login bem-sucedido",
+            user: { id: user.id, email: user.email, username: user.username },
+            token
+        });
+
+    } catch (error) {
+        console.error("Erro ao realizar login:", error);
+        return res.status(500).json({ message: "Erro interno no servidor." });
+    }
+};
