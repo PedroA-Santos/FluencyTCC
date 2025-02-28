@@ -10,6 +10,8 @@ exports.listAll = async (req, res) => {
         if (idiomas.length === 0) {
             return res.status(404).json({ message: "Nenhum idioma encontrado" });
         }
+        console.log(idiomas);
+
 
         return res.status(200).json(idiomas);
     } catch (error) {

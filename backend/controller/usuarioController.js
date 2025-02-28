@@ -1,6 +1,5 @@
 const usuarioModel = require("../model/usuarioModel");
-const { validarCampos } = require("../utils/validarCampos")
-
+const { validarCampos } = require("../utils/validarCampos");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
@@ -11,15 +10,16 @@ exports.listAll = async (req, res) => {
     try {
         const usuarios = await usuarioModel.list();
 
-        if (usuarios.length === 0) {
+        if (!usuarios.length) {
             return res.status(404).json({ message: "Nenhum usuário encontrado." });
         }
+
         res.status(200).json(usuarios);
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Erro ao listar usuarios");
+        console.error("Erro ao listar usuários:", error);
+        res.status(500).json({ message: "Erro interno do servidor." });
     }
-}
+};
 
 exports.listById = async (req, res) => {
     const { id } = req.params;
@@ -29,44 +29,40 @@ exports.listById = async (req, res) => {
     }
 
     try {
-        const response = await usuarioModel.listFindById(id);
+        const usuario = await usuarioModel.listFindById(id);
 
-        if (!response || Object.keys(response).length === 0) {
-            return res.status(404).json({ message: 'usuario não encontrado' });
+        if (!usuario) {
+            return res.status(404).json({ message: "Usuário não encontrado." });
         }
 
-        res.status(200).json(response);
+        res.status(200).json(usuario);
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Erro ao buscar usuario");
+        console.error("Erro ao buscar usuário:", error);
+        res.status(500).json({ message: "Erro interno do servidor." });
     }
-}
+};
 
 exports.postUsuario = async (req, res) => {
     const { username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil } = req.body;
-    console.log(username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil);
-    
 
-    const camposValidos = validarCampos({ username, email, senha, idioma_nativo_id, genero_id });
+    if (!validarCampos({ username, email, senha, idioma_nativo_id, genero_id })) {
+        return res.status(400).json({ message: "Preencha todos os campos obrigatórios corretamente." });
+    }
 
-    // Validação básica de email para não ter email incorreto 
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         return res.status(400).json({ message: "Formato de email inválido." });
     }
 
     try {
-        // Verificar se o email já está cadastrado
         const usuarioExistente = await usuarioModel.listByEmail(email);
         if (usuarioExistente) {
             return res.status(409).json({ message: "Este email já está cadastrado." });
         }
 
-        // Criptografar a senha
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(senha, saltRounds);
+        const hashedPassword = await bcrypt.hash(senha, 10);
 
-        // Criar o usuário
         const novoUsuario = await usuarioModel.post({
             username,
             email,
@@ -91,28 +87,28 @@ exports.postUsuario = async (req, res) => {
 exports.putUsuario = async (req, res) => {
     const { id } = req.params;
     const { username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil } = req.body;
-    
 
     if (!id || isNaN(Number(id))) {
-        return res.status(400).json({ message: "ID invalido ou ausente" });
+        return res.status(400).json({ message: "ID inválido ou ausente." });
     }
 
-    const camposValidos = validarCampos({ username, email, senha, idioma_nativo_id, genero_id });
-
-    if (!camposValidos) {
-        return res.status(400).json({ message: "Username, email e senhea são obrigatórios." });
+    if (!validarCampos({ username, email, senha, idioma_nativo_id, genero_id })) {
+        return res.status(400).json({ message: "Campos obrigatórios ausentes." });
     }
+
     try {
-        const response = await usuarioModel.put({ username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, id });
+        const usuarioAtualizado = await usuarioModel.put({
+            id, username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil
+        });
 
-        if (response.affectedRows === 0) {
+        if (usuarioAtualizado.affectedRows === 0) {
             return res.status(404).json({ message: "Usuário não encontrado." });
         }
 
-        res.status(201).json({ message: "Usuario atualizado com sucesso!", response });
+        res.status(200).json({ message: "Usuário atualizado com sucesso!" });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Erro ao atualizar usuario" });
+        console.error("Erro ao atualizar usuário:", error);
+        res.status(500).json({ message: "Erro ao atualizar usuário." });
     }
 };
 
@@ -120,50 +116,38 @@ exports.deleteUsuario = async (req, res) => {
     const { id } = req.params;
 
     if (!id || isNaN(Number(id))) {
-        return res.status(400).json({ message: "ID invalido ou ausente" });
+        return res.status(400).json({ message: "ID inválido ou ausente." });
     }
 
     try {
-        const response = await usuarioModel.delete(id);
+        const resultado = await usuarioModel.delete(id);
 
-        if (response.affectedRows === 0) {
-            return res.status(404).json({ message: "Usuario não encontrado" })
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({ message: "Usuário não encontrado." });
         }
 
-        res.status(200).json({ message: "Usuario excluido com sucesso!" });
+        res.status(200).json({ message: "Usuário excluído com sucesso!" });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Erro ao excluir usuario" })
+        console.error("Erro ao excluir usuário:", error);
+        res.status(500).json({ message: "Erro ao excluir usuário." });
     }
-}
-
-
+};
 
 exports.login = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, senha } = req.body;
 
-    if (!email || !password) {
+    if (!email || !senha) {
         return res.status(400).json({ message: "Os campos email e senha são obrigatórios." });
     }
 
     try {
         const user = await usuarioModel.listByEmail(email);
 
-        if (!user) {
+        if (!user || !(await bcrypt.compare(senha, user.senha))) {
             return res.status(401).json({ message: "Email ou senha incorretos." });
         }
 
-        const senhaValida = await bcrypt.compare(password, user.senha);
-
-        if (!senhaValida) {
-            return res.status(401).json({ message: "Email ou senha incorretos." });
-        }
-
-        const token = jwt.sign(
-            { id: user.id, email: user.email },
-            secretKey,
-            { expiresIn: "1h" }
-        );
+        const token = jwt.sign({ id: user.id, email: user.email }, secretKey, { expiresIn: "1h" });
 
         return res.status(200).json({
             message: "Login bem-sucedido",

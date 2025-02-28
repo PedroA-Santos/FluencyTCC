@@ -9,11 +9,12 @@ const db = require("./db");
 const usuarioRoutes = require("./routes/usuarioRoutes");
 const idiomaRoutes = require("./routes/idiomaRoutes");
 const interesseRoutes = require("./routes/interesseRoutes");
-const matchRoutes = require("./routes/matchRoutes"); 
-const mensagemRoutes = require("./routes/mensagemRoutes"); 
-const ofensivasRoutes = require("./routes/ofensivasRoutes"); 
+const matchRoutes = require("./routes/matchRoutes");
+const mensagemRoutes = require("./routes/mensagemRoutes");
+const ofensivasRoutes = require("./routes/ofensivasRoutes");
 const usuarioInteressesRoutes = require("./routes/usuarioInteressesRoutes");
 const usuarioIdiomasRoutes = require("./routes/usuarioIdiomasRoutes");
+const generoRoutes = require("./routes/generoRoutes");
 
 app.use(cors({
     origin: "http://localhost:3000", // Permite apenas o frontend acessar
@@ -29,6 +30,7 @@ app.use("/chat", mensagemRoutes); //está com o nome chat apenas para melhor org
 app.use("/ofensivas", ofensivasRoutes);
 app.use("/usuarioInteresses", usuarioInteressesRoutes);
 app.use("/usuarioIdiomas", usuarioIdiomasRoutes);
+app.use("/genero", generoRoutes);
 
 
 
