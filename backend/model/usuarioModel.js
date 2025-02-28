@@ -31,7 +31,9 @@ exports.listByEmail = (email) => {
     });
 };
 
-exports.post = ({ username, email, senha, bio, foto_perfil }) => {
+exports.post = ({ username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil }) => {
+    console.log( username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil );
+    
     return new Promise((resolve, reject) => {
         db.query('INSERT INTO usuarios (username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil) VALUES (?, ?, ?, ?, ?, ?, ?);',
             [username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil],

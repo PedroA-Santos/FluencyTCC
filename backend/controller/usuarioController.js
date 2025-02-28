@@ -44,6 +44,8 @@ exports.listById = async (req, res) => {
 
 exports.postUsuario = async (req, res) => {
     const { username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil } = req.body;
+    console.log(username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil);
+    
 
     const camposValidos = validarCampos({ username, email, senha, idioma_nativo_id, genero_id });
 
@@ -60,7 +62,6 @@ exports.postUsuario = async (req, res) => {
             return res.status(409).json({ message: "Este email já está cadastrado." });
         }
 
-        const response = await usuarioModel.post({ username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil });
         // Criptografar a senha
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(senha, saltRounds);
@@ -70,6 +71,8 @@ exports.postUsuario = async (req, res) => {
             username,
             email,
             senha: hashedPassword,
+            idioma_nativo_id,
+            genero_id,
             bio,
             foto_perfil
         });
