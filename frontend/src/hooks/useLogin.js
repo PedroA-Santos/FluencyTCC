@@ -1,64 +1,63 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importa o hook para navegação
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const useLogin = () => {
+    // Estado para armazenar as credenciais do usuário
+    const [credentials, setCredentials] = useState({ email: "", senha: "" });
+    const [loading, setLoading] = useState(false); // Estado de carregamento
+    const [error, setError] = useState(""); // Estado para armazenar mensagens de erro
+    const [user, setUser] = useState(null); // Estado para armazenar o usuário autenticado
 
-    // esse estado gerencia o email e a senha passados pelo usuário no form
-    const [credentials, setCredentials] = useState({
-        email: "",
-        password: "",
-    });
+    const navigate = useNavigate(); // Hook para navegação
+    const location = useLocation(); // Hook para capturar a URL anterior
 
-    const [loading, setLoading] = useState(false); // para quando estiver em andamento a requisição
-    const [error, setError] = useState("");
-    const [user, setUser] = useState(null);
-    // esse estado vai ser responsável por armazenar os dados do usuário autenticado
+    // Obtém a página para onde o usuário deveria ser redirecionado após o login
+    const from = location.state?.from?.pathname || "/";
 
-    const navigate = useNavigate(); // Inicializa o hook para navegação
-
-    // Atualiza os campos de credenciais recebendo o que o usuário esta inserindo 
+    // Atualiza os campos de credenciais conforme o usuário digita
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCredentials({ ...credentials, [name]: value });
     };
 
-    // Essa função faz a requisição no back para autenticar o usuário
+    // Função para autenticar o usuário
     const handleLogin = async (e) => {
         e.preventDefault();
+
+        // Evita múltiplos envios enquanto a requisição está em andamento
+        if (loading) return;
+
         setLoading(true);
         setError("");
 
         try {
-            // aq ela envia as credenciais preenchidas pelo usuário através de um post para a rota de login no back
+            // Envia as credenciais para o backend
             const response = await fetch("http://localhost:5000/usuario/login", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(credentials),
             });
 
-            // se n der erro aq ele salva o token no localStorage(onde armazena dados no dispositivo do usuário) e redireciona para a home
             if (response.ok) {
                 const data = await response.json();
                 setUser(data.user);
                 setError("");
 
+                // Armazena o token no sessionStorage para maior segurança
+                sessionStorage.setItem("token", data.token);
 
-                localStorage.setItem("token", data.token);
-
-
-                navigate("/");
-
-
+                // Redireciona para a página pretendida
+                navigate(from, { replace: true });
             } else {
-                //se der erro cai aqui
-                const errorData = await response.json();
-                setError(errorData.message || "Credenciais incorretas.");
+                // Tratamento de erro caso a resposta do servidor seja inválida
+                try {
+                    const errorData = await response.json();
+                    setError(errorData.message || "Credenciais incorretas.");
+                } catch {
+                    setError("Erro inesperado ao processar a resposta do servidor.");
+                }
             }
         } catch (err) {
-
-            //se der b.o com o back cai aq
             setError("Erro ao conectar com o servidor.");
             console.error(err);
         } finally {
@@ -66,12 +65,29 @@ const useLogin = () => {
         }
     };
 
-    // Realiza o logout
+    // Função para realizar o logout do usuário
     const handleLogout = () => {
         setUser(null);
-        setCredentials({ email: "", password: "" });
-        localStorage.removeItem("token"); // Remove o token
+        setCredentials({ email: "", senha: "" });
+        sessionStorage.removeItem("token"); // Remove o token armazenado
     };
+
+    // Verifica se há um usuário autenticado ao carregar a aplicação
+    useEffect(() => {
+        const token = sessionStorage.getItem("token");
+        if (token) {
+            fetch("http://localhost:5000/usuario/me", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => res.json())
+                .then((data) => setUser(data.user))
+                .catch(() => handleLogout()); // Se o token for inválido, desloga o usuário
+        }
+    }, []);
 
     return {
         credentials,
