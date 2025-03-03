@@ -1,4 +1,5 @@
 const matchModel = require('../model/matchModel');
+const matchService = require("../services/matchServices"); ///importa o serviço de sugestão de usuarios - ainda deve ser melhorado
 
 const { validarCampos } = require('../utils/validarCampos');
 
@@ -110,5 +111,16 @@ exports.deleteMatch = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Erro ao deletar o match" })
+    }
+}
+
+exports.obterMatches = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const matches = await matchService.buscarMatches(userId);
+        res.json(matches);
+    } catch (error) {
+        console.error("erro ao buscar matches: ",error);
+        res.status(500).json({ error: "Erro interno do servidor"});
     }
 }

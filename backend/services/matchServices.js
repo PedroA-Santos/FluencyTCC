@@ -1,6 +1,6 @@
 const db = require("../db");
 
-async function buscarMatches(userId) {
+exports.buscarMatches = async (userId) => {
     //buscar idiomas nativos e idiomas que o usuário QUER APRENDER!!!
     const [userData] = await db.query(`
             SELECT idioma_nativo_id FROM usuarios WHERE id = ?
@@ -31,5 +31,3 @@ async function buscarMatches(userId) {
 
     return matches;
 }
-
-module.exports = { buscarMatches };
