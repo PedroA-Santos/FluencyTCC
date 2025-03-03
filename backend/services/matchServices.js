@@ -1,33 +1,42 @@
+// services/matchService.js
 const db = require("../db");
 
 exports.buscarMatches = async (userId) => {
-    //buscar idiomas nativos e idiomas que o usuário QUER APRENDER!!!
-    const [userData] = await db.query(`
+    // Retorna uma nova Promise para que possamos usar async/await corretamente
+    return new Promise((resolve, reject) => {
+        // Buscar idioma nativo
+        db.query(`
             SELECT idioma_nativo_id FROM usuarios WHERE id = ?
-        `, [userId]);
-        
-    const [idiomasAprendidos] = await db.query(
-        `SELECT idioma_id FROM usuarios_idiomas WHERE usuario_id = ?`,
-        [userId]
-    );
+        `, [userId], (error, userData) => {
+            if (error) return reject(error);
 
-    if (!userData || idiomasAprendidos.length === 0) {
-        return [];
-    }
+            // Buscar idiomas que o usuário quer aprender
+            db.query(`
+                SELECT idioma_id FROM usuarios_idiomas WHERE usuario_id = ?
+            `, [userId], (error, idiomasAprendidos) => {
+                if (error) return reject(error);
 
-    const idiomaNativo = userData.idioma_nativo_id;
-    const idiomasQuerAprender = idiomasAprendidos.map(row => row.idioma_id);
+                if (!userData || idiomasAprendidos.length === 0) {
+                    return resolve([]);
+                }
 
-    // busca usuarios que falam o idiomas desejado ou querem aprender o mesmo idioma
-    const [matches] = await db.query(`
-        SELECT u.id, u.username, u.bio, u.foto_perfil, ui.idioma_id, ui.nivel
-        FROM usuarios u
-        JOIN usuarios_idiomas ui ON u.id = ui.usuario_id
-        WHERE
-            (ui.idioma_id IN (?) AND ui.nivel = 'Avançado' AND u.id != ?)
-            OR
-            (u.idioma_nativo_id IN (?) AND u.id != ?)
-    `, [idiomasQuerAprender, userId, idiomaNativo, userId]);
+                const idiomaNativo = userData[0].idioma_nativo_id;
+                const idiomasQuerAprender = idiomasAprendidos.map(row => row.idioma_id);
 
-    return matches;
-}
+                // Buscar matches
+                db.query(`
+                    SELECT DISTINCT u.id, u.username, u.bio, u.foto_perfil, ui.idioma_id, ui.nivel
+                    FROM usuarios u
+                    JOIN usuarios_idiomas ui ON u.id = ui.usuario_id
+                    WHERE 
+                        (ui.idioma_id IN (?) AND ui.nivel = 'Avançado' AND u.id != ?) 
+                        OR 
+                        (u.idioma_nativo_id IN (?) AND u.id != ?)
+                `, [idiomasQuerAprender, userId, idiomaNativo, userId], (error, matches) => {
+                    if (error) return reject(error);
+                    resolve(matches);
+                });
+            });
+        });
+    });
+};
