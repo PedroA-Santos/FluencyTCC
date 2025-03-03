@@ -117,6 +117,8 @@ exports.deleteMatch = async (req, res) => {
 exports.obterMatches = async (req, res) => {
     try {
         const userId = req.params.userId;
+        console.log(userId);
+        
         const matches = await matchService.buscarMatches(userId);
         res.json(matches);
     } catch (error) {

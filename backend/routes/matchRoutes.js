@@ -7,6 +7,8 @@ router.get("/", matchController.listAll);
 
 router.get("/:id", matchController.listById);
 
+router.get("/matches/:userId", matchController.obterMatches)
+
 router.post("/", matchController.postMatch);
 
 router.put("/:id", matchController.putMatch);
