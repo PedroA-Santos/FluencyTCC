@@ -29,11 +29,25 @@ exports.buscarMatches = async (userId) => {
                     FROM usuarios u
                     JOIN usuarios_idiomas ui ON u.id = ui.usuario_id
                     WHERE 
-                        (ui.idioma_id IN (?) AND ui.nivel = 'Avançado' AND u.id != ?) 
+                        (
+                            -- Buscar usuários que falam nativamente o idioma que o usuário quer aprender
+                            ui.idioma_id IN (?)
+                            AND u.idioma_nativo_id = ui.idioma_id
+                        )
                         OR 
-                        (u.idioma_nativo_id IN (?) AND u.id != ?)
-                    GROUP BY u.id
-                `, [idiomasQuerAprender, userId, idiomaNativo, userId], (error, matches) => {
+                        (
+                            -- Buscar usuários que já têm um nível intermediário ou avançado
+                            ui.idioma_id IN (?)
+                            AND ui.nivel IN ('Intermediário', 'Avançado')
+                        )
+                        OR 
+                        (
+                            -- Buscar usuários que também querem aprender o mesmo idioma
+                            ui.idioma_id IN (?)
+                            AND ui.nivel = 'Básico'
+                        )
+                    AND u.id != ? -- Evitar sugerir o próprio usuário
+                    `, [idiomasQuerAprender, idiomasQuerAprender, idiomasQuerAprender, userId], (error, matches) => {
                     if (error) return reject(error);
                     resolve(matches);
                 });

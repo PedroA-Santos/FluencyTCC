@@ -1,13 +1,16 @@
 const { Router } = require("express");
 const router = Router();
 const matchController = require("../controller/matchController");
+const authMiddleware = require("../middleware/authMiddleware"); //arquivo para autenticar user, provisório
 
+//rota protegida: retorna os matches do usuario autenticado
+router.get("/meus-matches", authMiddleware, matchController.getUserMatches);
 
 router.get("/", matchController.listAll);
 
 router.get("/:id", matchController.listById);
 
-router.get("/matches/:userId", matchController.obterMatches)
+router.get("/sugeridos/:userId", matchController.obterMatches)
 
 router.post("/", matchController.postMatch);
 
