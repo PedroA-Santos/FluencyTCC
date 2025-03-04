@@ -1,4 +1,4 @@
-import useCadastroUsuario from '../../hooks/useCadastroUsuario';
+import useCadastroUsuario from '../../hooks/useCadastroUsuario1';
 import useListIdiomas from '../../hooks/useListIdiomas';
 import useListGeneros from '../../hooks/useListGenero';  // Importando o hook de gêneros
 
