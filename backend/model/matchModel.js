@@ -57,3 +57,22 @@ exports.delete = (id) => {
         })
     })
 }
+
+//matches ACEITOS onde userId está como usuario1_id || usuario2_id - *exclui o proprio usuario da lista*
+exports.getMatchesByUserId = (userId) => {
+    return new Promise((resolve, reject) => {
+        db.query(
+            `SELECT u.id, u.username, u.bio, u.foto_perfil
+            FROM matches m
+            JOIN usuarios u ON (u.id = m.usuario1_id OR u.id = m.usuario2_id)
+            WHERE (m.usuario1_id = ? OR m.usuario2_id = ?)
+            AND m.status = 'aceito'
+            AND u.id != ?`,
+            [userId, userId, userId],
+            (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            }
+        )
+    })
+}
