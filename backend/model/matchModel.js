@@ -62,7 +62,7 @@ exports.delete = (id) => {
 exports.getMatchesByUserId = (userId) => {
     return new Promise((resolve, reject) => {
         db.query(
-            `SELECT u.id, u.username, u.bio, u.foto_perfil
+            `SELECT DISTINCT u.id, u.username, u.bio, u.foto_perfil
             FROM matches m
             JOIN usuarios u ON (u.id = m.usuario1_id OR u.id = m.usuario2_id)
             WHERE (m.usuario1_id = ? OR m.usuario2_id = ?)
