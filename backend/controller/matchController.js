@@ -114,6 +114,24 @@ exports.deleteMatch = async (req, res) => {
     }
 }
 
+//busca os matches ja aceitos
+exports.getUserMatches = async (req, res) => {
+    const userId = req.user.id // id do usuario autenticado
+
+    if (!id || isNaN(Number(id))) {
+        return res.status(400).json({ message: "ID inválido ou ausente."})
+    }
+
+    try {
+        const matches = await matchModel.getMatchesByUserId(userId);
+        res.status(200).json(matches);
+    } catch (error) {
+        console.error('erro ao buscar matches',error);
+        res.status(500).json({ message: "Erro ao buscar matches."});        
+    }
+}
+
+//obtém as sugestões de matches
 exports.obterMatches = async (req, res) => {
     try {
         const userId = req.params.userId;
