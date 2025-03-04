@@ -32,6 +32,7 @@ exports.buscarMatches = async (userId) => {
                         (ui.idioma_id IN (?) AND ui.nivel = 'Avançado' AND u.id != ?) 
                         OR 
                         (u.idioma_nativo_id IN (?) AND u.id != ?)
+                    GROUP BY u.id
                 `, [idiomasQuerAprender, userId, idiomaNativo, userId], (error, matches) => {
                     if (error) return reject(error);
                     resolve(matches);
