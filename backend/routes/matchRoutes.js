@@ -4,7 +4,7 @@ const matchController = require("../controller/matchController");
 const authMiddleware = require("../middleware/authMiddleware"); //arquivo para autenticar user, provisório
 
 //rota protegida: retorna os matches do usuario autenticado
-router.get("/meus-matches", authMiddleware, matchController.getUserMatches);
+router.get("/contatos/:userId", /*authMiddleware,*/ matchController.getUserMatches);
 
 router.get("/", matchController.listAll);
 

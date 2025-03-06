@@ -116,9 +116,12 @@ exports.deleteMatch = async (req, res) => {
 
 //busca os matches ja aceitos
 exports.getUserMatches = async (req, res) => {
-    const userId = req.user.id // id do usuario autenticado
+    const { userId } = req.params // PROVISÓRIO, deve ser da seguinte maneira depois que obtivermos token de user - req.user.id
 
-    if (!id || isNaN(Number(id))) {
+    
+    
+    if (!userId || isNaN(Number(userId))) {
+        console.log(userId);
         return res.status(400).json({ message: "ID inválido ou ausente."})
     }
 
