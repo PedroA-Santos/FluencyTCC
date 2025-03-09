@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
-    
-    
+
+
     return (
         <nav>
             <ul>
@@ -12,10 +12,11 @@ const Navbar = () => {
                 <li><Link to="/interesse">interesse</Link></li>
                 <li><Link to="/login">login</Link></li>
                 <li><Link to="/perfil">perfil</Link></li>
-                <li><Link to="/usuario">usuario</Link></li>
+                <li><Link to="/usuarioCadastro">Cadastro usuario Parte 1</Link></li>
+                <li><Link to="/usuarioCadastro2">Cadastro usuario Parte 2</Link></li>
             </ul>
         </nav>
-    ) 
+    )
 }
 
 export default Navbar;

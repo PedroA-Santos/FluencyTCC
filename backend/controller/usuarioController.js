@@ -171,49 +171,38 @@ exports.login = async (req, res) => {
 
 
 // ESSA FUNÇÃO REGISTRA O USUÁRIO NA PRIMEIRA ETAPA APENAS (EMAIL,SENHA ,IDIOMA NATIVO E GENERO)
-
 exports.postUsuarioStep1 = async (req, res) => {
-    const { email, senha, idioma_nativo_id, genero_id, } = req.body;
+    const { email, senha, idioma_nativo_id, genero_id } = req.body;
 
-    // Verificar se email, senha e idioma_nativo_id foram fornecidos
     if (!email || !senha || !idioma_nativo_id || !genero_id) {
-        return res.status(400).json({ message: "Email, senha , idioma nativo e genero são obrigatórios." });
+        return res.status(400).json({ message: "Email, senha, idioma nativo e gênero são obrigatórios." });
     }
 
-    // Validar o formato do email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         return res.status(400).json({ message: "Formato de email inválido." });
     }
 
     try {
-        // Verificar se o idioma_nativo_id é válido (existe na tabela 'idiomas')
         const idiomaExistente = await usuarioModel.listByIdIdioma(idioma_nativo_id);
         if (!idiomaExistente) {
             return res.status(400).json({ message: "Idioma nativo inválido." });
         }
 
-        // Verificar se o email já está cadastrado
         const usuarioExistente = await usuarioModel.listByEmail(email);
         if (usuarioExistente) {
             return res.status(409).json({ message: "Este email já está cadastrado." });
         }
 
-        // Criptografar a senha antes de armazenar
         const hashedPassword = await bcrypt.hash(senha, 10);
-
-        // Criar usuário com email, senha e idioma_nativo_id
         const novoUsuario = await usuarioModel.postStep1({
             email,
             senha: hashedPassword,
             idioma_nativo_id,
-            genero_id // Adicionando o idioma nativo na primeira etapa
+            genero_id
         });
 
-        return res.status(201).json({
-            message: "Primeira etapa concluída. Complete seu perfil.",
-            usuario: { id: novoUsuario.id, email }
-        });
+        return res.status(201).json({ id: novoUsuario.id, email, idioma_nativo_id, genero_id });
 
     } catch (error) {
         console.error("Erro ao cadastrar usuário:", error);
@@ -221,48 +210,27 @@ exports.postUsuarioStep1 = async (req, res) => {
     }
 };
 
-
-
-// ESSA FUNÇÃO ATUALIZA O USUÁRIO CADASTRADO NA PRIMEIRA ETAPA(INFORMAÇÕES COMPLEMENTARES)
-
 exports.updateUsuarioStep2 = async (req, res) => {
-    const { id } = req.params;  // Acessando o id da URL
+    const { id } = req.params;
     const { username, bio, foto_perfil } = req.body;
 
-    console.log('ID recebido para atualização:', id);  // Verificando se o id está correto
-
-    if (!username || !bio || !foto_perfil) {
-        return res.status(400).json({ message: "Preencha todos os campos obrigatórios corretamente." });
+    if (!id) {
+        return res.status(400).json({ message: "ID do usuário é obrigatório." });
     }
+    console.log(id)
 
     try {
-        // Verificar se o usuário existe
-        const usuarioExistente = await usuarioModel.listFindById(id);  // Passando o id para a busca no banco
+        const usuarioExistente = await usuarioModel.listFindById(id);
         if (!usuarioExistente) {
             return res.status(404).json({ message: "Usuário não encontrado." });
         }
 
-        // Passar o id e os dados de atualização para a função updateStep2
-        await usuarioModel.updateStep2({
-            id,
-            username,
-            bio,
-            foto_perfil
-        });
+        await usuarioModel.updateStep2({ id, username, bio, foto_perfil });
 
-        return res.status(200).json({
-            message: "Perfil atualizado com sucesso!",
-            usuario: {
-                id,
-                username,
-                bio,
-                foto_perfil
-            }
-        });
+        return res.status(200).json({ message: "Perfil atualizado com sucesso!" });
 
     } catch (error) {
-        console.error("Erro ao atualizar usuário:", error);
-        return res.status(500).json({ message: "Erro ao atualizar usuário." });
+        console.error("Erro ao atualizar perfil:", error);
+        return res.status(500).json({ message: "Erro ao atualizar perfil." });
     }
 };
-

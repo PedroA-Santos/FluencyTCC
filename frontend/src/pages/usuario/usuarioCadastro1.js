@@ -1,11 +1,22 @@
-import useCadastroUsuario from '../../hooks/useCadastroUsuario1';
+import useCadastroUsuario1 from '../../hooks/useCadastroUsuario1';
 import useListIdiomas from '../../hooks/useListIdiomas';
-import useListGeneros from '../../hooks/useListGenero';  // Importando o hook de gêneros
+import useListGeneros from '../../hooks/useListGenero';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
-function Usuario() {
-    const { user, loading, success, error, handleChange, handleSubmit } = useCadastroUsuario();
+function UsuarioCadastro1() {
+    const { user, userId, loading, success, error, handleChange, handleSubmit } = useCadastroUsuario1();
     const { idiomas, loading: loadingIdiomas, error: errorIdiomas } = useListIdiomas();
-    const { generos, loading: loadingGeneros, error: errorGeneros } = useListGeneros();  // Usando o hook de gêneros
+    const { generos, loading: loadingGeneros, error: errorGeneros } = useListGeneros();
+    const navigate = useNavigate();
+
+    // ✅ Redireciona para a próxima página quando o ID do usuário for atualizado
+    useEffect(() => {
+        if (userId) {
+            console.log("🔹 Redirecionando para:", `/usuarioCadastro2/${userId}`);
+            setTimeout(() => navigate(`/usuarioCadastro2/${userId}`), 500);
+        }
+    }, [userId, navigate]);
 
     return (
         <div style={styles.container}>
@@ -14,23 +25,9 @@ function Usuario() {
             {success && <p style={styles.success}>{success}</p>}
             {error && <p style={styles.error}>{error}</p>}
             {errorIdiomas && <p style={styles.error}>Erro ao carregar idiomas: {errorIdiomas}</p>}
-            {errorGeneros && <p style={styles.error}>Erro ao carregar gêneros: {errorGeneros}</p>}  {/* Exibindo erro dos gêneros */}
+            {errorGeneros && <p style={styles.error}>Erro ao carregar gêneros: {errorGeneros}</p>}
 
             <form onSubmit={handleSubmit} style={styles.form}>
-                <div style={styles.inputGroup}>
-                    <label htmlFor="username">Username:</label>
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value={user.username}
-                        onChange={handleChange}
-                        required
-                        autoComplete="username"
-                        style={styles.input}
-                    />
-                </div>
-
                 <div style={styles.inputGroup}>
                     <label htmlFor="email">Email:</label>
                     <input
@@ -60,34 +57,10 @@ function Usuario() {
                 </div>
 
                 <div style={styles.inputGroup}>
-                    <label htmlFor="bio">Bio:</label>
-                    <textarea
-                        id="bio"
-                        name="bio"
-                        value={user.bio}
-                        onChange={handleChange}
-                        style={{ ...styles.input, height: '80px' }}
-                    />
-                </div>
-
-                <div style={styles.inputGroup}>
-                    <label htmlFor="foto_perfil">Foto de Perfil (URL):</label>
-                    <input
-                        type="text"
-                        id="foto_perfil"
-                        name="foto_perfil"
-                        value={user.foto_perfil}
-                        onChange={handleChange}
-                        style={styles.input}
-                    />
-                </div>
-
-                {/* Seleção de Idioma (Carregado do Hook) */}
-                <div style={styles.inputGroup}>
                     <label htmlFor="idioma">Idioma:</label>
                     <select
                         id="idioma"
-                        name="idioma_nativo_id"  // Alterado para o nome correto
+                        name="idioma_nativo_id"
                         value={user.idioma_nativo_id}
                         onChange={handleChange}
                         style={styles.input}
@@ -102,12 +75,11 @@ function Usuario() {
                     </select>
                 </div>
 
-                {/* Seleção de Gênero (Carregado do Hook) */}
                 <div style={styles.inputGroup}>
                     <label htmlFor="genero">Gênero:</label>
                     <select
                         id="genero"
-                        name="genero_id"  // Alterado para o nome correto
+                        name="genero_id"
                         value={user.genero_id}
                         onChange={handleChange}
                         style={styles.input}
@@ -122,9 +94,10 @@ function Usuario() {
                     </select>
                 </div>
 
-                <button type="submit" disabled={loading} style={{ ...styles.button, opacity: loading ? 0.6 : 1 }}>
+                <button type="button" onClick={handleSubmit} disabled={loading} style={{ ...styles.button, opacity: loading ? 0.6 : 1 }}>
                     {loading ? "Cadastrando..." : "Cadastrar"}
                 </button>
+
             </form>
         </div>
     );
@@ -181,4 +154,4 @@ const styles = {
     }
 };
 
-export default Usuario;
+export default UsuarioCadastro1;
