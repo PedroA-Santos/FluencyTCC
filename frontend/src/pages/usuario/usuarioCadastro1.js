@@ -1,6 +1,7 @@
 import useCadastroUsuario1 from '../../hooks/useCadastroUsuario1';
 import useListIdiomas from '../../hooks/useListIdiomas';
 import useListGeneros from '../../hooks/useListGenero';
+import useListPaises from '../../hooks/useListPaises';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
@@ -8,6 +9,7 @@ function UsuarioCadastro1() {
     const { user, userId, loading, success, error, handleChange, handleSubmit } = useCadastroUsuario1();
     const { idiomas, loading: loadingIdiomas, error: errorIdiomas } = useListIdiomas();
     const { generos, loading: loadingGeneros, error: errorGeneros } = useListGeneros();
+    const { paises, loading: loadingPaises, error: errorPaises } = useListPaises();
     const navigate = useNavigate();
 
     // ✅ Redireciona para a próxima página quando o ID do usuário for atualizado
@@ -26,6 +28,7 @@ function UsuarioCadastro1() {
             {error && <p style={styles.error}>{error}</p>}
             {errorIdiomas && <p style={styles.error}>Erro ao carregar idiomas: {errorIdiomas}</p>}
             {errorGeneros && <p style={styles.error}>Erro ao carregar gêneros: {errorGeneros}</p>}
+            {errorPaises && <p style={styles.error}>Erro ao carregar países: {errorPaises}</p>}
 
             <form onSubmit={handleSubmit} style={styles.form}>
                 <div style={styles.inputGroup}>
@@ -57,6 +60,17 @@ function UsuarioCadastro1() {
                 </div>
 
                 <div style={styles.inputGroup}>
+                    <label htmlFor="data_nascimento">Data de Nascimento</label>
+                    <input type="date"
+                        id="data_nascimento"
+                        name="data_nascimento"
+                        value={user.data_nascimento}
+                        onChange={handleChange}
+                        required
+                        style={styles.input} />
+                </div>
+
+                <div style={styles.inputGroup}>
                     <label htmlFor="idioma">Idioma:</label>
                     <select
                         id="idioma"
@@ -72,6 +86,26 @@ function UsuarioCadastro1() {
                                 {idioma.idioma}
                             </option>
                         ))}
+                    </select>
+                </div>
+
+                <div>
+                    <label htmlFor="paises">Seu Pais de Origem</label>
+                    <select
+                        name="pais_origem_id"
+                        id="paises"
+                        value={user.pais_origem_id}
+                        onChange={handleChange}
+                        style={styles.input}
+                        disabled={loadingPaises}>
+
+                        <option value="">Selecione um País</option>
+                        {paises.map((pais) => (
+                            <option key={pais.id} value={pais.id}>
+                                {pais.nome}
+                            </option>
+                        ))}
+
                     </select>
                 </div>
 
