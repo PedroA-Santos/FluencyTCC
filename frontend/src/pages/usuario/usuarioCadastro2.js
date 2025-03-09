@@ -1,13 +1,23 @@
 import { useParams } from "react-router-dom";
 import useUpdateCadastroUsuario from "../../hooks/useUpdateCadastroUsuario2"; // Certifique-se de que o hook está correto
+import { useState } from "react";
 
 function UsuarioCadastro2() {
     const { id } = useParams();  // ✅ Captura o ID da URL corretamente
     const { user, handleChange, handleSubmit, loading, success, error } = useUpdateCadastroUsuario(id);  // Passa o ID para o hook
+    const [imagem, setImagem] = useState(null); // Estado para armazenar a imagem
 
     if (!id || id === null) {
         return <p>Erro: ID do usuário não encontrado.</p>;  // Verifica se o ID existe na URL
     }
+
+    // Manipula a seleção da imagem
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImagem(URL.createObjectURL(file));  // Cria um preview da imagem
+        }
+    };
 
     return (
         <div style={styles.container}>
@@ -39,13 +49,26 @@ function UsuarioCadastro2() {
                         placeholder="Bio"
                     />
                 </div>
-                <button type="submit" style={{ ...styles.button, opacity: loading ? 0.6 : 1 }}>Salvar Alterações</button>
+
+                {/* Novo campo para imagem */}
+                <div style={styles.inputGroup}>
+                    <label>Foto de Perfil:</label>
+                    <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleImageChange} 
+                        style={styles.input} 
+                    />
+                    {imagem && <img src={imagem} alt="Preview" style={styles.preview} />} 
+                </div>
+
+                <button type="submit" style={{ ...styles.button, opacity: loading ? 0.6 : 1 }}>
+                    Salvar Alterações
+                </button>
             </form>
         </div>
     );
 }
-
-
 
 const styles = {
     container: {
@@ -95,6 +118,13 @@ const styles = {
         cursor: 'pointer',
         borderRadius: '5px',
         fontSize: '16px'
+    },
+    preview: {
+        width: '100%',
+        maxHeight: '150px',
+        objectFit: 'cover',
+        marginTop: '10px',
+        borderRadius: '5px'
     }
 };
 
