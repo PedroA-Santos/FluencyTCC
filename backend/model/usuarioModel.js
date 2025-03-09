@@ -33,12 +33,12 @@ exports.listByEmail = (email) => {
 
 
 //post
-exports.post = ({ username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil }) => {
-    console.log(username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil);
+exports.post = ({ username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, data_nascimento, pais_origem_id }) => {
+    console.log(username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, data_nascimento, pais_origem_id);
 
     return new Promise((resolve, reject) => {
-        db.query('INSERT INTO usuarios (username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil) VALUES (?, ?, ?, ?, ?, ?, ?);',
-            [username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil],
+        db.query('INSERT INTO usuarios (username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil,data_nascimento,pais_origem_id) VALUES (?, ?, ?, ?, ?, ?, ?,?,?);',
+            [username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, data_nascimento, pais_origem_id],
             (err, results) => {
                 if (err) return reject(err);
                 resolve(results);
@@ -49,10 +49,10 @@ exports.post = ({ username, email, senha, idioma_nativo_id, genero_id, bio, foto
 
 
 //put
-exports.put = ({ username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, id }) => {
+exports.put = ({ username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, data_nascimento, pais_origem_id, id }) => {
     return new Promise((resolve, reject) => {
-        db.query('UPDATE usuarios SET username = ?, email = ?, senha = ?, idioma_nativo_id = ?, genero_id = ?, bio = ?, foto_perfil = ? WHERE id = ?',
-            [username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, id],
+        db.query('UPDATE usuarios SET username = ?, email = ?, senha = ?, idioma_nativo_id = ?, genero_id = ?, bio = ?, foto_perfil = ?,data_nascimento = ?, pais_origem_id = ? WHERE id = ?',
+            [username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, data_nascimento, pais_origem_id, id],
             (err, results) => {
                 if (err) return reject(err);
                 resolve(results);
@@ -84,11 +84,11 @@ exports.delete = (id) => {
 
 
 // ESSA DAQUI CADASTRA O USUARIO PRIMEIRO, OU SEJA, O EMAIL, SENHA, IDIOMA NATIVO E GENERO
-exports.postStep1 = ({ email, senha, idioma_nativo_id, genero_id }) => {
+exports.postStep1 = ({ email, senha, idioma_nativo_id, genero_id, data_nascimento, pais_origem_id }) => {
     return new Promise((resolve, reject) => {
         db.query(
-            'INSERT INTO usuarios (email, senha, idioma_nativo_id, genero_id) VALUES (?, ?, ?, ?);',
-            [email, senha, idioma_nativo_id, genero_id], // Inserindo os dados aqui
+            'INSERT INTO usuarios (email, senha, idioma_nativo_id, genero_id,data_nascimento,pais_origem_id) VALUES (?, ?, ?, ?,?,?);',
+            [email, senha, idioma_nativo_id, genero_id, data_nascimento, pais_origem_id], // Inserindo os dados aqui
             (err, results) => {
                 if (err) return reject(err);
 
@@ -96,7 +96,7 @@ exports.postStep1 = ({ email, senha, idioma_nativo_id, genero_id }) => {
                 const id = results.insertId;
 
                 // Resolva a promessa com o id e os outros dados
-                resolve({ id, email, idioma_nativo_id, genero_id });
+                resolve({ id, email, idioma_nativo_id, genero_id, data_nascimento, pais_origem_id });
             }
         );
     });

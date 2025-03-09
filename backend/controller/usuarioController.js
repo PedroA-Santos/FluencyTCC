@@ -45,9 +45,9 @@ exports.listById = async (req, res) => {
 
 // esse post é só pra usar no postman
 exports.postUsuario = async (req, res) => {
-    const { username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil } = req.body;
+    const { username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, data_nascimento, pais_origem_id } = req.body;
 
-    if (!validarCampos({ username, email, senha, idioma_nativo_id, genero_id })) {
+    if (!validarCampos({ username, email, senha, idioma_nativo_id, genero_id, data_nascimento, pais_origem_id })) {
         return res.status(400).json({ message: "Preencha todos os campos obrigatórios corretamente." });
     }
 
@@ -72,7 +72,9 @@ exports.postUsuario = async (req, res) => {
             idioma_nativo_id,
             genero_id,
             bio,
-            foto_perfil
+            foto_perfil,
+            data_nascimento,
+            pais_origem_id
         });
 
         return res.status(201).json({
@@ -89,19 +91,19 @@ exports.postUsuario = async (req, res) => {
 
 exports.putUsuario = async (req, res) => {
     const { id } = req.params;
-    const { username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil } = req.body;
+    const { username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, data_nascimento, pais_origem_id } = req.body;
 
     if (!id || isNaN(Number(id))) {
         return res.status(400).json({ message: "ID inválido ou ausente." });
     }
 
-    if (!validarCampos({ username, email, senha, idioma_nativo_id, genero_id })) {
+    if (!validarCampos({ username, email, senha, idioma_nativo_id, genero_id, data_nascimento, pais_origem_id })) {
         return res.status(400).json({ message: "Campos obrigatórios ausentes." });
     }
 
     try {
         const usuarioAtualizado = await usuarioModel.put({
-            id, username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil
+            id, username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil, data_nascimento, pais_origem_id
         });
 
         if (usuarioAtualizado.affectedRows === 0) {
@@ -172,10 +174,10 @@ exports.login = async (req, res) => {
 
 // ESSA FUNÇÃO REGISTRA O USUÁRIO NA PRIMEIRA ETAPA APENAS (EMAIL,SENHA ,IDIOMA NATIVO E GENERO)
 exports.postUsuarioStep1 = async (req, res) => {
-    const { email, senha, idioma_nativo_id, genero_id } = req.body;
+    const { email, senha, idioma_nativo_id, genero_id, data_nascimento, pais_origem_id } = req.body;
 
-    if (!email || !senha || !idioma_nativo_id || !genero_id) {
-        return res.status(400).json({ message: "Email, senha, idioma nativo e gênero são obrigatórios." });
+    if (!email || !senha || !idioma_nativo_id || !genero_id || !data_nascimento || !pais_origem_id) {
+        return res.status(400).json({ message: "Email, senha, idioma nativo, gênero, data de nascimento e pais de origem são obrigatórios." });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -199,10 +201,12 @@ exports.postUsuarioStep1 = async (req, res) => {
             email,
             senha: hashedPassword,
             idioma_nativo_id,
-            genero_id
+            genero_id,
+            data_nascimento,
+            pais_origem_id
         });
 
-        return res.status(201).json({ id: novoUsuario.id, email, idioma_nativo_id, genero_id });
+        return res.status(201).json({ id: novoUsuario.id, email, idioma_nativo_id, genero_id, data_nascimento, pais_origem_id });
 
     } catch (error) {
         console.error("Erro ao cadastrar usuário:", error);
