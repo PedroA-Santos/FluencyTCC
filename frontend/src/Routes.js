@@ -8,7 +8,8 @@ import Chat from "./pages/chat/chat";
 import Interesse from "./pages/interesse/interesse";
 import Login from "./pages/login/login";
 import Perfil from "./pages/perfil/perfil";
-import Usuario from "./pages/usuario/usuario";
+import CadastroUsuario from "./pages/usuario/usuarioCadastro1";
+import CadastroUsuario2 from './pages/usuario/usuarioCadastro2';
 
 const AppRoutes = () => {
     return (
@@ -21,7 +22,9 @@ const AppRoutes = () => {
                 <Route path="/interesse" element={<Interesse />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/perfil" element={<Perfil />} />
-                <Route path="/usuario" element={<Usuario />} />
+                <Route path="/usuarioCadastro" element={<CadastroUsuario />} />
+                <Route path="/usuarioCadastro2/:id" element={<CadastroUsuario2 />} />
+
             </Routes>
         </Router>
     );

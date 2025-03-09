@@ -87,11 +87,16 @@ exports.delete = (id) => {
 exports.postStep1 = ({ email, senha, idioma_nativo_id, genero_id }) => {
     return new Promise((resolve, reject) => {
         db.query(
-            'INSERT INTO usuarios (email, senha, idioma_nativo_id,genero_id) VALUES (?, ?, ?,?);',
-            [email, senha, idioma_nativo_id, genero_id], // Inserindo o idioma nativo aqui
+            'INSERT INTO usuarios (email, senha, idioma_nativo_id, genero_id) VALUES (?, ?, ?, ?);',
+            [email, senha, idioma_nativo_id, genero_id], // Inserindo os dados aqui
             (err, results) => {
                 if (err) return reject(err);
-                resolve(results);
+
+                // Aqui estamos pegando o `insertId` que é gerado após a inserção
+                const id = results.insertId;
+
+                // Resolva a promessa com o id e os outros dados
+                resolve({ id, email, idioma_nativo_id, genero_id });
             }
         );
     });
