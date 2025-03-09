@@ -3,7 +3,7 @@ import useUpdateCadastroUsuario from "../../hooks/useUpdateCadastroUsuario2"; //
 
 function UsuarioCadastro2() {
     const { id } = useParams();  // ✅ Captura o ID da URL corretamente
-    const { user, handleChange, handleSubmit,loading } = useUpdateCadastroUsuario(id);  // Passa o ID para o hook
+    const { user, handleChange, handleSubmit, loading, success, error } = useUpdateCadastroUsuario(id);  // Passa o ID para o hook
 
     if (!id || id === null) {
         return <p>Erro: ID do usuário não encontrado.</p>;  // Verifica se o ID existe na URL
@@ -12,6 +12,11 @@ function UsuarioCadastro2() {
     return (
         <div style={styles.container}>
             <h2>Atualizar Perfil</h2>
+
+            {success && <p style={styles.success}>{success}</p>}
+            {error && <p style={styles.error}>{error}</p>}
+            {loading && <p>Carregando...</p>}
+
             <form onSubmit={handleSubmit} style={styles.form}>
                 <div style={styles.inputGroup}>
                     <label>Nome de Usuário:</label>

@@ -8,7 +8,9 @@ const useCadastroUsuario = () => {
         email: '',
         senha: '',
         idioma_nativo_id: '',
-        genero_id: ''
+        genero_id: '',
+        data_nascimento: '',
+        pais_origem_id: ''
     });
 
     const [userId, setUserId] = useState(null); // Novo estado para armazenar o ID do usuário
@@ -44,7 +46,10 @@ const useCadastroUsuario = () => {
 
 
 
-            setUser({ email: '', senha: '', idioma_nativo_id: '', genero_id: '' })
+            setUser({
+                email: '', senha: '', idioma_nativo_id: '', genero_id: '', data_nascimento: '',
+                pais_origem_id: ''
+            });
 
 
         } catch (err) {
