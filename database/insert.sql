@@ -1,3 +1,4 @@
+-- Active: 1701303209239@@127.0.0.1@3306@fluencytcc
 -- Apaga os dados existentes e reseta os IDs
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE mensagens;
@@ -31,10 +32,10 @@ INSERT INTO interesses (interesse) VALUES ('Viagens'), ('Negócios'), ('Tecnolog
 
 -- Insere usuários com país de origem
 INSERT INTO usuarios (username, email, senha, idioma_nativo_id, genero_id, data_nascimento, pais_origem_id, bio, foto_perfil) VALUES
-('Alice', 'alice@email.com', '123456', 3, 2, '1995-06-12', 1, 'Apaixonada por idiomas!', NULL), -- Alice é do Brasil
-('Bob', 'bob@email.com', '123456', 1, 1, '1990-03-25', 2, 'Gosto de tecnologia.', NULL), -- Bob é dos EUA
-('Carlos', 'carlos@email.com', '123456', 2, 1, '1988-11-03', 3, 'Viajante do mundo!', NULL), -- Carlos é da Espanha
-('Diana', 'diana@email.com', '123456', 4, 2, '1992-09-14', 4, 'Amante de música.', NULL); -- Diana é da França
+('Alice', 'alice@email.com', '$2b$10$GzIOT9pgjJipy3.RqjTkTOrfi3QDDnGjMNFjWPLe9PLhAWr7gkeYq', 3, 2, '1995-06-12', 1, 'Apaixonada por idiomas!', NULL), -- Alice é do Brasil
+('Bob', 'bob@email.com', '$2b$10$GzIOT9pgjJipy3.RqjTkTOrfi3QDDnGjMNFjWPLe9PLhAWr7gkeYq', 1, 1, '1990-03-25', 2, 'Gosto de tecnologia.', NULL), -- Bob é dos EUA
+('Carlos', 'carlos@email.com', '$2b$10$GzIOT9pgjJipy3.RqjTkTOrfi3QDDnGjMNFjWPLe9PLhAWr7gkeYq', 2, 1, '1988-11-03', 3, 'Viajante do mundo!', NULL), -- Carlos é da Espanha
+('Diana', 'diana@email.com', '$2b$10$GzIOT9pgjJipy3.RqjTkTOrfi3QDDnGjMNFjWPLe9PLhAWr7gkeYq', 4, 2, '1992-09-14', 4, 'Amante de música.', NULL); -- Diana é da França
 
 -- Insere idiomas que os usuários estão aprendendo
 INSERT INTO usuarios_idiomas (usuario_id, idioma_id, nivel) VALUES

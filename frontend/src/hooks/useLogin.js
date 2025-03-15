@@ -41,9 +41,17 @@ const useLogin = () => {
             const data = await response.json();
 
             if (response.ok) {
+                // Atualiza o estado com os dados do usuário
                 setUser(data.user);
                 sessionStorage.setItem("token", data.token);
                 sessionStorage.setItem("user", JSON.stringify(data.user));
+
+                // Acessa o userId do usuário autenticado
+                const userId = data.user.id;  // Aqui está o id do usuário
+
+                console.log("User ID do login :", userId); // Para verificar
+
+                // Navega para a página de origem ou para a página padrão
                 navigate(from, { replace: true });
             } else {
                 setError(data.message || "Credenciais incorretas.");

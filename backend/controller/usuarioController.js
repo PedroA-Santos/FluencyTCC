@@ -35,7 +35,7 @@ exports.listById = async (req, res) => {
             return res.status(404).json({ message: "Usuário não encontrado." });
         }
 
-        res.status(200).json(usuario[0]);
+        res.status(200).json(usuario);
     } catch (error) {
         console.error("Erro ao buscar usuário:", error);
         res.status(500).json({ message: "Erro interno do servidor." });
