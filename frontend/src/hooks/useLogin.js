@@ -1,91 +1,89 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+const API_URL = "http://localhost:5000/usuario";
+
 const useLogin = () => {
-    // Estado para armazenar as credenciais do usuário
     const [credentials, setCredentials] = useState({ email: "", senha: "" });
-    const [loading, setLoading] = useState(false); // Estado de carregamento
-    const [error, setError] = useState(""); // Estado para armazenar mensagens de erro
-    const [user, setUser] = useState(null); // Estado para armazenar o usuário autenticado
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [user, setUser] = useState(() => {
+        // Recupera os dados do usuário armazenados no sessionStorage
+        const savedUser = sessionStorage.getItem("user");
+        return savedUser ? JSON.parse(savedUser) : null;
+    });
 
-    const navigate = useNavigate(); // Hook para navegação
-    const location = useLocation(); // Hook para capturar a URL anterior
-
-    // Obtém a página para onde o usuário deveria ser redirecionado após o login
+    const navigate = useNavigate();
+    const location = useLocation();
     const from = location.state?.from?.pathname || "/";
 
     // Atualiza os campos de credenciais conforme o usuário digita
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setCredentials({ ...credentials, [name]: value });
+        setCredentials((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Função para autenticar o usuário
+    // Autenticação do usuário
     const handleLogin = async (e) => {
         e.preventDefault();
-
-        // Evita múltiplos envios enquanto a requisição está em andamento
         if (loading) return;
 
         setLoading(true);
         setError("");
 
         try {
-            // Envia as credenciais para o backend
-            const response = await fetch("http://localhost:5000/usuario/login", {
+            const response = await fetch(`${API_URL}/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(credentials),
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                const data = await response.json();
                 setUser(data.user);
-                setError("");
-
-                // Armazena o token no sessionStorage para maior segurança
                 sessionStorage.setItem("token", data.token);
-
-                // Redireciona para a página pretendida
+                sessionStorage.setItem("user", JSON.stringify(data.user));
                 navigate(from, { replace: true });
             } else {
-                // Tratamento de erro caso a resposta do servidor seja inválida
-                try {
-                    const errorData = await response.json();
-                    setError(errorData.message || "Credenciais incorretas.");
-                } catch {
-                    setError("Erro inesperado ao processar a resposta do servidor.");
-                }
+                setError(data.message || "Credenciais incorretas.");
             }
         } catch (err) {
             setError("Erro ao conectar com o servidor.");
-            console.error(err);
+            console.error("Erro na autenticação:", err);
         } finally {
             setLoading(false);
         }
     };
 
-    // Função para realizar o logout do usuário
+    // Logout do usuário
     const handleLogout = () => {
         setUser(null);
         setCredentials({ email: "", senha: "" });
-        sessionStorage.removeItem("token"); // Remove o token armazenado
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("user");
+        navigate("/login");
     };
 
-    // Verifica se há um usuário autenticado ao carregar a aplicação
+    // Verifica a sessão ao carregar a aplicação
     useEffect(() => {
         const token = sessionStorage.getItem("token");
+
         if (token) {
-            fetch("http://localhost:5000/usuario/me", {
+            fetch(`${API_URL}/me`, {
                 method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
+                headers: { "Authorization": `Bearer ${token}` },
             })
                 .then((res) => res.json())
-                .then((data) => setUser(data.user))
-                .catch(() => handleLogout()); // Se o token for inválido, desloga o usuário
+                .then((data) => {
+                    if (data.user) {
+                        setUser(data.user);
+                        sessionStorage.setItem("user", JSON.stringify(data.user));
+                    } else {
+                        handleLogout();
+                    }
+                })
+                .catch(() => handleLogout());
         }
     }, []);
 
