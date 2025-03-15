@@ -9,6 +9,7 @@ TRUNCATE TABLE usuarios;
 TRUNCATE TABLE idiomas;
 TRUNCATE TABLE interesses;
 TRUNCATE TABLE generos;
+TRUNCATE TABLE paises;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- Insere gêneros
@@ -17,15 +18,23 @@ INSERT INTO generos (genero) VALUES ('Masculino'), ('Feminino'), ('Outro');
 -- Insere idiomas
 INSERT INTO idiomas (idioma) VALUES ('Inglês'), ('Espanhol'), ('Português'), ('Francês'), ('Alemão');
 
+-- Insere países
+INSERT INTO paises (nome) VALUES 
+('Brasil'), 
+('Estados Unidos'), 
+('Espanha'), 
+('França'), 
+('Alemanha');
+
 -- Insere interesses
 INSERT INTO interesses (interesse) VALUES ('Viagens'), ('Negócios'), ('Tecnologia'), ('Música');
 
--- Insere usuários
-INSERT INTO usuarios (username, email, senha, idioma_nativo_id, genero_id, bio, foto_perfil) VALUES
-('Alice', 'alice@email.com', '123456', 3, 2, 'Apaixonada por idiomas!', NULL),
-('Bob', 'bob@email.com', '123456', 1, 1, 'Gosto de tecnologia.', NULL),
-('Carlos', 'carlos@email.com', '123456', 2, 1, 'Viajante do mundo!', NULL),
-('Diana', 'diana@email.com', '123456', 4, 2, 'Amante de música.', NULL);
+-- Insere usuários com país de origem
+INSERT INTO usuarios (username, email, senha, idioma_nativo_id, genero_id, data_nascimento, pais_origem_id, bio, foto_perfil) VALUES
+('Alice', 'alice@email.com', '123456', 3, 2, '1995-06-12', 1, 'Apaixonada por idiomas!', NULL), -- Alice é do Brasil
+('Bob', 'bob@email.com', '123456', 1, 1, '1990-03-25', 2, 'Gosto de tecnologia.', NULL), -- Bob é dos EUA
+('Carlos', 'carlos@email.com', '123456', 2, 1, '1988-11-03', 3, 'Viajante do mundo!', NULL), -- Carlos é da Espanha
+('Diana', 'diana@email.com', '123456', 4, 2, '1992-09-14', 4, 'Amante de música.', NULL); -- Diana é da França
 
 -- Insere idiomas que os usuários estão aprendendo
 INSERT INTO usuarios_idiomas (usuario_id, idioma_id, nivel) VALUES
@@ -35,9 +44,8 @@ INSERT INTO usuarios_idiomas (usuario_id, idioma_id, nivel) VALUES
 (4, 2, 'Avançado');      -- Diana já sabe Espanhol
 
 INSERT INTO usuarios_idiomas (usuario_id, idioma_id, nivel) VALUES
-(1, 2, 'Avançado'),  -- Alice também fala Espanhol (para combinar com Carlos)
-(3, 1, 'Básico');    -- Carlos quer aprender Inglês (para combinar com Alice)
-
+(1, 2, 'Avançado'),  -- Alice também fala Espanhol
+(3, 1, 'Básico');    -- Carlos quer aprender Inglês
 
 -- Insere interesses dos usuários
 INSERT INTO usuarios_interesses (usuario_id, interesse_id) VALUES
@@ -51,4 +59,3 @@ INSERT INTO matches (usuario1_id, usuario2_id, idioma_comum, status) VALUES
 (1, 2, 3, 'aceito'),  -- Alice e Bob têm Português em comum
 (1, 3, 2, 'pendente'),-- Alice e Carlos compartilham Espanhol
 (2, 4, 3, 'aceito');  -- Bob e Diana compartilham Português
-
