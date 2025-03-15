@@ -1,3 +1,4 @@
+-- Active: 1701303209239@@127.0.0.1@3306@fluencytcc
 -- Apaga os dados existentes e reseta os IDs
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE mensagens;

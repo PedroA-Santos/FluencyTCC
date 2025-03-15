@@ -1,14 +1,23 @@
-import React from 'react'
+import React from 'react';
 import useListContatos from '../../hooks/useListContatos';
 
 function Home() {
-    const contatos = useListContatos();
+
+    const { contatos, error } = useListContatos();
+
+    // Verifica se há erro na requisição
+    if (error) {
+        return <div className="text-red-500">Erro: {error}</div>;
+    }
+
+    // Verifica se contatos é indefinido ou ainda não foi carregado
+
 
     return (
         <div className='w-1/4 h-screen bg-gray-100 p-4 overflow-y-auto border-r'>
-            <h2 className='text-xl font-bold mb-4'>Contatos </h2>
+            <h2 className='text-xl font-bold mb-4'>Contatos</h2>
             <ul>
-                {contatos.map(match =>(
+                {contatos.map(match => (
                     <li key={match.id} className='flex items-center gap-3 p-2 hover:bg-gray-200 cursor-pointer rounded-lg'>
                         <img src={match.foto_perfil} alt={match.username} className="w-10 h-10 rounded-full" />
                         <p className='text-lg'>{match.username}</p>
@@ -16,7 +25,7 @@ function Home() {
                 ))}
             </ul>
         </div>
-    )
+    );
 }
 
 export default Home;
