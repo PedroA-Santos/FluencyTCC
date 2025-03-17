@@ -38,7 +38,7 @@ exports.listById = async (req, res) => {
             return res.status(404).json({ message: "Nenhum interesse do usuário encontrado" })
         }
 
-        return res.status(200).json(response);
+        return res.status(200).json(Array.isArray(response) ? response : [response]);;
 
 
     } catch (error) {
