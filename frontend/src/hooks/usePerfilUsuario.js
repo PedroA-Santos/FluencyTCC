@@ -7,19 +7,16 @@ const usePerfilUsuario = () => {
     const [perfil, setPerfil] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    
+
     useEffect(() => {
         const fetchPerfil = async () => {
             try {
                 const res = await axios.get(`http://localhost:5000/usuario/${id}`);
-                console.log('====================================');
-                console.log(res.data, "retorno do user");
-                console.log('====================================');
 
                 setPerfil(res.data);
-            } catch (error) {
+            } catch (err) {
                 setError("Erro ao carregar perfil.");
-                console.error(error);
+                console.error("Erro ao carregar perfil do usuario", err);
             } finally {
                 setLoading(false);
             }
