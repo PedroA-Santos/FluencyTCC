@@ -10,7 +10,7 @@ router.get("/", matchController.listAll);
 
 router.get("/:id", matchController.listById);
 
-router.get("/sugeridos/:userId", authMiddleware, matchController.obterMatches)
+router.get("/sugeridos/:userId", /*authMiddleware,*/ matchController.obterMatches)
 
 router.post("/", matchController.postMatch);
 
