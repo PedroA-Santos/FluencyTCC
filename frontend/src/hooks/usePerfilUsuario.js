@@ -7,7 +7,7 @@ const usePerfilUsuario = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const userIdDaSessao = verificarSessaoUsuario(setError);
+    const userIdDaSessao = verificarSessaoUsuario();
 
 
 
@@ -15,6 +15,7 @@ const usePerfilUsuario = () => {
         const fetchPerfil = async () => {
 
             if (!userIdDaSessao) {
+                setError("Erro: ID de usuario não encontrado")
                 return;
             }
             try {

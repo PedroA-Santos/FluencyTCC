@@ -1,29 +1,20 @@
-import React from 'react';
-import useListContatos from '../../hooks/useListContatos';
+import React from "react";
+import Contatos from "../../components/Contatos"; // Importa o componente Contatos
 
 function Home() {
-
-    const { contatos, error } = useListContatos();
-
-    // Verifica se há erro na requisição
-    if (error) {
-        return <div className="text-red-500">Erro: {error}</div>;
-    }
-
-    // Verifica se contatos é indefinido ou ainda não foi carregado
-
-
     return (
-        <div className='w-1/4 h-screen bg-gray-100 p-4 overflow-y-auto border-r'>
-            <h2 className='text-xl font-bold mb-4'>Contatos</h2>
-            <ul>
-                {contatos.map(match => (
-                    <li key={match.id} className='flex items-center gap-3 p-2 hover:bg-gray-200 cursor-pointer rounded-lg'>
-                        <img src={match.foto_perfil} alt={match.username} className="w-10 h-10 rounded-full" />
-                        <p className='text-lg'>{match.username}</p>
-                    </li>
-                ))}
-            </ul>       
+        <div className="flex">
+            {/* Contatos */}
+            <Contatos /> {/* Renderiza os contatos */}
+
+            {/* Main Content */}
+            <div className="flex-grow p-4">
+                <h1 className="text-2xl font-bold mb-4">Bem-vindo à Página Inicial</h1>
+                <p>
+                    Aqui é o espaço principal da sua Home. Você pode adicionar outros componentes
+                    ou conteúdo principal aqui, como um feed, cards, ou o que for necessário.
+                </p>
+            </div>
         </div>
     );
 }
