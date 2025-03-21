@@ -23,7 +23,7 @@ function Home() {
                         <p className='text-lg'>{match.username}</p>
                     </li>
                 ))}
-            </ul>
+            </ul>       
         </div>
     );
 }
