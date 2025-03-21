@@ -4,6 +4,7 @@ import verificarSessaoUsuario from '../utils/verificarSessaoUsuario'; //função
 
 const useListContatos = () => {
     const [contatos, setContatos] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
   
@@ -23,17 +24,15 @@ const useListContatos = () => {
             } catch (err) {
                 console.error("Erro ao carregar contatos", err);
                 setError('Erro ao carregar contatos.');
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchContatos();
     }, []);  // O hook será executado apenas uma vez na montagem, já que userId não precisa ser uma dependência aqui
 
-    if (error) {
-        return <div>{error}</div>;
-    }
-
-    return { contatos };
+    return { contatos, error, loading };
 };
 
 export default useListContatos;

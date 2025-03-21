@@ -1,11 +1,11 @@
-const verificarSessaoUsuario = (setError) => {
+const verificarSessaoUsuario = () => {
     // Recupera o usuário armazenado no sessionStorage
     const userString = sessionStorage.getItem("user");
 
     // Verifica se o usuário existe e tem o ID
     if (!userString) {
-        setError('Usuário não encontrado.');
-        return null;
+        console.error('Usuário não encontrado.');
+        return;
     }
 
     // Converte o JSON para objeto
@@ -13,9 +13,8 @@ const verificarSessaoUsuario = (setError) => {
     const userIdDaSessao = user?.id;
 
     if (!userIdDaSessao) {
-        setError('ID de usuário não encontrado.');
-        console.log("Erro: ID de usuário não encontrado.");
-        return null;
+        console.error('Erro: ID de usuário não encontrado.');
+        return;
     }
 
     return userIdDaSessao;
