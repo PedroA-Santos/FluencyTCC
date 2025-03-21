@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import verificarSessaoUsuario from '../utils/verificarSessaoUsuario'; //função que retorna id do usuario logado
 
 const useListContatos = () => {
     const [contatos, setContatos] = useState([]);
@@ -8,23 +9,9 @@ const useListContatos = () => {
   
     useEffect(() => {
        
-
-        // Recupera o usuário armazenado no sessionStorage
-        const userString = sessionStorage.getItem("user");
-
-        // Verifica se o usuário existe e tem o ID
-        if (!userString) {
-            setError('Usuário não encontrado.');
-            return;
-        }
-
-        // Converte o JSON para objeto
-        const user = JSON.parse(userString);
-        const userIdDaSessao = user?.id;
+        const userIdDaSessao = verificarSessaoUsuario(setError);
 
         if (!userIdDaSessao) {
-            setError('ID de usuário não encontrado.');
-            console.log("Erro: ID de usuário não encontrado.");
             return;
         }
 
