@@ -2,6 +2,7 @@ import styles from './perfil.module.css';
 import usePerfilUsuario from '../../hooks/usePerfilUsuario';
 import useListInteressesUsuario from '../../hooks/useListInteressesUsuario';
 
+
 function Perfil() {
     ///ESTOU USANDO ESSE HOOK PARA PEGAR OS DADOS DO USUARIO E MOSTRAR NO PERFIL
     const { perfil, loading, error } = usePerfilUsuario();

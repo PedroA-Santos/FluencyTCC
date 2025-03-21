@@ -1,17 +1,24 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from 'react-router-dom';
+import verificarSessaoUsuario from "../utils/verificarSessaoUsuario";
 
 const usePerfilUsuario = () => {
-    const { id } = useParams();
     const [perfil, setPerfil] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const userIdDaSessao = verificarSessaoUsuario(setError);
+
+
+
     useEffect(() => {
         const fetchPerfil = async () => {
+
+            if (!userIdDaSessao) {
+                return;
+            }
             try {
-                const res = await axios.get(`http://localhost:5000/usuario/${id}`);
+                const res = await axios.get(`http://localhost:5000/usuario/${userIdDaSessao}`);
 
                 setPerfil(res.data);
             } catch (err) {
@@ -23,7 +30,7 @@ const usePerfilUsuario = () => {
         };
 
         fetchPerfil();
-    }, [id]);
+    }, [userIdDaSessao]);
 
     return { perfil, loading, error };
 
