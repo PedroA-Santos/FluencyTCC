@@ -66,7 +66,8 @@ exports.buscarMatches = (userId) => {
             db.query(`
                     SELECT 
                         u.id, 
-                        u.username, 
+                        u.username,
+                        u.bio,
                         u.foto_perfil, 
                         u.idioma_nativo_id,
                         COALESCE(GROUP_CONCAT(DISTINCT i.idioma SEPARATOR ', '), '') AS idiomas_aprendendo,

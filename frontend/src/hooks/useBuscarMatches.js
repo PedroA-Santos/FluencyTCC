@@ -3,7 +3,7 @@ import axios from 'axios';
 import verificarSessaoUsuario from "../utils/verificarSessaoUsuario";
 
 const useBuscarMatches = () => {
-    const [sugeridos, setSugeridos] = useState([]);
+    const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -18,7 +18,7 @@ const useBuscarMatches = () => {
             try {
                 const res = await axios.get(`http://localhost:5000/match/sugeridos/${userIdDaSessao}`);
 
-                setSugeridos(res.data);
+                setUsers(res.data);
             } catch (error) {
                 setError("Erro ao procurar usuarios.");
                 console.error("Erro ao buscar usuarios.", error);
@@ -30,7 +30,7 @@ const useBuscarMatches = () => {
         fetchSugestoes();
     }, [userIdDaSessao]);
 
-    return { sugeridos, loading, error };
+    return { users, loading, error };
 
 };
 
