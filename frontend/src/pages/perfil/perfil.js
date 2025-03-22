@@ -2,6 +2,7 @@ import styles from './perfil.module.css';
 import usePerfilUsuario from '../../hooks/usePerfilUsuario';
 import useListInteressesUsuario from '../../hooks/useListInteressesUsuario';
 import verificarSessaoUsuario from '../../utils/verificarSessaoUsuario';
+import { useNavigate } from 'react-router-dom';
 
 
 function Perfil() {
@@ -11,6 +12,7 @@ function Perfil() {
     const { interesses, error: errorInteresses } = useListInteressesUsuario();
     // Recupera o usuário logado da sessionStorage
     const userIdLogado = verificarSessaoUsuario();
+    const navigate = useNavigate();
 
 
     if (loading) return <div>Carregando...</div>
@@ -34,8 +36,14 @@ function Perfil() {
                 </div>
             ))}
 
-            {perfil.id === userIdLogado && (
+            {userIdLogado && (
                 <button className="mt-4 bg-blue-500 text-white p-2 rounded">Editar Perfil</button>
+            )}
+
+          {userIdLogado && (
+                <button className="mt-4 bg-blue-500 text-white p-2 rounded" onClick={() => navigate('/')}>
+                  Home
+                </button>
             )}
         </div>
     )
