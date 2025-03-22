@@ -1,6 +1,7 @@
 import styles from './perfil.module.css';
 import usePerfilUsuario from '../../hooks/usePerfilUsuario';
 import useListInteressesUsuario from '../../hooks/useListInteressesUsuario';
+import verificarSessaoUsuario from '../../utils/verificarSessaoUsuario';
 
 
 function Perfil() {
@@ -9,18 +10,14 @@ function Perfil() {
     //ESTOU USANDO ESSE HOOK PARA PEGAR OS INTERESSES DO USUARIO E MOSTRAR NO PERFIL
     const { interesses, error: errorInteresses } = useListInteressesUsuario();
     // Recupera o usuário logado da sessionStorage
-    const userString = sessionStorage.getItem("user");
-    let userIdLogado = null;
+    const userIdLogado = verificarSessaoUsuario();
 
-    if (userString) {
-        const user = JSON.parse(userString);
-        userIdLogado = user?.id;
-    }
 
     if (loading) return <div>Carregando...</div>
     if (error) return <div>{error}</div>
     if (!perfil) return <div>Perfil não encontrado.</div>
-    if (errorInteresses) return <div>{errorInteresses}</div>
+    if (errorInteresses) return <div>Você não possui interesses no momento</div>
+    if (interesses.length === 0) return <div>Nenhum interesse encontrado.</div>
     return (
         <div className={styles.container}>
             <img src={perfil.foto_perfil || "/images/default-image.jpg"} alt={perfil.username} className={styles.profileImage} />

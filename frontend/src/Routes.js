@@ -14,7 +14,6 @@ import CadastroUsuario2 from "./pages/usuario/usuarioCadastro2";
 const AppRoutes = () => {
     return (
         <Router> {/* Envolva suas rotas com Router */}
-            <NavBar />
             <Routes>
                 <Route element={<ProtectedRoute />}>
                     <Route path="/" element={<Home />} />
