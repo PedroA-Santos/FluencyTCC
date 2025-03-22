@@ -31,14 +31,19 @@ function useListInteressesUsuario() {
             return;
         }
 
-        
+
         const fetchInteressesUser = async () => {
             setLoading(true);
             setError(null);
             try {
                 const res = await axios.get(`http://localhost:5000/usuarioInteresses/${userIdDaSessao}`);
                 setInteresses(res.data);
-                
+
+                if (res.data.length === 0) {
+                    setError('Nenhum interesse encontrado.');
+                    console.log("Erro: Nenhum interesse encontrado.");
+                }
+
             } catch (err) {
                 setError("Erro ao carregar perfil.");
                 console.error("Erro ao Carregar Interesses", err);
