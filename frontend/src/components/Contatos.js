@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./Contatos.module.css";
+import styles from "./contatos.module.css";
 import useListContatos from "../hooks/useListContatos";
 
 function Contatos() {
