@@ -1,0 +1,82 @@
+/* Contêiner principal */
+.mainContainer {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Container para empilhar os cartões */
+.stackContainer {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    overflow: hidden;
+}
+
+/* Estilo dos cartões */
+.card {
+    position: absolute;
+    width: 300px;
+    height: 400px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Cartão no topo da pilha */
+.topCard {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Cartões atrás */
+.behindCard {
+    transform: translateY(20px) scale(0.95);
+    opacity: 0.8;
+}
+
+/* Estilo da imagem do perfil */
+.profileImage {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+/* Botão para ir ao próximo */
+.nextButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.nextButton:hover {
+    background-color: #0056b3;
+}
+
+/* Mensagem de erro */
+.errorMessage {
+    color: red;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* Mensagem de carregamento */
+.loading {
+    font-size: 18px;
+    color: gray;
+    text-align: center;
+}

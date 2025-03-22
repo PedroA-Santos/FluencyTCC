@@ -23,7 +23,7 @@ function Perfil() {
     if (errorInteresses) return <div>{errorInteresses}</div>
     return (
         <div className={styles.container}>
-            <img src={perfil.foto_perfil} alt={perfil.username} className={styles.profileImage} />
+            <img src={perfil.foto_perfil || "/images/default-image.jpg"} alt={perfil.username} className={styles.profileImage} />
             <h1 className={styles.nameUser}>{perfil.username}</h1>
             <p className={styles.bioUser}>{perfil.bio}</p>
             <p className={styles.infosUser}>Idioma:{perfil.idioma}</p>

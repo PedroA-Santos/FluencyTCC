@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./contatos.module.css";
 import useListContatos from "../hooks/useListContatos";
 
 function Contatos() {
@@ -20,7 +21,7 @@ function Contatos() {
             <ul>
                 {contatos.map(match => (
                     <li key={match.id} className='flex items-center gap-3 p-2 hover:bg-gray-200 cursor-pointer rounded-lg'>
-                        <img src={match.foto_perfil} alt={match.username} className="w-10 h-10 rounded-full" />
+                        <img src={match.foto_perfil || "/images/default-image.jpg"} alt={match.username} className={styles.profileImage} />
                         <p className='text-lg'>{match.username}</p>
                     </li>
                 ))}
