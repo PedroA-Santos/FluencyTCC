@@ -1,30 +1,36 @@
 const multer = require('multer');
 const path = require('path');
 
-// Configuração do multer para armazenar imagens no servidor
+// Definindo o local de armazenamento dos arquivos
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');  // Pasta onde as imagens serão salvas
-    },
-    filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname);  // Extrai a extensão do arquivo
-        const filename = `${Date.now()}-${file.fieldname}${ext}`;  // Nome único para o arquivo
-        cb(null, filename);
-    }
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Pasta onde os arquivos serão armazenados
+  },
+  filename: (req, file, cb) => {
+    // Definindo o nome do arquivo (timestamp + extensão original)
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
 });
 
-// Aceitar apenas arquivos de imagem
+// Filtrando os tipos de arquivos permitidos (somente imagens)
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    if (!allowedTypes.includes(file.mimetype)) {
-        return cb(new Error('Somente imagens são permitidas'), false);
-    }
-    cb(null, true);
+  const filetypes = /jpeg|jpg|png|gif/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+    return cb(null, true);
+  } else {
+    cb(new Error('Apenas imagens são permitidas'), false);
+  }
 };
 
+// Configuração do multer
 const upload = multer({
-    storage: storage,
-    fileFilter: fileFilter
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 } // Limite de 5MB para o tamanho do arquivo
 });
 
+// Exportando a configuração para ser usada em outros arquivos
 module.exports = upload;

@@ -3,7 +3,7 @@ import useUpdateCadastroUsuario from "../../hooks/useUpdateCadastroUsuario2"; //
 
 function UsuarioCadastro2() {
     const { id } = useParams();  // ✅ Captura o ID da URL corretamente
-    const { user, handleChange, handleSubmit, loading, success, error } = useUpdateCadastroUsuario(id);  // Passa o ID para o hook
+    const { user, handleChange, handleSubmit, loading, success, error, handleImageChange } = useUpdateCadastroUsuario(id);  // Passa o ID para o hook
 
     if (!id || id === null) {
         return <p>Erro: ID do usuário não encontrado.</p>;  // Verifica se o ID existe na URL
@@ -39,13 +39,20 @@ function UsuarioCadastro2() {
                         placeholder="Bio"
                     />
                 </div>
+                <div style={styles.inputGroup}>
+                    <label>Foto de Perfil:</label>
+                    <input
+                        type="file"
+                        name="foto_perfil"
+                        onChange={handleImageChange}  // Função para lidar com a imagem
+                        accept="image/*"  // Aceita apenas arquivos de imagem
+                    />
+                </div>
                 <button type="submit" style={{ ...styles.button, opacity: loading ? 0.6 : 1 }}>Salvar Alterações</button>
             </form>
         </div>
     );
 }
-
-
 
 const styles = {
     container: {
