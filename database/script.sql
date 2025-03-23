@@ -94,4 +94,4 @@ CREATE TABLE mensagens (
 );
 
 
-ALTER TABLE usuarios MODIFY COLUMN foto_perfil LONGBLOB;
+ALTER TABLE usuarios MODIFY foto_perfil VARCHAR(255);
