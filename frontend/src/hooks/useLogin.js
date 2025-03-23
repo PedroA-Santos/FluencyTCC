@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const API_URL = "http://localhost:5000/usuario";
@@ -8,7 +8,6 @@ const useLogin = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [user, setUser] = useState(() => {
-        // Recupera os dados do usuário armazenados no sessionStorage
         const savedUser = sessionStorage.getItem("user");
         return savedUser ? JSON.parse(savedUser) : null;
     });
@@ -17,13 +16,11 @@ const useLogin = () => {
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
 
-    // Atualiza os campos de credenciais conforme o usuário digita
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCredentials((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Autenticação do usuário
     const handleLogin = async (e) => {
         e.preventDefault();
         if (loading) return;
@@ -41,17 +38,17 @@ const useLogin = () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Atualiza o estado com os dados do usuário
                 setUser(data.user);
                 sessionStorage.setItem("token", data.token);
                 sessionStorage.setItem("user", JSON.stringify(data.user));
 
-                // Acessa o userId do usuário autenticado
-                const userId = data.user.id;  // Aqui está o id do usuário
+                const userId = data.user.id;
+                console.log("User ID do login :", userId);
 
-                console.log("User ID do login :", userId); // Para verificar
+                // Isso avisa a Navbar que o sessionStorage mudou, forçando a atualização do ID.
+                setUser(data.user);
+                window.dispatchEvent(new Event("storage"));
 
-                // Navega para a página de origem ou para a página padrão
                 navigate(from, { replace: true });
             } else {
                 setError(data.message || "Credenciais incorretas.");
@@ -64,16 +61,14 @@ const useLogin = () => {
         }
     };
 
-    // Logout do usuário
-    const handleLogout = () => {
+    const handleLogout = useCallback(() => {
         setUser(null);
         setCredentials({ email: "", senha: "" });
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("user");
         navigate("/login");
-    };
+    }, [navigate]);
 
-    // Verifica a sessão ao carregar a aplicação
     useEffect(() => {
         const token = sessionStorage.getItem("token");
 
@@ -93,7 +88,7 @@ const useLogin = () => {
                 })
                 .catch(() => handleLogout());
         }
-    }, []);
+    }, [handleLogout]); // `handleLogout` está no array de dependências, mas agora é estável
 
     return {
         credentials,

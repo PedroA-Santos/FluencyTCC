@@ -9,22 +9,20 @@ const usePerfilUsuario = () => {
 
     const userIdDaSessao = verificarSessaoUsuario();
 
+    console.log("No hook de perfil", userIdDaSessao);
+
 
 
     useEffect(() => {
-        const fetchPerfil = async () => {
+        if (!userIdDaSessao) return;
 
-            if (!userIdDaSessao) {
-                setError("Erro: ID de usuario não encontrado")
-                return;
-            }
+        const fetchPerfil = async () => {
             try {
                 const res = await axios.get(`http://localhost:5000/usuario/${userIdDaSessao}`);
-
                 setPerfil(res.data);
             } catch (err) {
                 setError("Erro ao carregar perfil.");
-                console.error("Erro ao carregar perfil do usuario", err);
+                console.error("Erro ao carregar perfil do usuário", err);
             } finally {
                 setLoading(false);
             }
@@ -32,6 +30,7 @@ const usePerfilUsuario = () => {
 
         fetchPerfil();
     }, [userIdDaSessao]);
+
 
     return { perfil, loading, error };
 

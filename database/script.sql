@@ -94,4 +94,10 @@ CREATE TABLE mensagens (
 );
 
 
+<<<<<<< HEAD
 ALTER TABLE usuarios MODIFY foto_perfil VARCHAR(255);
+=======
+ALTER TABLE usuarios MODIFY COLUMN foto_perfil LONGBLOB;
+
+SELECT id, username, foto_perfil FROM usuarios WHERE id = '17';
+>>>>>>> ef18b650895f44c74754c08bfd0b69f7443aa6d8
