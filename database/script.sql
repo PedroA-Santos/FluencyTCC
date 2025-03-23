@@ -95,3 +95,5 @@ CREATE TABLE mensagens (
 
 
 ALTER TABLE usuarios MODIFY COLUMN foto_perfil LONGBLOB;
+
+SELECT id, username, foto_perfil FROM usuarios WHERE id = '17';
