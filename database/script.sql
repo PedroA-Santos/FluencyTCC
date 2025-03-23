@@ -92,3 +92,6 @@ CREATE TABLE mensagens (
     FOREIGN KEY (remetente_id) REFERENCES usuarios(id),
     FOREIGN KEY (destinatario_id) REFERENCES usuarios(id)
 );
+
+
+ALTER TABLE usuarios MODIFY foto_perfil VARCHAR(255);

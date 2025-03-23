@@ -11,9 +11,12 @@ exports.list = () => {
 
 exports.listFindById = (id) => {
     return new Promise((resolve, reject) => {
-        db.query(`SELECT * FROM usuarios_interesses WHERE id = ?`, [id], (err, results) => {
+        db.query(`SELECT i.id, i.interesse AS interesse 
+            FROM usuarios_interesses iu
+            INNER JOIN interesses i ON iu.interesse_id = i.id
+            WHERE iu.usuario_id = ?`, [id], (err, results) => {
             if (err) return reject(err);
-            resolve(results.length > 0 ? results[0] : null);
+            resolve(results);
         });
     });
 };

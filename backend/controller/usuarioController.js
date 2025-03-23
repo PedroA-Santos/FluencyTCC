@@ -3,6 +3,8 @@ const { validarCampos } = require("../utils/validarCampos");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
+const path = require('path');
+
 
 const secretKey = process.env.SECRET_KEY;
 
@@ -35,7 +37,7 @@ exports.listById = async (req, res) => {
             return res.status(404).json({ message: "Usuário não encontrado." });
         }
 
-        res.status(200).json(usuario[0]);
+        res.status(200).json(usuario);
     } catch (error) {
         console.error("Erro ao buscar usuário:", error);
         res.status(500).json({ message: "Erro interno do servidor." });
@@ -216,19 +218,27 @@ exports.postUsuarioStep1 = async (req, res) => {
 
 exports.updateUsuarioStep2 = async (req, res) => {
     const { id } = req.params;
-    const { username, bio, foto_perfil } = req.body;
+    const { username, bio } = req.body;
 
+    // Verificando se o ID do usuário foi fornecido
     if (!id) {
         return res.status(400).json({ message: "ID do usuário é obrigatório." });
     }
-    console.log(id)
+
+    // Verificando se a foto foi enviada
+    const foto_perfil = req.file ? `/uploads/${req.file.filename}` : null; // Caminho da imagem
+
+    console.log('ID do usuário:', id);
+    console.log('Foto de perfil:', foto_perfil);
 
     try {
+        // Verifica se o usuário existe no banco
         const usuarioExistente = await usuarioModel.listFindById(id);
         if (!usuarioExistente) {
             return res.status(404).json({ message: "Usuário não encontrado." });
         }
 
+        // Atualiza as informações do perfil
         await usuarioModel.updateStep2({ id, username, bio, foto_perfil });
 
         return res.status(200).json({ message: "Perfil atualizado com sucesso!" });

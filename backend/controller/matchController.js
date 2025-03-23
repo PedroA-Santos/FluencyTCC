@@ -138,7 +138,7 @@ exports.getUserMatches = async (req, res) => {
 exports.obterMatches = async (req, res) => {
     try {
         const userId = req.params.userId;
-        console.log(userId);
+        console.log("id do user: '", userId, "'");
         
         const matches = await matchService.buscarMatches(userId);
         res.json(matches);

@@ -11,10 +11,16 @@ exports.list = () => {
 
 exports.listFindById = (id) => {
     return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM usuarios WHERE id = ?', [id], (err, results) => {
+        db.query(`
+            SELECT 
+                u.username, u.bio, u.foto_perfil, i.idioma, g.genero, p.nome AS pais FROM usuarios u 
+                INNER JOIN idiomas i ON u.idioma_nativo_id = i.id
+                INNER JOIN generos g ON u.genero_id = g.id
+                INNER JOIN paises p ON u.pais_origem_id = p.id
+                 WHERE u.id =?`, [id], (err, results) => {
             if (err) return reject(err);
-            if (results.length === 0) return resolve(null);  // Retorna null se não encontrar
-            resolve(results[0]);  // Retorna o primeiro usuário encontrado
+            if (results.length === 0) return resolve(null);
+            resolve(results[0]);
         });
     });
 };

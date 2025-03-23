@@ -4,20 +4,11 @@ import { useState } from "react";
 
 function UsuarioCadastro2() {
     const { id } = useParams();  // ✅ Captura o ID da URL corretamente
-    const { user, handleChange, handleSubmit, loading, success, error } = useUpdateCadastroUsuario(id);  // Passa o ID para o hook
-    const [imagem, setImagem] = useState(null); // Estado para armazenar a imagem
+    const { user, handleChange, handleSubmit, loading, success, error, handleImageChange } = useUpdateCadastroUsuario(id);  // Passa o ID para o hook
 
     if (!id || id === null) {
         return <p>Erro: ID do usuário não encontrado.</p>;  // Verifica se o ID existe na URL
     }
-
-    // Manipula a seleção da imagem
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImagem(URL.createObjectURL(file));  // Cria um preview da imagem
-        }
-    };
 
     return (
         <div style={styles.container}>
@@ -49,22 +40,16 @@ function UsuarioCadastro2() {
                         placeholder="Bio"
                     />
                 </div>
-
-                {/* Novo campo para imagem */}
                 <div style={styles.inputGroup}>
                     <label>Foto de Perfil:</label>
-                    <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handleImageChange} 
-                        style={styles.input} 
+                    <input
+                        type="file"
+                        name="foto_perfil"
+                        onChange={handleImageChange}  // Função para lidar com a imagem
+                        accept="image/*"  // Aceita apenas arquivos de imagem
                     />
-                    {imagem && <img src={imagem} alt="Preview" style={styles.preview} />} 
                 </div>
-
-                <button type="submit" style={{ ...styles.button, opacity: loading ? 0.6 : 1 }}>
-                    Salvar Alterações
-                </button>
+                <button type="submit" style={{ ...styles.button, opacity: loading ? 0.6 : 1 }}>Salvar Alterações</button>
             </form>
         </div>
     );

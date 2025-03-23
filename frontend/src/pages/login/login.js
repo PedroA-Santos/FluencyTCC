@@ -16,15 +16,15 @@ const Login = () => {
     } = useLogin();
 
     return (
-        <div >
+        <div className={styles.container} >
             <FluencyTitle />
-            <h1>Login</h1>
+            <h1 className={styles.h1Login}>Faça seu Login</h1>
 
             {/* Exibe mensagem de erro, se houver */}
             {error && <p style={{ color: "red" }}>{error}</p>}
 
             {/* Formulário de login */}
-            <form onSubmit={handleLogin} > {/* aq ele chama a função que faz a requisição pro back na hora de enviar o form */}
+            <form onSubmit={handleLogin} className={styles.form} > {/* aq ele chama a função que faz a requisição pro back na hora de enviar o form */}
                 <div>
                     <label htmlFor="email">E-mail:</label>
                     <input
@@ -49,13 +49,13 @@ const Login = () => {
                         required
                     />
                 </div>
-                <button type="submit" disabled={loading}>
+                <button className={styles.loginButton}type="submit" disabled={loading}>
                     {loading ? "Carregando..." : "Login"}
                 </button>
             </form>
 
             {/* Link para página de cadastro */}
-            <Link to="/registerUser">Não possui cadastro? Cadastrar</Link>
+            <Link className={styles.linkRegister} to="/usuarioCadastro">Não possui cadastro? Cadastrar</Link>
         </div>
     );
 };
