@@ -2,6 +2,7 @@ import useCadastroUsuario1 from '../../hooks/useCadastroUsuario1';
 import useListIdiomas from '../../hooks/useListIdiomas';
 import useListGeneros from '../../hooks/useListGenero';
 import useListPaises from '../../hooks/useListPaises';
+import styles from './usuarioCadastro1.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
@@ -10,8 +11,6 @@ function UsuarioCadastro1() {
     const { idiomas, loading: loadingIdiomas, error: errorIdiomas } = useListIdiomas();
     const { generos, loading: loadingGeneros, error: errorGeneros } = useListGeneros();
     const { paises, loading: loadingPaises, error: errorPaises } = useListPaises();
-
-
 
     const navigate = useNavigate();
 
@@ -22,22 +21,19 @@ function UsuarioCadastro1() {
         }
     }, [userId, navigate]);
 
-
-
     return (
-        <div style={styles.container}>
-            <h2 style={styles.title}>Cadastro de Usuário</h2>
+        <div className={styles.container}>
+            <h2 className={styles.title}>Cadastro de Usuário</h2>
 
-            {success && <p style={styles.success}>{success}</p>}
-            {error && <p style={styles.error}>{error}</p>}
-            {errorIdiomas && <p style={styles.error}>Erro ao carregar idiomas: {errorIdiomas}</p>}
-            {errorGeneros && <p style={styles.error}>Erro ao carregar gêneros: {errorGeneros}</p>}
-            {errorPaises && <p style={styles.error}>Erro ao carregar países: {errorPaises}</p>}
+            {success && <p className={styles.sucessMessage}>{success}</p>}
+            {error && <p className={styles.error}>{error}</p>}
+            {errorIdiomas && <p className={styles.error}>Erro ao carregar idiomas: {errorIdiomas}</p>}
+            {errorGeneros && <p className={styles.error}>Erro ao carregar gêneros: {errorGeneros}</p>}
+            {errorPaises && <p className={styles.error}>Erro ao carregar países: {errorPaises}</p>}
 
-
-            <form onSubmit={handleSubmit} style={styles.form}>
-                <div style={styles.inputGroup}>
-                    <label htmlFor="email">Email:</label>
+            <form onSubmit={handleSubmit} className={styles.form}>
+                
+                <div className={styles.inputGroup}>
                     <input
                         type="email"
                         id="email"
@@ -46,12 +42,11 @@ function UsuarioCadastro1() {
                         onChange={handleChange}
                         required
                         autoComplete="email"
-                        style={styles.input}
                     />
+                    <label htmlFor="email">Email</label>
                 </div>
 
-                <div style={styles.inputGroup}>
-                    <label htmlFor="senha">Senha:</label>
+                <div className={styles.inputGroup}>
                     <input
                         type="password"
                         id="senha"
@@ -60,12 +55,11 @@ function UsuarioCadastro1() {
                         onChange={handleChange}
                         required
                         autoComplete="new-password"
-                        style={styles.input}
                     />
+                    <label htmlFor="senha">Senha</label>
                 </div>
 
-                <div style={styles.inputGroup}>
-                    <label htmlFor="data_nascimento">Data de Nascimento</label>
+                <div className={styles.inputGroup}>
                     <input
                         type="date"
                         id="data_nascimento"
@@ -73,18 +67,16 @@ function UsuarioCadastro1() {
                         value={user.data_nascimento}
                         onChange={handleChange}
                         required
-                        style={styles.input}
                     />
+                    <label htmlFor="data_nascimento">Data de Nascimento</label>
                 </div>
 
-                <div style={styles.inputGroup}>
-                    <label htmlFor="idioma">Idioma:</label>
+                <div className={styles.inputGroup}>
                     <select
                         id="idioma"
                         name="idioma_nativo_id"
                         value={user.idioma_nativo_id}
                         onChange={handleChange}
-                        style={styles.input}
                         disabled={loadingIdiomas}
                     >
                         <option value="">Selecione um idioma</option>
@@ -94,16 +86,15 @@ function UsuarioCadastro1() {
                             </option>
                         ))}
                     </select>
+                    <label htmlFor="idioma">Idioma</label>
                 </div>
 
-                <div style={styles.inputGroup}>
-                    <label htmlFor="paises">Seu País de Origem:</label>
+                <div className={styles.inputGroup}>
                     <select
                         name="pais_origem_id"
                         id="paises"
                         value={user.pais_origem_id}
                         onChange={handleChange}
-                        style={styles.input}
                         disabled={loadingPaises}
                     >
                         <option value="">Selecione um País</option>
@@ -113,16 +104,15 @@ function UsuarioCadastro1() {
                             </option>
                         ))}
                     </select>
+                    <label htmlFor="paises">Seu País de Origem</label>
                 </div>
 
-                <div style={styles.inputGroup}>
-                    <label htmlFor="genero">Gênero:</label>
+                <div className={styles.inputGroup}>
                     <select
                         id="genero"
                         name="genero_id"
                         value={user.genero_id}
                         onChange={handleChange}
-                        style={styles.input}
                         disabled={loadingGeneros}
                     >
                         <option value="">Selecione um gênero</option>
@@ -132,70 +122,15 @@ function UsuarioCadastro1() {
                             </option>
                         ))}
                     </select>
+                    <label htmlFor="genero">Gênero</label>
                 </div>
 
-                <button type="submit" disabled={loading} style={{ ...styles.button, opacity: loading ? 0.6 : 1 }}>
-                    {loading ? "Cadastrando..." : "Próxima  Etapa"}
+                <button type="submit" disabled={loading} className={styles.button}>
+                    {loading ? "Cadastrando..." : "Próxima Etapa"}
                 </button>
             </form>
         </div>
     );
 }
-
-const styles = {
-    container: {
-        maxWidth: '400px',
-        margin: 'auto',
-        padding: '20px',
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        backgroundColor: '#f9f9f9',
-        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-    },
-    title: {
-        textAlign: 'center',
-        marginBottom: '15px',
-    },
-    success: {
-        color: 'green',
-        textAlign: 'center',
-        fontWeight: 'bold',
-    },
-    error: {
-        color: 'red',
-        textAlign: 'center',
-        fontWeight: 'bold',
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    inputGroup: {
-        marginBottom: '10px',
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    input: {
-        width: '100%',
-        padding: '10px',
-        border: '1px solid #ccc',
-        borderRadius: '5px',
-    },
-    info: {
-        fontSize: '12px',
-        color: '#555',
-        marginTop: '5px',
-    },
-    button: {
-        width: '100%',
-        padding: '10px',
-        backgroundColor: '#007bff',
-        color: '#fff',
-        border: 'none',
-        cursor: 'pointer',
-        borderRadius: '5px',
-        fontSize: '16px',
-    },
-};
 
 export default UsuarioCadastro1;

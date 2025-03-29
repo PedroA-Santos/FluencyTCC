@@ -1,0 +1,127 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #37376D;
+    padding: 20px;
+}
+
+.title {
+    color: #FFC107;
+    font-size: 3em;
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.inputGroup {
+    position: relative;
+    width: 100%;
+    margin-bottom: 2em;
+}
+
+/* Inputs e Selects */
+.inputGroup input, 
+.inputGroup select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+    appearance: none; /* Remove estilo padrão do navegador */
+}
+
+/* Personalizando Select */
+.inputGroup select {
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 30px;
+}
+
+/* Corrige o fundo branco do select quando aberto */
+.inputGroup select:focus {
+    border-bottom: 2px solid #FFC107;
+    background-color: #37376D; /* Mantém a cor do fundo igual ao da página */
+    color: white;
+}
+
+/* Estilizando a lista suspensa */
+.inputGroup select option {
+    background-color:rgba(255, 255, 255, 0.536);
+    color: #ffffff;
+}
+
+/* Labels flutuantes corrigidos */
+.inputGroup label {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: white;
+    transition: 0.3s ease-in-out;
+    pointer-events: none;
+}
+
+/* Quando o input está focado ou tem valor, move o label para cima */
+.inputGroup input:focus + label, 
+.inputGroup select:focus + label,
+.inputGroup input:not(:placeholder-shown) + label,
+.inputGroup select:not([value=""]) + label {
+    top: -10px;
+    font-size: 12px;
+    color: #FFC107;
+}
+
+.inputGroup input:-webkit-autofill,
+.inputGroup input:-webkit-autofill:hover, 
+.inputGroup input:-webkit-autofill:focus, 
+.inputGroup input:-webkit-autofill:active {
+    background-color: transparent !important;
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Botão */
+.button {
+    width: 100%;
+    padding: 12px;
+    background-color: #FFC107;
+    color: #37376D;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.button:hover {
+    background-color: #e6a800;
+    transform: scale(1.05);
+}
+
+
+.sucessMessage {
+    color: #4CAF50;
+    font-size: 22px;
+    margin-top: 10px;
+    font-weight: bold;
+    
+}
