@@ -1,0 +1,186 @@
+/* Container principal */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #37376D;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Título */
+.title {
+    color: #FFC107;
+    font-size: 3em;
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+/* Formulário */
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Grupo de input e label */
+.inputGroup {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1.5em;
+}
+
+.inputGroup input, 
+.inputGroup select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+    appearance: none;
+}
+
+/* Personalização do Select */
+.inputGroup select {
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 30px;
+}
+
+/* Estilo ao focar o Select */
+.inputGroup select:focus {
+    border-bottom: 2px solid #FFC107;
+    background-color: #37376D;
+    color: white;
+}
+
+/* Estilo das opções do select */
+.inputGroup select option {
+    background-color: rgba(255, 255, 255, 0.536);
+    color: #ffffff;
+}
+
+/* Labels flutuantes */
+.inputGroup label {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: white;
+    transition: 0.3s ease-in-out;
+    pointer-events: none;
+}
+
+/* Movendo label para cima quando o input ou select está focado */
+.inputGroup input:focus + label, 
+.inputGroup select:focus + label,
+.inputGroup input:not(:placeholder-shown) + label,
+.inputGroup select:not([value=""]) + label {
+    top: -10px;
+    font-size: 12px;
+    color: #FFC107;
+}
+
+/* Estilizando o autofill */
+.inputGroup input:-webkit-autofill,
+.inputGroup input:-webkit-autofill:hover, 
+.inputGroup input:-webkit-autofill:focus, 
+.inputGroup input:-webkit-autofill:active {
+    background-color: transparent !important;
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Estilo para os botões de interesse */
+.interessesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Botões de interesse */
+.interesseButton {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    background-color: #f0f0f0;
+    color: #333;
+    transition: 0.3s;
+    min-width: 120px;
+}
+
+.interesseButton:hover {
+    background-color: #e0e0e0;
+}
+
+.interesseButton.selected {
+    background-color: #FFC107;
+    color: #37376D;
+}
+
+/* Interesses selecionados */
+.selectedInteresses {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e6f7ff;
+    border-radius: 5px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;  /* Alterado de flex-direction: column para flex-direction: row */
+    gap: 10px;
+    flex-wrap: wrap; /* Permite que as tags se ajustem quando necessário */
+}
+
+.selectedTagsContainer {
+    display: flex; 
+    gap: 10px; /* Espaço entre as tags */
+    justify-content: flex-start; /* Garante que as tags fiquem alinhadas à esquerda */
+    flex-wrap: wrap; /* Permite que as tags quebrem para a próxima linha se necessário */
+}
+
+/* Estilo das tags de interesses selecionados */
+.selectedTag {
+    background-color: #FFC107;
+    color: #37376D;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+}
+/* Botão de salvar */
+.button {
+    width: 100%;
+    padding: 10px;
+    background-color: #FFC107;
+    color: #37376D;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background 0.3s ease;
+    margin-top: 20px;
+}
+
+.button:hover {
+    background-color: #e6a800;
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
