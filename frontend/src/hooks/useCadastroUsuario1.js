@@ -38,12 +38,13 @@ const useCadastroUsuario = () => {
 
             const res = await axios.post(`http://localhost:5000/usuario/step1`, user);
 
+          
+
             setError(false);
             setSuccess("Cadastrado com sucesso")
             setUserId(res.data.id);
             console.log("Resposta da API:", res.data);
-
-
+            console.log(user)
 
 
             setUser({

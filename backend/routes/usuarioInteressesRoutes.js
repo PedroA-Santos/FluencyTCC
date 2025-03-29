@@ -7,11 +7,12 @@ router.get("/", usuarioInteressesController.listAll);
 
 router.get("/:id", usuarioInteressesController.listById);
 
-router.post("/", usuarioInteressesController.postUsuarioInteresse);
+router.post("/:usuario_id", usuarioInteressesController.postUsuarioInteresse);
+
 
 router.put("/:id", usuarioInteressesController.putUsuarioInteresse);
 
-router.delete("/:id", usuarioInteressesController.deleteUsuarioInteresse);
+router.delete("/:usuario_id", usuarioInteressesController.deleteUsuarioInteresse);
 
 
 
