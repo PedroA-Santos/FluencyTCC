@@ -10,15 +10,19 @@ function UsuarioCadastro1() {
     const { idiomas, loading: loadingIdiomas, error: errorIdiomas } = useListIdiomas();
     const { generos, loading: loadingGeneros, error: errorGeneros } = useListGeneros();
     const { paises, loading: loadingPaises, error: errorPaises } = useListPaises();
+
+
+
     const navigate = useNavigate();
 
-    // ✅ Redireciona para a próxima página quando o ID do usuário for atualizado
     useEffect(() => {
         if (userId) {
             console.log("🔹 Redirecionando para:", `/usuarioCadastro2/${userId}`);
             setTimeout(() => navigate(`/usuarioCadastro2/${userId}`), 500);
         }
     }, [userId, navigate]);
+
+
 
     return (
         <div style={styles.container}>
@@ -29,6 +33,7 @@ function UsuarioCadastro1() {
             {errorIdiomas && <p style={styles.error}>Erro ao carregar idiomas: {errorIdiomas}</p>}
             {errorGeneros && <p style={styles.error}>Erro ao carregar gêneros: {errorGeneros}</p>}
             {errorPaises && <p style={styles.error}>Erro ao carregar países: {errorPaises}</p>}
+
 
             <form onSubmit={handleSubmit} style={styles.form}>
                 <div style={styles.inputGroup}>
@@ -61,13 +66,15 @@ function UsuarioCadastro1() {
 
                 <div style={styles.inputGroup}>
                     <label htmlFor="data_nascimento">Data de Nascimento</label>
-                    <input type="date"
+                    <input
+                        type="date"
                         id="data_nascimento"
                         name="data_nascimento"
                         value={user.data_nascimento}
                         onChange={handleChange}
                         required
-                        style={styles.input} />
+                        style={styles.input}
+                    />
                 </div>
 
                 <div style={styles.inputGroup}>
@@ -89,23 +96,22 @@ function UsuarioCadastro1() {
                     </select>
                 </div>
 
-                <div>
-                    <label htmlFor="paises">Seu Pais de Origem</label>
+                <div style={styles.inputGroup}>
+                    <label htmlFor="paises">Seu País de Origem:</label>
                     <select
                         name="pais_origem_id"
                         id="paises"
                         value={user.pais_origem_id}
                         onChange={handleChange}
                         style={styles.input}
-                        disabled={loadingPaises}>
-
+                        disabled={loadingPaises}
+                    >
                         <option value="">Selecione um País</option>
                         {paises.map((pais) => (
                             <option key={pais.id} value={pais.id}>
                                 {pais.nome}
                             </option>
                         ))}
-
                     </select>
                 </div>
 
@@ -128,10 +134,9 @@ function UsuarioCadastro1() {
                     </select>
                 </div>
 
-                <button type="button" onClick={handleSubmit} disabled={loading} style={{ ...styles.button, opacity: loading ? 0.6 : 1 }}>
-                    {loading ? "Cadastrando..." : "Cadastrar"}
+                <button type="submit" disabled={loading} style={{ ...styles.button, opacity: loading ? 0.6 : 1 }}>
+                    {loading ? "Cadastrando..." : "Próxima  Etapa"}
                 </button>
-
             </form>
         </div>
     );
@@ -145,36 +150,41 @@ const styles = {
         border: '1px solid #ccc',
         borderRadius: '8px',
         backgroundColor: '#f9f9f9',
-        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)'
+        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
     },
     title: {
         textAlign: 'center',
-        marginBottom: '15px'
+        marginBottom: '15px',
     },
     success: {
         color: 'green',
         textAlign: 'center',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     error: {
         color: 'red',
         textAlign: 'center',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     form: {
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     inputGroup: {
         marginBottom: '10px',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     input: {
         width: '100%',
         padding: '10px',
         border: '1px solid #ccc',
-        borderRadius: '5px'
+        borderRadius: '5px',
+    },
+    info: {
+        fontSize: '12px',
+        color: '#555',
+        marginTop: '5px',
     },
     button: {
         width: '100%',
@@ -184,8 +194,8 @@ const styles = {
         border: 'none',
         cursor: 'pointer',
         borderRadius: '5px',
-        fontSize: '16px'
-    }
+        fontSize: '16px',
+    },
 };
 
 export default UsuarioCadastro1;

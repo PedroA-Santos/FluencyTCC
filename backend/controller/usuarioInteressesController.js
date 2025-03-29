@@ -53,29 +53,34 @@ exports.listById = async (req, res) => {
 
 
 exports.postUsuarioInteresse = async (req, res) => {
+    const { usuario_id } = req.params;
+    const { interesses } = req.body;  // Agora recebe um array de interesses
 
+    console.log("ID do Usuário:", usuario_id);
+    console.log("Interesses recebidos:", interesses);
 
-    const { usuario_id, interesse_id } = req.body;
-
-    const camposValidados = validarCampos({ usuario_id, interesse_id });
-
-
-    if (!camposValidados) {
-        return res.status(400).json({ message: "Todos os campos são obrigatórios" })
+    // Verifique se o usuário_id e os interesses estão presentes
+    if (!usuario_id || !Array.isArray(interesses) || interesses.length === 0) {
+        return res.status(400).json({ message: "Usuário e interesses são obrigatórios" });
     }
-
 
     try {
+        console.log("Chamando o modelo para inserir interesses...");
 
-        const response = await usuarioInteresseModel.post({ usuario_id, interesse_id });
+        // Chama a função no modelo para inserir múltiplos interesses
+        const response = await usuarioInteresseModel.postMultiple({ usuario_id, interesses });
 
-        return res.status(201).json({ message: "interesse do usuário criado com sucesso", response });
+        console.log("Interesses inseridos no banco de dados com sucesso!", response);
 
+        return res.status(201).json({
+            message: "Interesses do usuário criados com sucesso!",
+            response,
+        });
     } catch (error) {
-        console.error("Erro ao criar interesse do usuario", error);
-        res.status(500).json({ message: "Erro ao criar interesse do usuário" })
+        console.error("Erro ao criar interesses do usuário", error);
+        return res.status(500).json({ message: "Erro ao criar interesses do usuário" });
     }
-}
+};
 
 
 

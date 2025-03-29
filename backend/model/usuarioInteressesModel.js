@@ -21,18 +21,52 @@ exports.listFindById = (id) => {
     });
 };
 
-exports.post = ({ usuario_id, interesse_id }) => {
+exports.postMultiple = ({ usuario_id, interesses }) => {
     return new Promise((resolve, reject) => {
-        db.query(
-            `INSERT INTO usuarios_interesses (usuario_id, interesse_id) VALUES (?, ?)`,
-            [usuario_id, interesse_id],
-            (err, results) => {
-                if (err) return reject(err);
-                resolve(results);
-            }
-        );
+        console.log("Inserindo múltiplos interesses para o usuário:", usuario_id);
+
+        // Inicia uma transação
+        db.beginTransaction((err) => {
+            if (err) return reject(err);
+
+            // Executa as inserções dentro da transação
+            const insertPromises = interesses.map((interesse_id) => {
+                return new Promise((resolve, reject) => {
+                    console.log(`Inserindo interesse_id ${interesse_id} para usuario_id ${usuario_id}`);
+
+                    db.query(
+                        `INSERT INTO usuarios_interesses (usuario_id, interesse_id) VALUES (?, ?)`,
+                        [usuario_id, interesse_id],
+                        (err, results) => {
+                            if (err) {
+                                return db.rollback(() => reject(err)); // Rollback em caso de erro
+                            }
+                            console.log(`Interesse ${interesse_id} inserido com sucesso.`);
+                            resolve(results);
+                        }
+                    );
+                });
+            });
+
+            // Aguarda todas as inserções
+            Promise.all(insertPromises)
+                .then(() => {
+                    // Se todas as inserções forem bem-sucedidas, faz o commit
+                    db.commit((err) => {
+                        if (err) {
+                            return db.rollback(() => reject(err)); // Rollback em caso de erro no commit
+                        }
+                        resolve("Todos os interesses inseridos com sucesso.");
+                    });
+                })
+                .catch((err) => {
+                    // Rollback caso algum erro ocorra
+                    db.rollback(() => reject(err));
+                });
+        });
     });
 };
+
 
 
 exports.put = ({ usuario_id, interesse_id, id }) => {
@@ -49,9 +83,9 @@ exports.put = ({ usuario_id, interesse_id, id }) => {
 };
 
 
-exports.delete = (id) => {
+exports.delete = ({ usuario_id }) => {
     return new Promise((resolve, reject) => {
-        db.query(`DELETE FROM usuarios_interesses WHERE id = ?`, [id], (err, results) => {
+        db.query(`DELETE FROM usuarios_interesses WHERE usuario_id = ?`, [usuario_id], (err, results) => {
             if (err) return reject(err);
             resolve(results);
         });

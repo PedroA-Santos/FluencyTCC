@@ -1,4 +1,5 @@
 const usuarioModel = require("../model/usuarioModel");
+const usuarioInteresseModel = require("../model/usuarioInteressesModel");
 const { validarCampos } = require("../utils/validarCampos");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -218,21 +219,17 @@ exports.postUsuarioStep1 = async (req, res) => {
 
 exports.updateUsuarioStep2 = async (req, res) => {
     const { id } = req.params;
-    const { username, bio } = req.body;
+    const { username, bio, interesses } = req.body;
 
-    // Verificando se o ID do usuário foi fornecido
+    console.log("Executando updateUsuarioStep2 para ID:", id);
+
     if (!id) {
         return res.status(400).json({ message: "ID do usuário é obrigatório." });
     }
 
-    // Verificando se a foto foi enviada
-    const foto_perfil = req.file ? `/uploads/${req.file.filename}` : null; // Caminho da imagem
-
-    console.log('ID do usuário:', id);
-    console.log('Foto de perfil:', foto_perfil);
+    const foto_perfil = req.file ? `/uploads/${req.file.filename}` : null;
 
     try {
-        // Verifica se o usuário existe no banco
         const usuarioExistente = await usuarioModel.listFindById(id);
         if (!usuarioExistente) {
             return res.status(404).json({ message: "Usuário não encontrado." });
@@ -241,7 +238,23 @@ exports.updateUsuarioStep2 = async (req, res) => {
         // Atualiza as informações do perfil
         await usuarioModel.updateStep2({ id, username, bio, foto_perfil });
 
-        return res.status(200).json({ message: "Perfil atualizado com sucesso!" });
+        // Se houver interesses, atualiza a tabela usuario_interesses
+        if (interesses && Array.isArray(interesses) && interesses.length > 0) {
+            console.log("Interesses são um array! Atualizando...");
+
+            // Remove interesses antigos antes de inserir os novos
+            await usuarioInteresseModel.delete({ usuario_id: id });
+            console.log("Interesses antigos removidos.");
+
+            // Insere os novos interesses em lote
+            await usuarioInteresseModel.postMultiple({ usuario_id: id, interesses });
+
+            console.log("Interesses inseridos com sucesso:", interesses);
+        } else {
+            console.log("Nenhum interesse válido foi enviado.");
+        }
+
+        return res.status(200).json({ message: "Perfil atualizado com sucesso!"});
 
     } catch (error) {
         console.error("Erro ao atualizar perfil:", error);
