@@ -179,26 +179,61 @@ exports.login = async (req, res) => {
 exports.postUsuarioStep1 = async (req, res) => {
     const { email, senha, idioma_nativo_id, genero_id, data_nascimento, pais_origem_id } = req.body;
 
-    if (!email || !senha || !idioma_nativo_id || !genero_id || !data_nascimento || !pais_origem_id) {
-        return res.status(400).json({ message: "Email, senha, idioma nativo, gênero, data de nascimento e pais de origem são obrigatórios." });
+    if (!validarCampos({ email, senha, idioma_nativo_id, genero_id, data_nascimento, pais_origem_id })) {
+        return res.status(400).json({ message: "Preencha todos os campos obrigatórios corretamente." });
     }
 
+    // Validação do formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         return res.status(400).json({ message: "Formato de email inválido." });
     }
 
+    //  Verifica se o email já está cadastrado
     try {
-        const idiomaExistente = await usuarioModel.listByIdIdioma(idioma_nativo_id);
-        if (!idiomaExistente) {
-            return res.status(400).json({ message: "Idioma nativo inválido." });
-        }
-
         const usuarioExistente = await usuarioModel.listByEmail(email);
         if (usuarioExistente) {
             return res.status(409).json({ message: "Este email já está cadastrado." });
         }
+    } catch (error) {
+        console.error("Erro ao verificar email:", error);
+        return res.status(500).json({ message: "Erro ao validar email." });
+    }
 
+    // Validação da senha (mínimo 8 caracteres, 1 letra maiúscula, 1 número)
+    const senhaRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!senhaRegex.test(senha)) {
+        return res.status(400).json({ message: "A senha deve ter no mínimo 8 caracteres, incluindo 1 letra maiúscula e 1 número." });
+    }
+
+    //  Validação da data de nascimento
+    const hoje = new Date();
+    const idadeMinima = 14;
+    const idadeMaxima = 120;
+    const dataMinima = new Date(hoje.getFullYear() - idadeMinima, hoje.getMonth(), hoje.getDate());
+    const dataMaxima = new Date(hoje.getFullYear() - idadeMaxima, hoje.getMonth(), hoje.getDate());
+
+    const dataNascimentoObj = new Date(data_nascimento);
+
+    if (isNaN(dataNascimentoObj.getTime())) {
+        return res.status(400).json({ message: "Data de nascimento inválida." });
+    }
+
+    if (dataNascimentoObj > hoje) {
+        return res.status(400).json({ message: "Data de nascimento não pode estar no futuro." });
+    }
+
+    if (dataNascimentoObj > dataMinima) {
+        return res.status(400).json({ message: "Você deve ter pelo menos 18 anos." });
+    }
+
+    if (dataNascimentoObj < dataMaxima) {
+        return res.status(400).json({ message: "Data de nascimento muito antiga." });
+    }
+
+
+    // Criar usuário com senha criptografada
+    try {
         const hashedPassword = await bcrypt.hash(senha, 10);
         const novoUsuario = await usuarioModel.postStep1({
             email,
@@ -209,7 +244,14 @@ exports.postUsuarioStep1 = async (req, res) => {
             pais_origem_id
         });
 
-        return res.status(201).json({ id: novoUsuario.id, email, idioma_nativo_id, genero_id, data_nascimento, pais_origem_id });
+        return res.status(201).json({
+            id: novoUsuario.id,
+            email,
+            idioma_nativo_id,
+            genero_id,
+            data_nascimento,
+            pais_origem_id
+        });
 
     } catch (error) {
         console.error("Erro ao cadastrar usuário:", error);
@@ -235,6 +277,12 @@ exports.updateUsuarioStep2 = async (req, res) => {
             return res.status(404).json({ message: "Usuário não encontrado." });
         }
 
+        const userNameExistente = await usuarioModel.listByUsername(username);
+
+        if (userNameExistente) {
+            return res.status(409).json({ message: "Este nome de usuário já está em uso." });
+        }
+
         // Atualiza as informações do perfil
         await usuarioModel.updateStep2({ id, username, bio, foto_perfil });
 
@@ -254,7 +302,7 @@ exports.updateUsuarioStep2 = async (req, res) => {
             console.log("Nenhum interesse válido foi enviado.");
         }
 
-        return res.status(200).json({ message: "Perfil atualizado com sucesso!"});
+        return res.status(200).json({ message: "Perfil atualizado com sucesso!" });
 
     } catch (error) {
         console.error("Erro ao atualizar perfil:", error);
