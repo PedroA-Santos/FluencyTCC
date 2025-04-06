@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState } from "react";
+import { FaUserPlus } from 'react-icons/fa';
 import useUpdateCadastroUsuario from "../../hooks/useUpdateCadastroUsuario2";
 import useListInteresses from "../../hooks/useListInteresses";
 import styles from "./usuarioCadastro2.module.css";
@@ -10,6 +11,7 @@ function UsuarioCadastro2() {
     const { interesses, loading: loadingInteresses, error: errorInteresses } = useListInteresses();
 
     const [interessesSelecionados, setInteressesSelecionados] = useState([]);
+    const [image, setImage] = useState(null);
 
     if (!id || id === null) {
         return <p>Erro: ID do usuário não encontrado.</p>;
@@ -25,17 +27,53 @@ function UsuarioCadastro2() {
         });
     };
 
+    const handleImageUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result);
+                handleImageChange(event);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     return (
         <div className={styles.container}>
-            <h2 className={styles.title}>Atualizar Perfil</h2>
+            <h2 className={styles.title}>Perfil</h2>
 
-            {success && <p className={styles.success}>{success} Redirecionando...</p>}
-            {error && <p className={styles.error}>{error}</p>}
+            {success && <p>{success} Redirecionando...</p>}
+            {error && <p>{error}</p>}
             {loading && <p>Carregando...</p>}
-            {errorInteresses && <p className={styles.error}>Erro ao carregar interesses: {errorInteresses}</p>}
+            {errorInteresses && <p>Erro ao carregar interesses: {errorInteresses}</p>}
 
             <form onSubmit={(e) => handleSubmit(e, interessesSelecionados)} className={styles.form}>
+                <div className={styles.iinputFileContainer}>
+                    <input
+                        type="file"
+                        id="fileInput"
+                        name="foto_perfil"
+                        onChange={handleImageUpload}
+                        accept="image/*"
+                        className={styles.fileInput}
+                    />
+                    <p>Foto de Perfil</p>
+                    <label htmlFor="fileInput" className={styles.previewImage}>
+                        {image ? (
+                            <img src={image} alt="Pré-visualização" width="100" />
+                        ) : (
+                            <span className={styles.span}>
+                                <FaUserPlus size={50} color="#ffff" />
+                            </span>
+
+                        )}
+                    </label>
+                </div>
+
+
                 <div className={styles.inputGroup}>
+                    <label>Nome de Usuário</label>
                     <input
                         type="text"
                         name="username"
@@ -44,10 +82,11 @@ function UsuarioCadastro2() {
                         required
                         placeholder="Nome de Usuário"
                     />
-                    <label>Nome de Usuário</label>
+
                 </div>
 
                 <div className={styles.inputGroup}>
+                    <label>Bio</label>
                     <input
                         type="text"
                         name="bio"
@@ -55,46 +94,32 @@ function UsuarioCadastro2() {
                         onChange={handleChange}
                         placeholder="Bio"
                     />
-                    <label>Bio</label>
-                </div>
 
-                <div className={styles.inputGroup}>
-                    <input
-                        type="file"
-                        name="foto_perfil"
-                        onChange={handleImageChange}
-                        accept="image/*"
-                    />
-                    <label>Foto de Perfil</label>
                 </div>
 
                 <div className={styles.inputGroup}>
                     <label>Interesses:</label>
-                    <div className={styles.interessesContainer}>
-                        {loadingInteresses ? (
-                            <p>Carregando interesses...</p>
-                        ) : (
-                            interesses.map((interesse) => (
-                                <button
-                                    key={interesse.id}
-                                    type="button"
-                                    className={`${styles.interesseButton} ${interessesSelecionados.includes(interesse.id) ? styles.selected : ""}`}
-                                    onClick={() => toggleInteresse(interesse.id)}
-                                >
-                                    {interesse.interesse}
-                                </button>
-                            ))
-                        )}
+                    <div className="interessesContainer">
+                        {loadingInteresses && <p>Carregando interesses...</p>}
+                        {interesses.map((item) => (
+                            <button
+                                key={item.id}
+                                type="button"
+                                className={styles.interesseButton}
+                                onClick={() => toggleInteresse(item.id)}
+                            >
+                                {item.interesse}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
-                {/* Mostrar interesses selecionados */}
                 {interessesSelecionados.length > 0 && (
-                    <div className={styles.selectedInteresses}>
-                        <p>Interesses Selecionados:</p>
-                        <div className={styles.selectedTagsContainer}>
+                    <div className={styles.interessesSelecionadosContainer}>
+                        <h3 className={styles.tituloInteressesSelecionados}>Interesses Selecionados:</h3>
+                        <div className={styles.listaInteressesSelecionados}>
                             {interessesSelecionados.map((id) => (
-                                <span key={id} className={styles.selectedTag}>
+                                <span key={id} className={styles.interesseSelecionado}>
                                     {interesses.find((item) => item.id === id)?.interesse}
                                 </span>
                             ))}
@@ -102,7 +127,7 @@ function UsuarioCadastro2() {
                     </div>
                 )}
 
-                <button type="submit" className={styles.button} disabled={loading}>
+                <button type="submit" disabled={loading} className={styles.buttonSubmit}>
                     {loading ? "Salvando..." : "Salvar"}
                 </button>
             </form>

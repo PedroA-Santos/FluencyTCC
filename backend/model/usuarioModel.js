@@ -26,6 +26,16 @@ exports.listFindById = (id) => {
 };
 
 
+exports.listByUsername = (username) => {
+    return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM usuarios WHERE username = ?', [username], (err, results) => {
+            if (err) return reject(err);
+            resolve(results.length > 0 ? results[0] : null);
+        });
+    });
+};
+
+
 //Busca o usuario a partir do email para realizar o login // AINDA NÃO ESTÁ FEITO NO CONTROLLER
 exports.listByEmail = (email) => {
     return new Promise((resolve, reject) => {

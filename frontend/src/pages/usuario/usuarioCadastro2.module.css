@@ -1,16 +1,15 @@
-/* Container principal */
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
+    justify-content: flex-start; /* Alinha no topo se o conteúdo crescer */
     background-color: #37376D;
+    min-height: 100vh; /* Permite crescer com o conteúdo */
+    width: 100%;
     padding: 20px;
     box-sizing: border-box;
 }
 
-/* Título */
 .title {
     color: #FFC107;
     font-size: 3em;
@@ -18,23 +17,50 @@
     text-align: center;
 }
 
-/* Formulário */
 .form {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     max-width: 400px;
 }
 
-/* Grupo de input e label */
-.inputGroup {
-    position: relative;
+/* Agrupa os inputs e labels para ficarem alinhados corretamente */
+.inputFileContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     width: 100%;
-    margin-bottom: 1.5em;
+    max-width: 400px;
+
 }
 
-.inputGroup input, 
+ p{
+    color: #FFC107;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Label sempre acima do input */
+.inputGroup label {
+    color: #FFC107;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+/* Estilização dos inputs */
+.inputGroup input,
 .inputGroup select {
     width: 100%;
     padding: 10px;
@@ -46,141 +72,165 @@
     outline: none;
     transition: border-color 0.3s;
     appearance: none;
+    /* Remove estilo padrão do navegador */
 }
 
-/* Personalização do Select */
-.inputGroup select {
+.inputContainer input:focus,
+.inputContainer select:focus {
+    border-color: #FFD54F;
+}
+
+.previewImage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background-color: #2c2c59;
     cursor: pointer;
-    background-image: url('data:image/svg+xml;utf8,<svg fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px;
-    padding-right: 30px;
+    padding: 1em;
 }
 
-/* Estilo ao focar o Select */
-.inputGroup select:focus {
-    border-bottom: 2px solid #FFC107;
-    background-color: #37376D;
-    color: white;
+
+.previewImage img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+
 }
 
-/* Estilo das opções do select */
-.inputGroup select option {
-    background-color: rgba(255, 255, 255, 0.536);
-    color: #ffffff;
+.fileInput {
+    display: none;
+
 }
 
-/* Labels flutuantes */
-.inputGroup label {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: white;
-    transition: 0.3s ease-in-out;
-    pointer-events: none;
-}
-
-/* Movendo label para cima quando o input ou select está focado */
-.inputGroup input:focus + label, 
-.inputGroup select:focus + label,
-.inputGroup input:not(:placeholder-shown) + label,
-.inputGroup select:not([value=""]) + label {
-    top: -10px;
-    font-size: 12px;
+.span {
     color: #FFC107;
+    font-size: 2em;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
 }
 
-/* Estilizando o autofill */
-.inputGroup input:-webkit-autofill,
-.inputGroup input:-webkit-autofill:hover, 
-.inputGroup input:-webkit-autofill:focus, 
-.inputGroup input:-webkit-autofill:active {
-    background-color: transparent !important;
-    color: white !important;
-    -webkit-text-fill-color: white !important;
-    transition: background-color 5000s ease-in-out 0s;
-}
 
-/* Estilo para os botões de interesse */
+
 .interessesContainer {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
     justify-content: center;
+    gap: 20px; /* Aumenta o espaçamento entre os botões */
+    padding: 20px;
+    margin-top: 20px;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
-/* Botões de interesse */
+
+/* Animação de leve flutuação */
+@keyframes floatRandom {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(2px, -3px) rotate(1deg); }
+    50% { transform: translate(-2px, 2px) rotate(-1deg); }
+    75% { transform: translate(3px, 1px) rotate(1.5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.interesseButton:nth-child(odd) {
+    transform: rotate(-2deg) translateY(2px);
+}
+.interesseButton:nth-child(even) {
+    transform: rotate(2deg) translateY(-2px);
+}
+
+
+/* Cada botão */
 .interesseButton {
-    padding: 8px 12px;
-    border: none;
+    background-color: #FFC107;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
     border-radius: 20px;
+    padding: 12px 20px; /* Maior padding para aumentar tamanho */
+    margin: 5px; /* Pequeno espaçamento interno além do gap */
+    border: none;
     cursor: pointer;
-    font-size: 14px;
-    background-color: #f0f0f0;
-    color: #333;
-    transition: 0.3s;
-    min-width: 120px;
+    box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+
+    animation: floatRandom 4s ease-in-out infinite;
+    animation-delay: calc(0.2s * var(--i));
+    transition: transform 0.2s ease-in-out;
 }
 
 .interesseButton:hover {
-    background-color: #e0e0e0;
-}
-
-.interesseButton.selected {
-    background-color: #FFC107;
+    transform: scale(1.1) rotate(2deg);
+    background-color:#ccc;
     color: #37376D;
 }
 
-/* Interesses selecionados */
-.selectedInteresses {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #e6f7ff;
-    border-radius: 5px;
+
+.interessesSelecionadosContainer {
+    margin-top: 2em;
+    padding: 1em;
+    background-color: #2e2e5e;
+    border-radius: 12px;
     width: 100%;
+    max-width: 700px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     display: flex;
-    flex-direction: column;  /* Alterado de flex-direction: column para flex-direction: row */
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+}
+
+.tituloInteressesSelecionados {
+    color: #FFC107;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.listaInteressesSelecionados {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 10px;
-    flex-wrap: wrap; /* Permite que as tags se ajustem quando necessário */
 }
 
-.selectedTagsContainer {
-    display: flex; 
-    gap: 10px; /* Espaço entre as tags */
-    justify-content: flex-start; /* Garante que as tags fiquem alinhadas à esquerda */
-    flex-wrap: wrap; /* Permite que as tags quebrem para a próxima linha se necessário */
-}
-
-/* Estilo das tags de interesses selecionados */
-.selectedTag {
+.interesseSelecionado {
     background-color: #FFC107;
-    color: #37376D;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 12px;
-}
-/* Botão de salvar */
-.button {
-    width: 100%;
-    padding: 10px;
-    background-color: #FFC107;
-    color: #37376D;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
+    color: #2e2e5e;
     font-size: 16px;
-    transition: background 0.3s ease;
-    margin-top: 20px;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 8px 16px;
+    border: none;
+    cursor: default;
+    box-shadow: 1px 3px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+    white-space: nowrap;
+    display: inline-block;
 }
 
-.button:hover {
-    background-color: #e6a800;
-}
 
-.button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+
+
+.buttonSubmit{
+    width: 100%;
+    padding: 12px;
+    background-color: #148300;
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
 }
