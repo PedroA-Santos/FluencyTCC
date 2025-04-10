@@ -4,7 +4,10 @@ const port = 5000;
 const cors = require("cors");
 
 const db = require("./db");
-
+const http = require("http");
+const { Server } = require("socket.io");
+const server = http.createServer(app);
+const configurarSocket = require("./socket/chatSocket");
 
 const usuarioRoutes = require("./routes/usuarioRoutes");
 const idiomaRoutes = require("./routes/idiomaRoutes");
@@ -17,30 +20,32 @@ const usuarioIdiomasRoutes = require("./routes/usuarioIdiomasRoutes");
 const generoRoutes = require("./routes/generoRoutes");
 const paisRoutes = require("./routes/paisRoutes");
 
-app.use(cors({
-    origin: "http://localhost:3000", // Permite apenas o frontend acessar
-}));
-
+app.use(cors({ origin: "http://localhost:3000" }));
 app.use(express.json());
 
 app.use("/usuario", usuarioRoutes);
 app.use("/idioma", idiomaRoutes);
 app.use("/interesse", interesseRoutes);
 app.use("/match", matchRoutes);
-app.use("/chat", mensagemRoutes); //está com o nome chat apenas para melhor organização
+app.use("/chat", mensagemRoutes);
 app.use("/ofensivas", ofensivasRoutes);
 app.use("/usuarioInteresses", usuarioInteressesRoutes);
 app.use("/usuarioIdiomas", usuarioIdiomasRoutes);
 app.use("/genero", generoRoutes);
 app.use("/pais", paisRoutes);
 
+app.get('/', (req, res) => res.send('Hello from the backend!'));
 
-
-
-app.get('/', (req, res) => {
-    res.send('Hello from the backend!');
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"]
+    }
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+// Configurar o Socket.IO
+configurarSocket(io);
+
+server.listen(port, () => {
+    console.log(`Servidor rodando na porta: ${port}`);
 });

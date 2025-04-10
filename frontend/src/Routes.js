@@ -18,7 +18,7 @@ const AppRoutes = () => {
                 <Route element={<ProtectedRoute />}>
                     <Route path="/" element={<Home />} />
                     <Route path="/idioma" element={<Idioma />} />
-                    <Route path="/chat" element={<Chat />} />
+                    <Route path="/chat/:matchId" element={<Chat />} />
                     <Route path="/interesse" element={<Interesse />} />
                     <Route path="/perfil/:id" element={<Perfil />} />
                 </Route>
