@@ -43,15 +43,25 @@ const useLogin = () => {
                 sessionStorage.setItem("user", JSON.stringify(data.user));
 
                 const userId = data.user.id;
-                console.log("User ID do login :", userId);
+                console.log("User ID do login:", userId);
 
-                // Isso avisa a Navbar que o sessionStorage mudou, forçando a atualização do ID.
-                setUser(data.user);
+                // Dispara atualização da navbar
                 window.dispatchEvent(new Event("storage"));
 
-                navigate(from, { replace: true });
-            } else {
-                setError(data.message || "Credenciais incorretas.");
+                // 🔥 Aqui vem a verificação se o usuário já escolheu idiomas:
+                try {
+                    const idiomasRes = await fetch(`http://localhost:5000/usuario/${userId}/idiomas/verificar`);
+                    const idiomasData = await idiomasRes.json();
+
+                    if (!idiomasData.selecionouIdiomas) {
+                        navigate("/salvarIdiomas"); // Redireciona pra seleção
+                    } else {
+                        navigate(from, { replace: true }); // Vai pra página que ele tentou acessar ou /home
+                    }
+                } catch (idiomaErr) {
+                    console.error("Erro ao verificar idiomas:", idiomaErr);
+                    navigate(from, { replace: true }); // fallback
+                }
             }
         } catch (err) {
             setError("Erro ao conectar com o servidor.");

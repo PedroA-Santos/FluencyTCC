@@ -3,6 +3,7 @@ const usuarioInteresseModel = require("../model/usuarioInteressesModel");
 const { validarCampos } = require("../utils/validarCampos");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const db = require("../db")
 require('dotenv').config();
 const path = require('path');
 
@@ -309,3 +310,30 @@ exports.updateUsuarioStep2 = async (req, res) => {
         return res.status(500).json({ message: "Erro ao atualizar perfil." });
     }
 };
+
+
+
+
+
+//funão para verificar se o usuário já escolheu os idiomas que ele quer aprender
+
+exports.verificarIdiomasSelecionados = async (req, res) => {
+    const { id } = req.params;
+
+    db.query(
+        `SELECT * FROM usuarios_idiomas WHERE usuario_id = ?`,
+        [id],
+        (err, results) => {
+            if (err) return res.status(500).json({ error: err });
+
+            const selecionouIdiomas = results.length > 0;
+
+            return res.status(200).json({ selecionouIdiomas });
+        }
+    );
+};
+
+
+
+
+

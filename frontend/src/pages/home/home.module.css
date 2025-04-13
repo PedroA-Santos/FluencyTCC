@@ -1,82 +1,198 @@
-/* Contêiner principal */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
 .mainContainer {
     display: flex;
+    flex-direction: row;
     width: 100%;
     height: 100vh;
+    background: #37376D;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-/* Container para empilhar os cartões */
 .stackContainer {
-    position: relative;
-    width: 100%;
+    flex: 1;
+    padding: 80px 20px 20px 320px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
-    overflow: hidden;
+    position: relative;
 }
 
-/* Estilo dos cartões */
+.cardStack {
+    flex: 2;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .card {
+    animation: fadeInUp 0.6s ease;
     position: absolute;
-    width: 300px;
-    height: 400px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 340px;
+    max-height: 600px;
+    background: #D9D9D9;
+    border-radius: 22px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+
 }
 
-/* Cartão no topo da pilha */
 .topCard {
     transform: translateY(0);
     opacity: 1;
 }
 
-/* Cartões atrás */
 .behindCard {
-    transform: translateY(20px) scale(0.95);
-    opacity: 0.8;
+    transform: translateY(15px) scale(0.95);
+    opacity: 0.6;
 }
 
-/* Estilo da imagem do perfil */
 .profileImage {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin-bottom: 10px;
+    width: 90%;
+    height: 55%;
+    object-fit: cover;
+    border-radius: 18px;
+    margin-bottom: 15px;
+    border: 3px solid #000000;
+    transition: transform 0.3s ease;
 }
 
-/* Botão para ir ao próximo */
-.nextButton {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.profileImage:hover {
+    transform: scale(1.07);
+}
+
+.card h2 {
+    margin: 10px 0 5px;
+    font-size: 24px;
+    color: #000000;
+}
+
+.card p {
+    font-size: 16px;
+    color: #000000;
+    text-align: center;
+    margin: 5px 0;
+}
+
+.actionButtons {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
     margin-top: 20px;
-    transition: background-color 0.3s ease;
+    width: 100%;
+    animation: pulse 2s infinite;
 }
 
-.nextButton:hover {
-    background-color: #0056b3;
+.rejectButton,
+.acceptButton {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    font-size: 26px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Mensagem de erro */
-.errorMessage {
-    color: red;
-    font-size: 18px;
-    text-align: center;
+.rejectButton {
+    background: linear-gradient(145deg, #ff3e3e, #b40000);
 }
 
-/* Mensagem de carregamento */
+.acceptButton {
+    background: linear-gradient(145deg, #4effb1, #00b477);
+}
+
+.rejectButton:hover,
+.acceptButton:hover {
+    transform: scale(1.2);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.4);
+}
+
+.errorMessage,
 .loading {
-    font-size: 18px;
-    color: gray;
+    font-size: 20px;
     text-align: center;
+    margin-top: 40px;
+    color: #ffffff;
+}
+
+.userDetails {
+    flex: 1;
+    background: #25253F;
+    backdrop-filter: blur(14px);
+    padding: 30px 20px;
+    border-radius: 16px;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    height: 90%;
+    margin-right: 20px;
+    animation: fadeInUp 0.5s ease;
+    overflow-y: auto;
+    border: 2px solid #FFC107;
+}
+
+.userDetails h2 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.infoGroup {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.infoGroup h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #FFC107;
+    text-align: center;
+}
+
+.infoGroup p {
+    font-size: 16px;
+    color: #eee;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.infoValue {
+    color: #aaa;
+    font-weight: 500;
+    margin-top: 5px;
 }

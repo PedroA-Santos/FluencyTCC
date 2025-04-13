@@ -13,6 +13,8 @@ router.put("/:id", usuarioIdiomasController.putUsuarioIdioma);
 
 router.delete("/:id", usuarioIdiomasController.deleteUsuarioIdioma);
 
+router.post("/:id/idiomas", usuarioIdiomasController.salvarIdiomas);
+
 
 
 module.exports = router;
