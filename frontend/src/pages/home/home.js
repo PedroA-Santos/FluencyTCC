@@ -11,6 +11,7 @@ function Home() {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const userIdDaSessao = verificarSessaoUsuario();
+    console.log(users)
 
     if (error) {
         return <div className={styles.errorMessage}>Erro ao carregar sugestões: {error}</div>;
@@ -30,35 +31,29 @@ function Home() {
     };
 
     return (
-        
-            <div className={styles.mainContainer}>
-                <Navbar/>
-                <Contatos />
-                
+        <div className={styles.mainContainer}>
+            <Contatos />
 
-                <div className={styles.stackContainer}>
+            <div className={styles.stackContainer}>
+                <div className={styles.cardStack}>
                     {users.map((user, i) => {
-                        if (i < currentIndex) return null; // Ignora cartões que já passaram
+                        if (i < currentIndex) return null;
 
-                        const isTopCard = i === currentIndex; // Verifica se é o cartão no topo
-                        const isBehindCard = i > currentIndex; // Verifica se é um cartão atrás
+                        const isTopCard = i === currentIndex;
+                        const isBehindCard = i > currentIndex;
 
                         return (
                             <div
-                            
                                 key={user.id}
-                                className={`${styles.card} ${isTopCard ? styles.topCard : styles.behindCard
-                                    }`}
+                                className={`${styles.card} ${isTopCard ? styles.topCard : styles.behindCard}`}
                                 style={{
-                                    zIndex: users.length - i, // Mantém a ordem de empilhamento
+                                    zIndex: users.length - i,
                                     transform: isBehindCard
-                                        ? `translateY(${(i - currentIndex) * 10}px) scale(${1 - (i - currentIndex) * 0.05
-                                        })`
-                                        : "translateY(0)", // Escala os cartões de trás
+                                        ? `translateY(${(i - currentIndex) * 10}px) scale(${1 - (i - currentIndex) * 0.05})`
+                                        : "translateY(0)",
                                     opacity: isBehindCard ? 0.8 : 1,
                                 }}
                             >
-                                
                                 <img
                                     src={user.foto_perfil || "/images/default-image.jpg"}
                                     alt={user.username}
@@ -66,19 +61,58 @@ function Home() {
                                 />
                                 <h2>{user.username}</h2>
                                 <p>{user.bio || "Sem descrição"}</p>
-                                <p><strong>Idiomas aprendendo:</strong> {user.idiomas_aprendendo}</p>
-                                <p><strong>Interesses:</strong> {user.interesses}</p>
+
+
                                 {isTopCard && (
-                                    <button onClick={handleNext} className={styles.nextButton}>
-                                        Próximo
-                                    </button>
+                                    <div className={styles.actionButtons}>
+                                        <button onClick={handleNext} className={styles.rejectButton}>❌</button>
+                                        <button onClick={handleNext} className={styles.acceptButton}>💖</button>
+                                    </div>
                                 )}
                             </div>
                         );
                     })}
                 </div>
+
+                {/* Detalhes à direita */}
+                <div className={styles.userDetails}>
+                    {users[currentIndex] && (
+                        <>
+                            <h2>Informações</h2>
+
+                            <div className={styles.infoGroup}>
+                                <h3><strong>Idiomas que está aprendendo:</strong></h3>
+                                <p className={styles.infoValue}>{users[currentIndex].idiomas_aprendendo}</p>
+                            </div>
+
+                            <div className={styles.infoGroup}>
+                                <h3><strong>Idioma Nativo:</strong></h3>
+                                <p className={styles.infoValue}>{users[currentIndex].idioma_nativo}</p>
+                            </div>
+
+                            <div className={styles.infoGroup}>
+                                <h3><strong>Interesses:</strong></h3>
+                                <p className={styles.infoValue}>{users[currentIndex].interesses}</p>
+                            </div>
+
+                            <div className={styles.infoGroup}>
+                                <h3><strong>Gênero:</strong></h3>
+                                <p className={styles.infoValue}>{users[currentIndex].generos}</p>
+                            </div>
+
+                            <div className={styles.infoGroup}>
+                                <h3><strong>País:</strong></h3>
+                                <p className={styles.infoValue}>{users[currentIndex].paises_origem}</p>
+                            </div>
+                        </>
+                    )}
+                </div>
+
             </div>
-            );
+
+        </div>
+    );
+
 }
 
-            export default Home;
+export default Home;

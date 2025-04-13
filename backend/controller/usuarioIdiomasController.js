@@ -1,4 +1,5 @@
 const usuarioIdiomaModel = require('../model/usuarioIdiomasModel');
+const db = require("../db");
 const { validarCampos } = require('../utils/validarCampos')
 
 
@@ -135,3 +136,36 @@ exports.deleteUsuarioIdioma = async (req, res) => {
     }
 
 }
+
+
+
+
+exports.salvarIdiomas = (req, res) => {
+    const { idiomas } = req.body;
+    const userId = req.params.id; // Correto
+
+    if (!idiomas || !Array.isArray(idiomas) || idiomas.length === 0) {
+        return res.status(400).json({ message: "Idiomas inválidos ou nenhum selecionado." });
+    }
+
+    // Verificando se cada objeto tem o idiomaId e o nível
+    const valores = idiomas.map(({ idiomaId, nivel }) => {
+        if (!idiomaId || !nivel || !['Básico', 'Intermediário', 'Avançado'].includes(nivel)) {
+            return res.status(400).json({ message: "Nível de fluência inválido." });
+        }
+        return [userId, idiomaId, nivel];
+    });
+
+    // SQL para inserir os idiomas e níveis
+    const sql = `INSERT INTO usuarios_idiomas (usuario_id, idioma_id, nivel) VALUES ?`;
+
+    db.query(sql, [valores], (err) => {
+        if (err) {
+            console.error("Erro ao salvar idiomas:", err);
+            return res.status(500).json({ message: "Erro ao salvar idiomas." });
+        }
+
+        return res.status(200).json({ message: "Idiomas salvos com sucesso." });
+    });
+};
+

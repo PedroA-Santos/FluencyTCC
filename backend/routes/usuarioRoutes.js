@@ -24,4 +24,6 @@ router.post("/step1", usuarioController.postUsuarioStep1);
 // Rota para atualizar o perfil (incluindo foto de perfil)
 router.put("/step2/:id", upload.single('foto_perfil'), usuarioController.updateUsuarioStep2);
 
+router.get('/:id/idiomas/verificar', usuarioController.verificarIdiomasSelecionados);
+
 module.exports = router;

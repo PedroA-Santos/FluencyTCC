@@ -32,7 +32,7 @@ function UsuarioCadastro1() {
             {errorPaises && <p className={styles.error}>Erro ao carregar países: {errorPaises}</p>}
 
             <form onSubmit={handleSubmit} className={styles.form}>
-                
+
                 <div className={styles.inputGroup}>
                     <input
                         type="email"
@@ -79,7 +79,7 @@ function UsuarioCadastro1() {
                         onChange={handleChange}
                         disabled={loadingIdiomas}
                     >
-                        <option value="">Selecione um idioma</option>
+                        <option value="">Selecione um Idioma Nativo</option>
                         {idiomas.map((idioma) => (
                             <option key={idioma.id} value={idioma.id}>
                                 {idioma.idioma}

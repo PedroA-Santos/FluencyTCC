@@ -11,7 +11,10 @@ function useListGenero() {
             setLoading(true);
             try {
                 const response = await axios.get('http://localhost:5000/genero');
+                console.log("Resposta da API:", response.data);
+
                 if (response.data && Array.isArray(response.data)) {
+
                     setGeneros(response.data);
                 } else {
                     setError("Resposta inválida da API");

@@ -47,9 +47,9 @@ exports.buscarMatches = (userId) => {
                         )
                     )
                 )
-            AND u.id != ? -- Excluir o próprio usuário
+            AND u.id != ? -- Excluir o próprio usuário da recomendação
             ORDER BY interesses_em_comum DESC;
-        `, [userId, userId, userId, userId, userId, userId], (error, rows) => {
+        `, [userId, userId, userId, userId, userId], (error, rows) => {
             if (error) {
                 console.error("Erro ao buscar IDs dos matches:", error);
                 return reject(error);
@@ -70,6 +70,9 @@ exports.buscarMatches = (userId) => {
                         u.bio,
                         u.foto_perfil, 
                         u.idioma_nativo_id,
+                        i2.idioma AS idioma_nativo,
+                       COALESCE(GROUP_CONCAT(DISTINCT p.nome SEPARATOR ', '), '') AS paises_origem,
+                        COALESCE(GROUP_CONCAT(DISTINCT g.genero SEPARATOR ', '), '') AS generos,
                         COALESCE(GROUP_CONCAT(DISTINCT i.idioma SEPARATOR ', '), '') AS idiomas_aprendendo,
                         COALESCE(GROUP_CONCAT(DISTINCT inter.interesse SEPARATOR ', '), '') AS interesses
                     FROM usuarios u
@@ -77,10 +80,14 @@ exports.buscarMatches = (userId) => {
                     LEFT JOIN idiomas i ON ui.idioma_id = i.id
                     LEFT JOIN usuarios_interesses ui2 ON u.id = ui2.usuario_id
                     LEFT JOIN interesses inter ON ui2.interesse_id = inter.id
+                    INNER JOIN generos g ON u.genero_id = g.id
+                    INNER JOIN paises p ON u.pais_origem_id = p.id
+                    INNER JOIN idiomas i2 ON u.idioma_nativo_id = i2.id
                     WHERE u.id IN (${placeholders})
+                    AND u.id != ? -- Garantir que o próprio usuário seja excluído na busca dos detalhes
                     GROUP BY u.id
                     ORDER BY FIELD(u.id, ${userIds.map(() => '?').join(',')});
-                `, [...userIds, ...userIds], (error, users) => {
+                `, [...userIds, userId, ...userIds], (error, users) => {
                 if (error) {
                     console.error("Erro ao buscar informações dos usuários:", error);
                     return reject(error);
