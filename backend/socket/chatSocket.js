@@ -1,13 +1,32 @@
 //Este arquivo terá a lógica do Socket.IO
 
 // backend/socket/chatSocket.js
+const jwt = require("jsonwebtoken");
+require('dotenv').config();
 const { verificarMatch, obterHistoricoMensagens, salvarMensagem } = require("../services/chatService");
 
-const configurarSocket = (io) => {
-    io.on("connection", (socket) => {
-        console.log(`Usuário conectado: ${socket.id}`);
+const secretKey = process.env.SECRET_KEY;
 
-        socket.on("entrarChat", ({ matchId, usuarioId }) => {
+const configurarSocket = (io) => { 
+    io.use((socket, next) => {   //valida o JWT enviado pelo frontend
+        const token = socket.handshake.query.token;
+        if (!token) {
+            return next(new Error("Token não fornecido"));
+        }
+        jwt.verify(token, secretKey, (err, decoded) => {
+            if (err) {
+                return next(new Error("Token inválido"));
+            }
+            socket.usuarioId = decoded.id; //Extrai o id do payload do JWT
+            next();
+        });
+    });
+    
+    io.on("connection", (socket) => {
+        const usuarioId = socket.usuarioId;
+        console.log(`Usuário conectado: ${socket.id}, ID do usuario: ${usuarioId}`);
+
+        socket.on("entrarChat", ({ matchId }) => {
             verificarMatch(matchId, usuarioId, (err, match) => {
                 if (err) {
                     socket.emit("erro", err.message);
@@ -25,7 +44,7 @@ const configurarSocket = (io) => {
             });
         });
 
-        socket.on("enviarMensagem", ({ matchId, usuarioId, conteudo }) => {
+        socket.on("enviarMensagem", ({ matchId, conteudo }) => {
             verificarMatch(matchId, usuarioId, (err, match) => {
                 if (err) return;
                 const { usuario1_id, usuario2_id } = match;
