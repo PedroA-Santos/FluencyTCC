@@ -155,9 +155,9 @@ exports.login = async (req, res) => {
         if (!user || !(await bcrypt.compare(senha, user.senha))) {
             return res.status(401).json({ message: "Email ou senha incorretos." });
         }
-
+        
         const token = jwt.sign({ id: user.id, email: user.email }, secretKey, { expiresIn: "1h" });
-
+        
         return res.status(200).json({
             message: "Login bem-sucedido",
             user: { id: user.id, email: user.email, username: user.username },
@@ -170,7 +170,27 @@ exports.login = async (req, res) => {
     }
 };
 
+/*exports.getUsuarioLogado = async (req, res) => {
+    console.log("Chegando em /usuarioController");
+    try {
+        const userId = req.user.id;
 
+        const usuario = await usuarioModel.listFindById(userId);
+
+        if (!usuario) {
+            return res.status(404).json({ message: "Usuário não encontrado." });
+        }
+
+        // Remover a senha antes de enviar a resposta
+        const { senha, ...usuarioSemSenha } = usuario;
+
+        return res.status(200).json(usuarioSemSenha);
+
+    } catch (error) {
+        console.error("Erro ao buscar usuário logado:", error);
+        return res.status(500).json({ message: "Erro ao buscar usuário logado." });
+    }
+};*/
 
 
 // ESSAS DUAS FUNÇÕES ABAIXO SÃO PARA O CADASTRO DO USUARIO EM DUAS ETAPAS

@@ -3,44 +3,60 @@ import io from "socket.io-client";
 import { useParams } from "react-router-dom";
 
 const Chat = () => {
-    const { matchId } = useParams(); // Pega o matchId da URL
+    const { matchId } = useParams();
     const socketRef = useRef(null);
     const [mensagens, setMensagens] = useState([]);
     const [novaMensagem, setNovaMensagem] = useState("");
-    const usuarioId = "1"; // Simulado por agora; substitua por autenticação real
+
+    // Obtém o usuário e o token fora do useEffect
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    const token = sessionStorage.getItem("token");
 
     useEffect(() => {
-        socketRef.current = io("http://localhost:5000");
+        // Verificações simples
+        if (!user || !token) {
+            console.error("Usuário ou token não encontrado.");
+            return;
+        }
 
-        // Entrar no chat
-        socketRef.current.emit("entrarChat", { matchId, usuarioId });
+        // Conexão socket
+        socketRef.current = io("http://localhost:5000", {
+            query: { token },
+        });
 
-        // Receber histórico
+        // Ao conectar
+        socketRef.current.on("connect", () => {
+            console.log("Conectado com ID:", socketRef.current.id);
+            socketRef.current.emit("entrarChat", { matchId });
+        });
+
         socketRef.current.on("historico", (historico) => {
             setMensagens(historico);
         });
 
-        // Receber novas mensagens
         socketRef.current.on("novaMensagem", (mensagem) => {
             setMensagens((prev) => [...prev, mensagem]);
         });
 
-        // Tratar erros
         socketRef.current.on("erro", (msg) => {
             console.error("Erro:", msg);
         });
 
         return () => {
+            socketRef.current.off("connect");
             socketRef.current.off("historico");
             socketRef.current.off("novaMensagem");
             socketRef.current.off("erro");
             socketRef.current.disconnect();
         };
-    }, [matchId]);
+    }, [matchId]); // matchId é estável, então não gera loop
 
     const enviarMensagem = () => {
-        if (novaMensagem.trim()) {
-            socketRef.current.emit("enviarMensagem", { matchId, usuarioId, conteudo: novaMensagem });
+        if (novaMensagem.trim() && user && socketRef.current) {
+            socketRef.current.emit("enviarMensagem", {
+                matchId,
+                conteudo: novaMensagem,
+            });
             setNovaMensagem("");
         }
     };
@@ -51,7 +67,8 @@ const Chat = () => {
             <div style={{ height: "300px", overflowY: "scroll", border: "1px solid #ccc" }}>
                 {mensagens.map((msg, index) => (
                     <p key={index}>
-                        {msg.remetente_id === usuarioId ? "Você" : "Outro"}: {msg.conteudo} ({new Date(msg.enviado_em).toLocaleTimeString()})
+                        {msg.remetente_id === user?.id ? "Você" : "Outro"}: {msg.conteudo} (
+                        {new Date(msg.enviado_em).toLocaleTimeString()})
                     </p>
                 ))}
             </div>
