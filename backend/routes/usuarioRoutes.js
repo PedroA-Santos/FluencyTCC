@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 const usuarioController = require("../controller/usuarioController");
+const authMiddleware = require("../middleware/authMiddleware");
 
 // Importando a configuração do multer
 const upload = require('../utils/multerConfig');
@@ -18,6 +19,8 @@ router.put("/:id", usuarioController.putUsuario);
 router.delete("/:id", usuarioController.deleteUsuario);
 
 router.post("/login", usuarioController.login);
+
+//router.get("/me", authMiddleware, usuarioController.getUsuarioLogado)
 
 router.post("/step1", usuarioController.postUsuarioStep1);
 
