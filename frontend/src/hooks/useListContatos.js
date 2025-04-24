@@ -7,9 +7,9 @@ const useListContatos = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-  
+
     useEffect(() => {
-       
+
         const userIdDaSessao = verificarSessaoUsuario(setError);
 
         if (!userIdDaSessao) {
@@ -30,7 +30,7 @@ const useListContatos = () => {
         };
 
         fetchContatos();
-    }, []);  // O hook será executado apenas uma vez na montagem, já que userId não precisa ser uma dependência aqui
+    }, [contatos]);  // O hook será executado apenas uma vez na montagem, já que userId não precisa ser uma dependência aqui
 
     return { contatos, error, loading };
 };

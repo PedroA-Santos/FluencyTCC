@@ -18,6 +18,8 @@ router.put("/:id", matchController.putMatch);
 
 router.delete("/:id", matchController.deleteMatch);
 
+router.post('/aceitar-ou-criar', matchController.aceitarOuCriarMatch);
+
 
 
 module.exports = router;

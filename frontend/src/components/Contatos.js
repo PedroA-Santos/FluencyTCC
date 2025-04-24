@@ -20,6 +20,10 @@ function Contatos() {
         ? `http://localhost:5000${perfil.foto_perfil}`
         : "/images/default-image.jpg"; // Caminho da imagem padrão caso o usuário não tenha foto
 
+    const imagePerfilContato = contatos.foto_perfil
+        ? `http://localhost:5000${contatos.foto_perfil}`
+        : "/images/default-image.jpg"; // Caminho da imagem padrão caso o usuário não tenha foto
+
     return (
         <div className={styles.containerLateral}>
             <div className={styles.profileContainer}>
@@ -34,17 +38,24 @@ function Contatos() {
             <div className={styles.matchesContainer}>
                 <h2>Matches</h2>
                 <ul>
-                    {contatos.map(match => (
-                        <li key={match.id} className={styles.matchItem}>
-                            <img
-                                src={match.foto_perfil || "/images/default-image.jpg"}
-                                alt={match.username}
-                                className={styles.profileImage}
-                            />
-                            <p className={styles.usernameMatch}>{match.username}</p>
-                        </li>
-                    ))}
+                    {contatos.map(match => {
+                        const imagePerfilContato = match.foto_perfil
+                            ? `http://localhost:5000${match.foto_perfil}`
+                            : "/images/default-image.jpg";
+
+                        return (
+                            <li key={match.id} className={styles.matchItem}>
+                                <img
+                                    src={imagePerfilContato}
+                                    alt={match.username}
+                                    className={styles.profileImage}
+                                />
+                                <p className={styles.usernameMatch}>{match.username}</p>
+                            </li>
+                        );
+                    })}
                 </ul>
+
             </div>
         </div>
     );
