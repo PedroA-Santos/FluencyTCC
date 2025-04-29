@@ -12,9 +12,13 @@ import CadastroUsuario from "./pages/usuario/usuarioCadastro1";
 import CadastroUsuario2 from "./pages/usuario/usuarioCadastro2";
 import SalvarIdiomas from './pages/IdiomasAprender/idiomasAprender';
 
+import { MatchProvider } from './context/matchContext'; // ajuste o caminho conforme sua pasta
+
+
 const AppRoutes = () => {
     return (
         <Router> {/* Envolva suas rotas com Router */}
+            <MatchProvider>
             <Routes>
                 <Route element={<ProtectedRoute />}>
                     <Route path="/" element={<Home />} />
@@ -30,6 +34,7 @@ const AppRoutes = () => {
                 <Route path="/usuarioCadastro" element={<CadastroUsuario />} />
                 <Route path="/usuarioCadastro2/:id" element={<CadastroUsuario2 />} />
             </Routes>
+            </MatchProvider>
         </Router>
     );
 };
