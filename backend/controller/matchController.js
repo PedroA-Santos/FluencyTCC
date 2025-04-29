@@ -184,12 +184,14 @@ exports.aceitarOuCriarMatch = async (req, res) => {
         }
 
         // Caso não exista ainda, criar um novo match pendente
+
         const novoMatch = await matchModel.post({
             usuario1_id,
             usuario2_id,
             idioma_comum,
             status: "pendente"
         });
+        console.log("novo match enviado: ", novoMatch);
 
         return res.status(201).json({
             message: "Match enviado. Aguardando o outro usuário aceitar.",

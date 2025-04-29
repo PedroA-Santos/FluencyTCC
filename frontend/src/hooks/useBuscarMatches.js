@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import verificarSessaoUsuario from "../utils/verificarSessaoUsuario";
 
+//HOOK PARA SUGERIR USUARIOS PARA MATCH
+
 const useBuscarMatches = () => {
     const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
@@ -23,7 +25,7 @@ const useBuscarMatches = () => {
                 setError("Erro ao procurar usuarios.");
                 console.error("Erro ao buscar usuarios.", error);
             } finally {
-                setLoading(false); 
+                setLoading(false);
             }
         };
 
