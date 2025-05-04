@@ -1,0 +1,236 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Alinha no topo se o conteúdo crescer */
+    background-color: #37376D;
+    min-height: 100vh; /* Permite crescer com o conteúdo */
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.title {
+    color: #FFC107;
+    font-size: 3em;
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Agrupa os inputs e labels para ficarem alinhados corretamente */
+.inputFileContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 400px;
+
+}
+
+ p{
+    color: #FFC107;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Label sempre acima do input */
+.inputGroup label {
+    color: #FFC107;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+/* Estilização dos inputs */
+.inputGroup input,
+.inputGroup select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+    appearance: none;
+    /* Remove estilo padrão do navegador */
+}
+
+.inputContainer input:focus,
+.inputContainer select:focus {
+    border-color: #FFD54F;
+}
+
+.previewImage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background-color: #2c2c59;
+    cursor: pointer;
+    padding: 1em;
+}
+
+
+.previewImage img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+
+}
+
+.fileInput {
+    display: none;
+
+}
+
+.span {
+    color: #FFC107;
+    font-size: 2em;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+}
+
+
+
+.interessesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Aumenta o espaçamento entre os botões */
+    padding: 20px;
+    margin-top: 20px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* Animação de leve flutuação */
+@keyframes floatRandom {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(2px, -3px) rotate(1deg); }
+    50% { transform: translate(-2px, 2px) rotate(-1deg); }
+    75% { transform: translate(3px, 1px) rotate(1.5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.interesseButton:nth-child(odd) {
+    transform: rotate(-2deg) translateY(2px);
+}
+.interesseButton:nth-child(even) {
+    transform: rotate(2deg) translateY(-2px);
+}
+
+
+/* Cada botão */
+.interesseButton {
+    background-color: #FFC107;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 12px 20px; /* Maior padding para aumentar tamanho */
+    margin: 5px; /* Pequeno espaçamento interno além do gap */
+    border: none;
+    cursor: pointer;
+    box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+
+    animation: floatRandom 4s ease-in-out infinite;
+    animation-delay: calc(0.2s * var(--i));
+    transition: transform 0.2s ease-in-out;
+}
+
+.interesseButton:hover {
+    transform: scale(1.1) rotate(2deg);
+    background-color:#ccc;
+    color: #37376D;
+}
+
+
+.interessesSelecionadosContainer {
+    margin-top: 2em;
+    padding: 1em;
+    background-color: #2e2e5e;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+}
+
+.tituloInteressesSelecionados {
+    color: #FFC107;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.listaInteressesSelecionados {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.interesseSelecionado {
+    background-color: #FFC107;
+    color: #2e2e5e;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 8px 16px;
+    border: none;
+    cursor: default;
+    box-shadow: 1px 3px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+
+
+
+.buttonSubmit{
+    width: 100%;
+    padding: 12px;
+    background-color: #148300;
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}

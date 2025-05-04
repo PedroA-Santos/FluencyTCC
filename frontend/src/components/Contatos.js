@@ -6,14 +6,15 @@ import usePerfilUsuario from "../hooks/usePerfilUsuario";
 import verificarSessaoUsuario from "../utils/verificarSessaoUsuario";
 
 function Contatos() {
-    const { contatos, error, loading } = useListContatos();
-    const { perfil, error: perfilError, loading: perfilLoading } = usePerfilUsuario();
-    const navigate = useNavigate();
     const userIdDaSessao = verificarSessaoUsuario();
+    const { contatos, error, loading } = useListContatos();
+    const { perfil, error: perfilError, loading: perfilLoading } = usePerfilUsuario(userIdDaSessao);
+    const navigate = useNavigate();
 
-  
 
-  
+
+
+
     if (loading || perfilLoading) {
         return <div>Carregando contatos...</div>;
     }
@@ -28,19 +29,25 @@ function Contatos() {
 
     return (
         <div className={styles.containerLateral}>
+            {/*Parte do Perfil do usuário logado*/}
             <div className={styles.profileContainer}>
                 <img
                     src={imageUrl}
                     alt={perfil.username}
                     className={styles.profileImage}
+                    onClick={() => navigate(`/perfil/${userIdDaSessao}`)}
                 />
                 <h2>{perfil.username}</h2>
+
             </div>
 
             <div className={styles.matchesContainer}>
+                {/*Parte dos contatos do usuário*/}
                 <h2>Matches</h2>
                 <ul>
                     {contatos.map(match => {
+                        console.log(contatos);
+
                         const imagePerfilContato = match.foto_perfil
                             ? `http://localhost:5000${match.foto_perfil}`
                             : "/images/default-image.jpg";
@@ -51,12 +58,9 @@ function Contatos() {
                                     src={imagePerfilContato}
                                     alt={match.username}
                                     className={styles.profileImage}
-                                    onClick={() => {
-                                        navigate(`/chat/${match.matchId}`);
-                                        console.log("ID do Match enviado:", match.matchId);
-                                    }}
+                                    onClick={() => navigate(`/perfil/${match.id}`)}
                                 />
-                                <p className={styles.usernameMatch}>{match.username}</p>
+                                <p onClick={() => navigate(`/chat/${match.id}`)} className={styles.usernameMatch}>{match.username}</p>
                             </li>
                         );
                     })}

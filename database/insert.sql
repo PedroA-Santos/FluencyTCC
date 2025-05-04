@@ -60,3 +60,5 @@ INSERT INTO matches (usuario1_id, usuario2_id, idioma_comum, status) VALUES
 (1, 2, 3, 'aceito'),  -- Alice e Bob têm Português em comum
 (1, 3, 2, 'pendente'),-- Alice e Carlos compartilham Espanhol
 (2, 4, 3, 'aceito');  -- Bob e Diana compartilham Português
+
+

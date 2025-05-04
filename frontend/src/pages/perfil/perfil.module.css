@@ -2,41 +2,105 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #37376D;
+    padding: 2rem;
+    background: linear-gradient(180deg, #1e1e3f 0%, #2d2d70 100%);
+    min-height: 100vh;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
 }
 
+.profileCard {
+    background-color: #2f2f6d;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
 
+.profileImage {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1.2rem;
+    border: 4px solid #fff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
 
 .nameUser {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #ffff;
+    font-size: 30px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
 }
 
 .bioUser {
     font-size: 16px;
-    margin-bottom: 20px;
-    color: #ffff;
+    font-style: italic;
+    margin-bottom: 1rem;
+    color: #e0e0e0;
 }
 
-.infosUser {
+.divider {
+    height: 1px;
+    width: 100%;
+    background-color: #555;
+    margin: 1rem 0;
+}
+
+.infoGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 15px;
+    color: #ccc;
+    margin-bottom: 1rem;
+}
+
+.infosUser strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+.interessesTitle {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+}
+
+.interesses {
+    background-color: #4c4c9d;
+    padding: 0.5rem 1rem;
+    margin: 0.3rem;
+    border-radius: 8px;
     font-size: 14px;
-    margin-bottom: 10px;
-    color: #ffff;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.interesses{
-    font-size: 14px;
-    margin-bottom: 10px;
-    color: #ffff;
+.buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
 }
 
-.profileImage {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    margin-bottom: 10px;
+.buttonCustom {
+    padding: 0.6rem 1.8rem;
+    background-color: #00bfff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 191, 255, 0.3);
+}
+
+.buttonCustom:hover {
+    background-color: #009acd;
 }

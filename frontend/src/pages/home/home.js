@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Contatos from "../../components/Contatos";
 import useBuscarMatches from "../../hooks/useBuscarMatches";
 import styles from "./home.module.css";
@@ -8,6 +9,7 @@ import useAceitarMatch from "../../hooks/useAceitarMatch";
 function Home() {
     const { users, loading, error } = useBuscarMatches();
     const [currentIndex, setCurrentIndex] = useState(0);
+    const navigate = useNavigate();
 
     const { aceitarMatch, loading: matchLoading, erro, sucesso } = useAceitarMatch();
     const userIdDaSessao = verificarSessaoUsuario();
@@ -71,7 +73,9 @@ function Home() {
                                     src={getImagemPerfilCard(user.foto_perfil)}
                                     alt={user.username}
                                     className={styles.profileImage}
+                                    onClick={() => navigate(`/perfil/${user.id}`)}
                                 />
+
                                 <h2>{user.username}</h2>
                                 <p>{user.bio || "Sem descrição"}</p>
 

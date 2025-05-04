@@ -298,10 +298,13 @@ exports.updateUsuarioStep2 = async (req, res) => {
             return res.status(404).json({ message: "Usuário não encontrado." });
         }
 
-        const userNameExistente = await usuarioModel.listByUsername(username);
+        // Verifica se o username já está sendo usado por outro usuário
+        if (username && username !== usuarioExistente.username) {
+            const userNameExistente = await usuarioModel.listByUsername(username);
 
-        if (userNameExistente) {
-            return res.status(409).json({ message: "Este nome de usuário já está em uso." });
+            if (userNameExistente && userNameExistente.id !== parseInt(id)) {
+                return res.status(409).json({ message: "Este nome de usuário já está em uso." });
+            }
         }
 
         // Atualiza as informações do perfil
@@ -330,7 +333,6 @@ exports.updateUsuarioStep2 = async (req, res) => {
         return res.status(500).json({ message: "Erro ao atualizar perfil." });
     }
 };
-
 
 
 

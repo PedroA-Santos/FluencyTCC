@@ -36,6 +36,7 @@
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #ccc;
+    cursor: pointer;
 }
 
 /* Lista de matches */
@@ -71,4 +72,5 @@
 .usernameMatch {
     color: #ffffff;
     ;
+    cursor: pointer;
 }

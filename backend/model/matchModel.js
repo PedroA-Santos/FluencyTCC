@@ -62,7 +62,7 @@ exports.delete = (id) => {
 exports.getMatchesByUserId = (userId) => {
     return new Promise((resolve, reject) => {
         const sql = `
-            SELECT DISTINCT u.id, u.username, u.bio, u.foto_perfil
+            SELECT DISTINCT u.id,m.id as matchId, u.username, u.bio, u.foto_perfil
             FROM matches m
             JOIN usuarios u 
                 ON (u.id = m.usuario1_id AND m.usuario2_id = ?)

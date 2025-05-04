@@ -26,6 +26,7 @@ exports.listFindById = (id) => {
 };
 
 
+
 exports.listByUsername = (username) => {
     return new Promise((resolve, reject) => {
         db.query('SELECT * FROM usuarios WHERE username = ?', [username], (err, results) => {
