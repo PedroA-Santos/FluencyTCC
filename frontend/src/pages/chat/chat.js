@@ -1,12 +1,28 @@
 import React, { useState, useEffect, useRef } from "react";
+import Contatos from "../../components/Contatos";
+import UserDetalhes from "../../components/UserDetalhes";
+import useListContatos from "../../hooks/useListContatos";
+import verificarSessaoUsuario from "../../utils/verificarSessaoUsuario";
+import styles from "./chat.module.css"; // ajuste o caminho se necessário
 import io from "socket.io-client";
 import { useParams } from "react-router-dom";
 
 const Chat = () => {
     const { matchId } = useParams();
+    const { contatos, loading, error } = useListContatos()
     const socketRef = useRef(null);
     const [mensagens, setMensagens] = useState([]);
     const [novaMensagem, setNovaMensagem] = useState("");
+    const userIdDaSessao = verificarSessaoUsuario()
+
+    const contato = contatos.find(
+        contato =>
+          contato.matchId.toString() === matchId &&
+          contato.id !== userIdDaSessao
+      );
+      
+      const nome = contato?.username;
+      
 
     // Obtém o usuário e o token fora do useEffect
     const user = JSON.parse(sessionStorage.getItem("user"));
@@ -62,25 +78,58 @@ const Chat = () => {
     };
 
     return (
-        <div>
-            <h1>Chat do Match {matchId}</h1>
-            <div style={{ height: "300px", overflowY: "scroll", border: "1px solid #ccc" }}>
-                {mensagens.map((msg, index) => (
-                    <p key={index}>
-                        {msg.remetente_id === user?.id ? "Você" : "Outro"}: {msg.conteudo} (
-                        {new Date(msg.enviado_em).toLocaleTimeString()})
-                    </p>
-                ))}
+        <div className={styles.container}>
+            <div className={styles.sidebar}>
+                <Contatos />
             </div>
-            <input
-                type="text"
-                value={novaMensagem}
-                onChange={(e) => setNovaMensagem(e.target.value)}
-                placeholder="Digite sua mensagem"
-            />
-            <button onClick={enviarMensagem}>Enviar</button>
+
+            <div className={styles.chatArea}>
+                <header className={styles.header}>
+                    <h2>{nome}</h2>
+                </header>
+
+                <div className={styles.messages}>
+                    {mensagens.map((msg, index) => {
+                        const isMinhaMensagem = msg.remetente_id === user?.id;
+                        return (
+                            <div
+                                key={index}
+                                className={`${styles.message} ${isMinhaMensagem ? styles.me : styles.other}`}
+                            >
+                                <p className={styles.messageContent}>{msg.conteudo}</p>
+                                <small className={styles.time}>
+                                    {new Date(msg.enviado_em).toLocaleTimeString([], {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    })}
+                                </small>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <footer className={styles.footer}>
+                    <input
+                        type="text"
+                        value={novaMensagem}
+                        onChange={(e) => setNovaMensagem(e.target.value)}
+                        placeholder="Digite sua mensagem"
+                        className={styles.input}
+                    />
+                    <button onClick={enviarMensagem} className={styles.button}>
+                        Enviar
+                    </button>
+                </footer>
+            </div>
+
+            {/* Mova o UserDetalhes para fora da chatArea */}
+            <div className={styles.userDetalhesWrapper}>
+                <UserDetalhes />
+            </div>
         </div>
+
     );
+
 };
 
 export default Chat;
