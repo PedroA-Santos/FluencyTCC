@@ -1,39 +1,15 @@
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.05);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
 .mainContainer {
     display: flex;
     flex-direction: row;
     width: 100%;
     height: 100vh;
-    background: #37376D;
+    background: linear-gradient(135deg, #121212, #1e1e2f); /* Fundo mais escuro */
     overflow: hidden;
     font-family: 'Segoe UI', sans-serif;
+    color: #f5f5f5;
 }
 
+/* Área principal da pilha */
 .stackContainer {
     flex: 1;
     padding: 80px 20px 20px 320px;
@@ -57,95 +33,117 @@
     width: 100%;
     max-width: 340px;
     max-height: 600px;
-    background: linear-gradient(180deg, #25253F, #c0c0c0, #25253F);
-    border-radius: 16px;
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);    padding: 20px;
+    background: #1a1a2e; /* Mais escuro para alto contraste */
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     transition: transform 0.4s ease, opacity 0.4s ease;
-
 }
 
-.topCard {
-    animation: fadeInUp 0.4s ease forwards;
-  }
-  
-  @keyframes fadeInUp {
-    0% {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+.card h2 {
+    margin: 10px 0 5px;
+    font-size: 26px;
+    color: #ffffff; /* Mais branco */
+}
 
-.behindCard {
-    pointer-events: none;
+.card p {
+    font-size: 16px;
+    color: #dddddd;
+    text-align: center;
+    margin: 5px 0;
 }
 
 .profileImage {
-    width: 90%;
-    height: 55%;
+    width: 100%;
+    height: 340px;
     object-fit: cover;
     border-radius: 18px;
     margin-bottom: 15px;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
     transition: transform 0.3s ease;
 }
 
 .profileImage:hover {
     transform: scale(1.07);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-
-}
-
-.card h2 {
-    margin: 10px 0 5px;
-    font-size: 24px;
-    color: #000000;
-}
-
-.card p {
-    font-size: 16px;
-    color: #000000;
-    text-align: center;
-    margin: 5px 0;
 }
 
 .actionButtons {
     display: flex;
-    justify-content: space-around;
-    gap: 20px;
+    justify-content: center;
+    gap: 30px;
     margin-top: 20px;
     width: 100%;
     animation: pulse 2s infinite;
 }
 
-
-
 .acceptButton,
 .rejectButton {
-  font-size: 2.5rem;
-  cursor: pointer;
-  background: none;
-  border: none;
-  transition: transform 0.2s ease, filter 0.2s ease;
+    font-size: 2.8rem;
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-.rejectButton:hover {
-    color: #ff4d4d;
-    transform: scale(1.2);
-    filter: drop-shadow(0 0 5px #ff4d4d);
+.acceptButton {
+    color: #FFC107; /* Amarelo vivo */
+}
+
+.rejectButton {
+    color: #FF5722; /* Laranja vibrante */
 }
 
 .acceptButton:hover {
-    color: #ff66cc;
     transform: scale(1.2);
-    filter: drop-shadow(0 0 5px #ff66cc);
+    filter: drop-shadow(0 0 5px #FFC107);
+}
+
+.rejectButton:hover {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 5px #FF5722);
+}
+
+.userDetails {
+    flex: 1;
+    background: #10101a; /* Bem escuro para contraste */
+    width: 350px;
+    padding: 30px 20px;
+    border-radius: 20px;
+    margin-right: 20px;
+    margin-bottom: 35px;
+    overflow-y: auto;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.08);
+    animation: fadeInRight 0.5s ease forwards;
+}
+
+.userDetails h2 {
+    margin-bottom: 1rem;
+    color: #FFC107; /* Destaque amarelo */
+    font-size: 1.6rem;
+}
+
+.infoGroup {
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid #FFC107;
+}
+
+.infoGroup h3 {
+    font-size: 1rem;
+    color: #aaaaee;
+    margin-bottom: 0.3rem;
+}
+
+.infoGroup p {
+    font-size: 15px;
+    color: #ffffff;
+    background-color: #232334;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    text-align: center;
 }
 
 .errorMessage,
@@ -154,60 +152,4 @@
     text-align: center;
     margin-top: 40px;
     color: #ffffff;
-}
-
-.userDetails {
-    flex: 1;
-    background: #25253F;
-    width: 350px;
-    padding: 30px 20px;
-    border-radius: 16px;
-    margin-right: 20px;
-    overflow-y: auto;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-    animation: fadeInRight 0.5s ease forwards;
-}
-
-@keyframes fadeInRight {
-    0% {
-        opacity: 0;
-        transform: translateX(40px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.userDetails h2 {
-    margin-bottom: 1rem;
-    color: #ffd700;
-    font-size: 1.6rem;
-}
-
-.infoGroup {
-    margin-bottom: 1rem;
-
-}
-
-.infoGroup h3 {
-    font-size: 1rem;
-    color: #ccccff;
-    margin-bottom: 0.2rem;
-}
-
-.infoGroup p {
-    font-size: 16px;
-    color: #eee;
-    text-align: center;
-    margin-top: 8px;
-}
-
-.infoValue {
-    font-size: 0.95rem;
-    background-color: #1b1b2f;
-    padding: 0.5rem 0.8rem;
-    border-radius: 8px;
-    color: #e0e0ff;
 }

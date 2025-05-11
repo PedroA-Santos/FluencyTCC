@@ -1,41 +1,64 @@
 .userDetails {
     position: fixed;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     right: 0;
     top: 0;
     height: 100%;
-    border-left: 1px solid #ccc;
+    border-left: 3px solid #ffff; /* Verde vibrante para separador */
     padding: 20px;
-    z-index: 1000; /* para ficar acima de outros elementos */
-    flex: 1;
-    background: #25253F;
+    background: #37376D; /* Azul escuro principal */
     width: 350px;
-    overflow-y: auto;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     animation: fadeInRight 0.5s ease forwards;
+}
+
+.userDetails h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #FFC107; /* Amarelo vibrante para destaque */
 }
 
 .infoGroup {
     margin-bottom: 1rem;
-
-}
-
-.infoGroup h3 {
-    font-size: 1rem;
-    color: #ccccff;
-    margin-bottom: 0.2rem;
 }
 
 .infoGroup p {
     font-size: 16px;
-    color: #eee;
+    color: #F5F5F5; /* Cinza claro para leitura confortável */
     text-align: center;
     margin-top: 8px;
 }
 
 .infoValue {
     font-size: 0.95rem;
-    background-color: #1b1b2f;
+    background-color: #25253F; /* Azul mais escuro para contraste */
     padding: 0.5rem 0.8rem;
     border-radius: 8px;
-    color: #e0e0ff;
+    color: #FFC107; /* Destaque nos valores */
+    border: 1px solid #FFC107;
+    text-align: center;
+}
+
+.userPhotoWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.userPhoto {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #FFC107; /* Moldura amarela vibrante */
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-align: center;
+}
+
+.userPhoto:hover {
+    transform: scale(1.05);
+    border-color: #FF5722; /* Laranja no hover */
 }

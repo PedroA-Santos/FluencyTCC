@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #37376D;
+    background: linear-gradient(180deg, #1a1a3d 0%, #37376D 100%);
     padding: 20px;
 }
 
@@ -13,6 +13,7 @@
     font-size: 3em;
     margin-bottom: 1em;
     text-align: center;
+    text-shadow: 0 0 10px rgba(255, 193, 7, 0.4);
 }
 
 .form {
@@ -21,6 +22,10 @@
     align-items: center;
     width: 100%;
     max-width: 400px;
+    background-color: #2a2a5d;
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6);
 }
 
 .inputGroup {
@@ -33,53 +38,49 @@
 .inputGroup input, 
 .inputGroup select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: none;
-    border-bottom: 2px solid #ccc;
+    border-bottom: 2px solid #999;
     background: transparent;
-    color: white;
+    color: #fff;
     font-size: 16px;
     outline: none;
-    transition: border-color 0.3s;
-    appearance: none; /* Remove estilo padrão do navegador */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Personalizando Select */
+.inputGroup input:focus, 
+.inputGroup select:focus {
+    border-bottom: 2px solid #FFC107;
+    box-shadow: 0 2px 10px rgba(255, 193, 7, 0.3);
+}
+
+/* Select */
 .inputGroup select {
     cursor: pointer;
-    background-image: url('data:image/svg+xml;utf8,<svg fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-image: url("data:image/svg+xml;utf8,<svg fill='white' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 16px;
     padding-right: 30px;
 }
 
-/* Corrige o fundo branco do select quando aberto */
-.inputGroup select:focus {
-    border-bottom: 2px solid #FFC107;
-    background-color: #37376D; /* Mantém a cor do fundo igual ao da página */
-    color: white;
-}
-
-/* Estilizando a lista suspensa */
 .inputGroup select option {
-    background-color:rgba(255, 255, 255, 0.536);
-    color: #ffffff;
+    background-color: #2a2a5d;
+    color: #fff;
 }
 
-/* Labels flutuantes corrigidos */
+/* Labels flutuantes */
 .inputGroup label {
     position: absolute;
-    left: 10px;
+    left: 12px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 16px;
-    color: white;
-    transition: 0.3s ease-in-out;
+    color: #ccc;
     pointer-events: none;
+    transition: 0.3s ease;
 }
 
-/* Quando o input está focado ou tem valor, move o label para cima */
 .inputGroup input:focus + label, 
 .inputGroup select:focus + label,
 .inputGroup input:not(:placeholder-shown) + label,
@@ -89,39 +90,36 @@
     color: #FFC107;
 }
 
-.inputGroup input:-webkit-autofill,
-.inputGroup input:-webkit-autofill:hover, 
-.inputGroup input:-webkit-autofill:focus, 
-.inputGroup input:-webkit-autofill:active {
-    background-color: transparent !important;
-    color: white !important;
+/* Corrige auto-preenchimento */
+.inputGroup input:-webkit-autofill {
     -webkit-text-fill-color: white !important;
-    transition: background-color 5000s ease-in-out 0s;
+    box-shadow: 0 0 0 30px #2a2a5d inset !important;
 }
 
-/* Botão */
 .button {
     width: 100%;
     padding: 12px;
     background-color: #FFC107;
-    color: #37376D;
+    color: #1a1a3d;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+    transition: all 0.3s ease;
 }
 
 .button:hover {
     background-color: #e6a800;
+    color: #fff;
     transform: scale(1.05);
 }
 
-
 .sucessMessage {
     color: #4CAF50;
-    font-size: 22px;
-    margin-top: 10px;
+    font-size: 20px;
+    margin-top: 15px;
     font-weight: bold;
-    
+    text-align: center;
 }

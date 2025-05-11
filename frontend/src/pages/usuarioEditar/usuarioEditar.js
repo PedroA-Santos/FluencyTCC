@@ -3,12 +3,14 @@ import { useState, useEffect } from "react";
 import { FaUserPlus } from 'react-icons/fa';
 import useEditPerfil from "../../hooks/useEditPerfil";
 import useListInteresses from "../../hooks/useListInteresses";
+import useListInteressesUsuario from '../../hooks/useListInteressesUsuario';
 import styles from "./usuarioEditar.module.css";
 
 function UsuarioEditar() {
     const { id } = useParams();
     const { user, handleChange, handleSubmit, loading, success, error, handleImageChange } = useEditPerfil(id);
     const { interesses, loading: loadingInteresses, error: errorInteresses } = useListInteresses();
+    const { interesses: interessesUsuario, loading: loadingInteressesUsuario, error: errorInteressesUsuario } = useListInteressesUsuario(id);
 
     const [interessesSelecionados, setInteressesSelecionados] = useState([]);
     const [image, setImage] = useState(null);
@@ -25,12 +27,12 @@ function UsuarioEditar() {
                 setImage(fullPath);
             }
         }
-    
+
         if (user && user.interesses) {
             setInteressesSelecionados(user.interesses.map((interesse) => interesse.id));
         }
     }, [user]);
-    
+
 
 
     if (!id || id === null) {
@@ -116,7 +118,21 @@ function UsuarioEditar() {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label>Interesses:</label>
+                    <label>Interesses Atuais</label>
+                    {loadingInteressesUsuario && <p>Carregando interesses...</p>}
+                    {interessesUsuario.length === 0 && !loadingInteressesUsuario && (
+                        <p>Nenhum interesse encontrado.</p>
+                    )}
+                    {interessesUsuario.map((item) => (
+                        <span key={item.id} className={styles.interesseSelecionado}>
+                            {item.interesse}
+                        </span>
+                    ))}
+                </div>
+
+
+                <div className={styles.inputGroup}>
+                    <label>Atualizar Interesses:</label>
                     <div className="interessesContainer">
                         {loadingInteresses && <p>Carregando interesses...</p>}
                         {interesses.map((item) => (

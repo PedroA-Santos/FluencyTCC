@@ -47,11 +47,14 @@ function Perfil() {
                 <div className={styles.divider}></div>
 
                 <h2 className={styles.interessesTitle}>Interesses</h2>
-                {interesses.map(interesse => (
-                    <div key={interesse.id} className={styles.interesses}>
-                        <p>{interesse.interesse}</p>
-                    </div>
-                ))}
+                <div className={styles.interessesContainer}>
+                    {interesses.map(interesse => (
+                        <div key={interesse.id} className={styles.interesses}>
+                            <p>{interesse.interesse}</p>
+                        </div>
+                    ))}
+                </div>
+
                 <button
                     className={styles.buttonCustom}
                     onClick={() => navigate('/')}

@@ -1,76 +1,116 @@
-/* Contêiner lateral fixo (engloba perfil + matches) */
+/* Container lateral geral */
 .containerLateral {
     position: fixed;
     top: 0;
     left: 0;
-    width: 240px;
+    width: 280px;
     height: 100vh;
-    background-color: #25253F;
-    padding: 20px 15px;
-    box-shadow: 12px 0 28px rgba(255, 255, 255, 0.05);
-    flex: 1;
+    background: linear-gradient(180deg, #2C2C4A, #1F1F3A); /* Azul profundo degradê */
+    padding: 20px;
+    box-shadow: 12px 0 28px rgba(52, 52, 52, 0.4);
+    display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
+    gap: 30px;
     z-index: 10;
-
+    overflow-y: auto;
+    border-right: 3px solid #ffff; /* Verde vibrante para contraste */
 }
 
-/* Perfil do usuário (parte de cima) */
+/* Perfil do usuário */
 .profileContainer {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    background-color: #D9D9D9;
-    padding: 10px;
-    border-radius: 10px;
-
+    background-color: #37376D; /* Azul escuro uniforme */
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
 }
 
-/* Imagem de perfil do usuário */
 .profileImage {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #ccc;
     cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
-/* Lista de matches */
+.profileImage:hover {
+    transform: scale(1.1);
+    border-color: #FF5722; /* Laranja no hover */
+}
+
+.profileContainer h2 {
+    color: #FFC107; /* Nome em destaque amarelo */
+    margin-top: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Matches */
 .matchesContainer {
     display: flex;
     flex-direction: column;
+    gap: 15px;
 }
 
 .matchesContainer h2 {
-    margin-bottom: 10px;
-    color: #ffffff;
+    color: #F5F5F5;
+    font-size: 1rem;
     text-align: center;
-    background-color: #797979;
-    border-radius: 10px;
+    padding: 10px;
+    background-color: #4CAF50; /* Verde vibrante */
+    border-radius: 12px;
+    box-shadow: inset 0 0 6px #00000050;
 }
 
+/* Lista de contatos */
 .matchesContainer ul {
     list-style: none;
     padding: 0;
     margin: 0;
-
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 450px;
+    overflow-y: auto;
+    scrollbar-width: thin;
 }
 
-.matchesContainer li {
+.matchItem {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-    padding: 5px;
-    border-bottom: 1px solid #ccc;
+    gap: 15px;
+    padding: 12px;
+    border-radius: 14px;
+    background-color: #434375; /* Azul mais claro para contraste */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.2s;
+    cursor: pointer;
+}
+
+.matchItem:hover {
+    background-color: #5555AA; /* Tom mais vivo no hover */
+    transform: translateY(-2px);
 }
 
 .usernameMatch {
-    color: #ffffff;
-    ;
-    cursor: pointer;
+    color: #F5F5F5;
+    font-size: 1rem;
+    font-weight: 500;
+    flex: 1;
+    transition: color 0.2s;
+}
+
+.usernameMatch:hover {
+    color: #FFC107; /* Destaque ao passar o mouse */
+}
+
+/* Reutilização da imagem de perfil para os contatos */
+.matchItem .profileImage {
+    width: 50px;
+    height: 50px;
+
 }

@@ -155,9 +155,9 @@ exports.login = async (req, res) => {
         if (!user || !(await bcrypt.compare(senha, user.senha))) {
             return res.status(401).json({ message: "Email ou senha incorretos." });
         }
-        
+
         const token = jwt.sign({ id: user.id, email: user.email }, secretKey, { expiresIn: "1h" });
-        
+
         return res.status(200).json({
             message: "Login bem-sucedido",
             user: { id: user.id, email: user.email, username: user.username },
@@ -290,7 +290,20 @@ exports.updateUsuarioStep2 = async (req, res) => {
         return res.status(400).json({ message: "ID do usuário é obrigatório." });
     }
 
-    const foto_perfil = req.file ? `/uploads/${req.file.filename}` : null;
+    const usuarioExistente = await usuarioModel.listFindById(id);
+    if (!usuarioExistente) {
+        return res.status(404).json({ message: "Usuário não encontrado." });
+    }
+
+
+    let foto_perfil;
+
+    if (req.file) {
+        foto_perfil = `/uploads/${req.file.filename}`;
+    } else {
+        foto_perfil = usuarioExistente.foto_perfil;
+    }
+
 
     try {
         const usuarioExistente = await usuarioModel.listFindById(id);
