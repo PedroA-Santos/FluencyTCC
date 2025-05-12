@@ -60,7 +60,7 @@ function Contatos() {
                                     className={styles.profileImage}
                                     onClick={() => navigate(`/perfil/${match.id}`)}
                                 />
-                                <p onClick={() => navigate(`/chat/${match.id}`)} className={styles.usernameMatch}>{match.username}</p>
+                                <p onClick={() => navigate(`/chat/${match.matchId}`)} className={styles.usernameMatch}>{match.username}</p>
                             </li>
                         );
                     })}

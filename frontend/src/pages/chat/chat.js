@@ -9,12 +9,14 @@ import { useParams } from "react-router-dom";
 
 const Chat = () => {
     const { matchId } = useParams();
-    const { contatos, loading, error } = useListContatos()
+    const { contatos, loading } = useListContatos()
     const socketRef = useRef(null);
     const [mensagens, setMensagens] = useState([]);
     const [novaMensagem, setNovaMensagem] = useState("");
+    const [error, setError] = useState(null);
     const userIdDaSessao = verificarSessaoUsuario()
-
+    
+    
     const contato = contatos.find(
         contato =>
           contato.matchId.toString() === matchId &&
@@ -55,6 +57,7 @@ const Chat = () => {
         });
 
         socketRef.current.on("erro", (msg) => {
+            setError(msg);
             console.error("Erro:", msg);
         });
 
@@ -67,6 +70,8 @@ const Chat = () => {
         };
     }, [matchId]); // matchId é estável, então não gera loop
 
+    
+
     const enviarMensagem = () => {
         if (novaMensagem.trim() && user && socketRef.current) {
             socketRef.current.emit("enviarMensagem", {
@@ -76,6 +81,10 @@ const Chat = () => {
             setNovaMensagem("");
         }
     };
+
+    if (error) {
+        return
+    }
 
     return (
         <div className={styles.container}>
