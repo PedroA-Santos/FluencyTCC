@@ -45,23 +45,24 @@ const useLogin = () => {
                 const userId = data.user.id;
                 console.log("User ID do login:", userId);
 
-                // Dispara atualização da navbar
                 window.dispatchEvent(new Event("storage"));
 
-                // 🔥 Aqui vem a verificação se o usuário já escolheu idiomas:
                 try {
                     const idiomasRes = await fetch(`http://localhost:5000/usuario/${userId}/idiomas/verificar`);
                     const idiomasData = await idiomasRes.json();
 
                     if (!idiomasData.selecionouIdiomas) {
-                        navigate("/salvarIdiomas"); // Redireciona pra seleção
+                        navigate("/salvarIdiomas");
                     } else {
-                        navigate(from, { replace: true }); // Vai pra página que ele tentou acessar ou /home
+                        navigate(from, { replace: true });
                     }
                 } catch (idiomaErr) {
                     console.error("Erro ao verificar idiomas:", idiomaErr);
-                    navigate(from, { replace: true }); // fallback
+                    navigate(from, { replace: true });
                 }
+            } else {
+                // Aqui tratamos o erro retornado pela API (mensagem como "Email ou senha incorretos.")
+                setError(data.message || "Erro ao fazer login.");
             }
         } catch (err) {
             setError("Erro ao conectar com o servidor.");
@@ -70,6 +71,7 @@ const useLogin = () => {
             setLoading(false);
         }
     };
+
 
     const handleLogout = useCallback(() => {
         setUser(null);

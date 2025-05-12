@@ -9,6 +9,7 @@ import useAceitarMatch from "../../hooks/useAceitarMatch";
 function Home() {
     const { users, loading, error } = useBuscarMatches();
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [swipeDirection, setSwipeDirection] = useState("");
     const navigate = useNavigate();
 
     const { aceitarMatch, loading: matchLoading, erro, sucesso } = useAceitarMatch();
@@ -22,6 +23,14 @@ function Home() {
         }
     };
 
+    const animateAndGoNext = (direction) => {
+        setSwipeDirection(direction);
+        setTimeout(() => {
+            setSwipeDirection("");
+            handleNext();
+        }, 600);
+    };
+
     const handleAcceptMatch = () => {
         const currentUser = users[currentIndex];
         aceitarMatch(
@@ -29,8 +38,12 @@ function Home() {
             userIdDaSessao,
             currentUser.id,
             currentUser.idioma_comum || currentUser.idiomas_aprendendo,
-            handleNext
+            () => animateAndGoNext("right")
         );
+    };
+
+    const handleRejectMatch = () => {
+        animateAndGoNext("left");
     };
 
     const getImagemPerfilCard = (foto_perfil) => {
@@ -60,7 +73,12 @@ function Home() {
                         return (
                             <div
                                 key={user.id}
-                                className={`${styles.card} ${isTopCard ? styles.topCard : styles.behindCard}`}
+                                className={`
+                                    ${styles.card}
+                                    ${isTopCard && swipeDirection === "right" ? styles.swipeRight : ""}
+                                    ${isTopCard && swipeDirection === "left" ? styles.swipeLeft : ""}
+                                    ${isTopCard ? styles.topCard : styles.behindCard}
+                                `}
                                 style={{
                                     zIndex: users.length - i,
                                     transform: isBehindCard
@@ -69,6 +87,14 @@ function Home() {
                                     opacity: isBehindCard ? 0.8 : 1,
                                 }}
                             >
+                                {/* Animação de texto */}
+                                {isTopCard && swipeDirection === "right" && (
+                                    <div className={`${styles.swipeText} ${styles.liked}`}>Curtido 💖</div>
+                                )}
+                                {isTopCard && swipeDirection === "left" && (
+                                    <div className={`${styles.swipeText} ${styles.rejected}`}>Rejeitado ❌</div>
+                                )}
+
                                 <img
                                     src={getImagemPerfilCard(user.foto_perfil)}
                                     alt={user.username}
@@ -81,7 +107,7 @@ function Home() {
 
                                 {isTopCard && (
                                     <div className={styles.actionButtons}>
-                                        <button onClick={handleNext} className={styles.rejectButton} aria-label="Rejeitar">❌</button>
+                                        <button onClick={handleRejectMatch} className={styles.rejectButton} aria-label="Rejeitar">❌</button>
                                         <button onClick={handleAcceptMatch} className={styles.acceptButton} aria-label="Aceitar">💖</button>
                                     </div>
                                 )}
