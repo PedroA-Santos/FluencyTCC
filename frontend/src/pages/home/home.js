@@ -10,6 +10,7 @@ function Home() {
     const { users, loading, error } = useBuscarMatches();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [swipeDirection, setSwipeDirection] = useState("");
+    const [buscandoMais, setBuscandoMais] = useState(false);
     const navigate = useNavigate();
 
     const { aceitarMatch, loading: matchLoading, erro, sucesso } = useAceitarMatch();
@@ -18,8 +19,11 @@ function Home() {
     const handleNext = () => {
         if (currentIndex < users.length - 1) {
             setCurrentIndex((prevIndex) => prevIndex + 1);
+            setBuscandoMais(false);
         } else {
-            alert("Você chegou ao fim da lista de sugestões!");
+            setBuscandoMais(true);
+            // Aqui podemos simular um delay ou buscar mais usuários no futuro
+
         }
     };
 
@@ -64,56 +68,55 @@ function Home() {
 
             <div className={styles.stackContainer}>
                 <div className={styles.cardStack}>
-                    {users.map((user, i) => {
-                        if (i < currentIndex) return null;
+                    {!buscandoMais && currentIndex < users.length ? (
+                        (() => {
+                            const user = users[currentIndex];
+                            return (
+                                <div
+                                    key={user.id}
+                                    className={`
+                        ${styles.card}
+                        ${swipeDirection === "right" ? styles.swipeRight : ""}
+                        ${swipeDirection === "left" ? styles.swipeLeft : ""}
+                        ${styles.topCard}
+                    `}
+                                    style={{
+                                        zIndex: 10,
+                                        transform: "translateY(0)",
+                                        opacity: 1,
+                                    }}
+                                >
+                                    {swipeDirection === "right" && (
+                                        <div className={`${styles.swipeText} ${styles.liked}`}>Curtido 💖</div>
+                                    )}
+                                    {swipeDirection === "left" && (
+                                        <div className={`${styles.swipeText} ${styles.rejected}`}>Rejeitado ❌</div>
+                                    )}
 
-                        const isTopCard = i === currentIndex;
-                        const isBehindCard = i > currentIndex;
+                                    <img
+                                        src={getImagemPerfilCard(user.foto_perfil)}
+                                        alt={user.username}
+                                        className={styles.profileImage}
+                                        onClick={() => navigate(`/perfil/${user.id}`)}
+                                    />
 
-                        return (
-                            <div
-                                key={user.id}
-                                className={`
-                                    ${styles.card}
-                                    ${isTopCard && swipeDirection === "right" ? styles.swipeRight : ""}
-                                    ${isTopCard && swipeDirection === "left" ? styles.swipeLeft : ""}
-                                    ${isTopCard ? styles.topCard : styles.behindCard}
-                                `}
-                                style={{
-                                    zIndex: users.length - i,
-                                    transform: isBehindCard
-                                        ? `translateY(${(i - currentIndex) * 10}px) scale(${1 - (i - currentIndex) * 0.05})`
-                                        : "translateY(0)",
-                                    opacity: isBehindCard ? 0.8 : 1,
-                                }}
-                            >
-                                {/* Animação de texto */}
-                                {isTopCard && swipeDirection === "right" && (
-                                    <div className={`${styles.swipeText} ${styles.liked}`}>Curtido 💖</div>
-                                )}
-                                {isTopCard && swipeDirection === "left" && (
-                                    <div className={`${styles.swipeText} ${styles.rejected}`}>Rejeitado ❌</div>
-                                )}
+                                    <h2>{user.username}</h2>
+                                    <p>{user.bio || "Sem descrição"}</p>
 
-                                <img
-                                    src={getImagemPerfilCard(user.foto_perfil)}
-                                    alt={user.username}
-                                    className={styles.profileImage}
-                                    onClick={() => navigate(`/perfil/${user.id}`)}
-                                />
-
-                                <h2>{user.username}</h2>
-                                <p>{user.bio || "Sem descrição"}</p>
-
-                                {isTopCard && (
                                     <div className={styles.actionButtons}>
                                         <button onClick={handleRejectMatch} className={styles.rejectButton} aria-label="Rejeitar">❌</button>
                                         <button onClick={handleAcceptMatch} className={styles.acceptButton} aria-label="Aceitar">💖</button>
                                     </div>
-                                )}
-                            </div>
-                        );
-                    })}
+                                </div>
+                            );
+                        })()
+                    ) : (
+                        <div className={styles.semMaisUsuarios}>
+                            {buscandoMais
+                                ? "Buscando mais sugestões..."
+                            : "Nenhuma nova sugestão no momento. Tente novamente mais tarde. 🙁"}
+                        </div>
+                    )}
                 </div>
 
                 <div className={styles.userDetails}>
