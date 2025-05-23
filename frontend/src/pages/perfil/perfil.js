@@ -1,4 +1,5 @@
 import styles from './perfil.module.css';
+import Contatos from '../../components/Contatos';
 import usePerfilUsuario from '../../hooks/usePerfilUsuario';
 import useListInteressesUsuario from '../../hooks/useListInteressesUsuario';
 import verificarSessaoUsuario from '../../utils/verificarSessaoUsuario';
@@ -26,6 +27,7 @@ function Perfil() {
 
     return (
         <div className={styles.container}>
+            <Contatos />
             <div className={styles.profileCard}>
                 <img
                     src={imageUrl}
@@ -54,13 +56,6 @@ function Perfil() {
                         </div>
                     ))}
                 </div>
-
-                <button
-                    className={styles.buttonCustom}
-                    onClick={() => navigate('/')}
-                >
-                    Home
-                </button>
 
                 {isMeuPerfil && (
                     <div className={styles.buttons}>
