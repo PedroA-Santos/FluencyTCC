@@ -11,6 +11,12 @@ function Contatos() {
     const { perfil, error: perfilError, loading: perfilLoading } = usePerfilUsuario(userIdDaSessao);
     const navigate = useNavigate();
 
+    //Função de logout
+    const handleLogout = () => {
+        sessionStorage.removeItem("token");
+        navigate("/login");
+    }
+
     if (loading || perfilLoading) {
         return <div>Carregando contatos...</div>;
     }
@@ -33,6 +39,22 @@ function Contatos() {
                     onClick={() => navigate(`/perfil/${userIdDaSessao}`)}
                 />
                 <h2>{perfil.username}</h2>
+                <div className={styles.buttonGroup}>
+                    <button
+                        className={styles.homeButton}
+                        onClick={() => navigate("/")}
+                        aria-label="Voltar para a página inicial"
+                    >
+                        Home
+                    </button>
+                    <button
+                        className={styles.logoutButton}
+                        onClick={handleLogout}
+                        aria-label="Encerrar sessão"
+                    >
+                        Logout
+                    </button>
+                </div>
             </div>
 
             <div className={styles.matchesContainer}>
@@ -44,15 +66,29 @@ function Contatos() {
                             : "/images/default-image.jpg";
 
                         return (
-                            <li key={match.id} className={styles.matchItem}>
-                                
+                            <li
+                                key={match.id}
+                                className={styles.matchItem}
+                                onClick={() => navigate(`/chat/${match.matchId}`)}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" || e.key === " ") {
+                                        navigate(`/chat/${match.matchId}`);
+                                    }
+                                }}
+                            >
+
                                 <img
                                     src={imagePerfilContato}
                                     alt={match.username}
                                     className={styles.profileImage}
-                                    onClick={() => navigate(`/perfil/${match.id}`)}
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // Impede que o clique na imagem acione o onClick do li                                    }}
+                                        navigate(`/perfil/${match.id}`);
+                                    }}
                                 />
-                                <p
+                                < p
                                     onClick={() => navigate(`/chat/${match.matchId}`)}
                                     className={styles.usernameMatch}
                                 >
@@ -63,7 +99,7 @@ function Contatos() {
                     })}
                 </ul>
             </div>
-        </div>
+        </div >
     );
 }
 

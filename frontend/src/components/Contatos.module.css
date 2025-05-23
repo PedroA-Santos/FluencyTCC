@@ -114,3 +114,44 @@
     height: 50px;
 
 }
+
+/* Agrupamento de botões (Home e Logout) */
+.buttonGroup {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.homeButton {
+    padding: 0.6rem 1.8rem;
+    background-color: #434375; /* Rosa vibrante */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.homeButton:hover {
+    background-color: #5555AA;
+    transform: translateY(-2px);
+}
+
+.logoutButton {
+    padding: 0.6rem 1.8rem;
+    background-color: #FF5722; /* Cor laranja para destacar o logout */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.logoutButton:hover {
+    background-color: #e64a19;
+    transform: translateY(-2px);
+}
