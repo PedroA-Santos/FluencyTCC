@@ -225,3 +225,20 @@
         transform: translateX(-50%) scale(2);
     }
 }
+
+/*******/
+
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+.semMaisUsuarios {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #666;
+    animation: pulse 1.5s infinite;
+    text-align: center;
+}
