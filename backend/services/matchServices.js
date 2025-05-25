@@ -56,7 +56,7 @@ exports.buscarMatches = (userId) => {
                 FROM matches
                 WHERE (usuario1_id = ? OR usuario2_id = ?)
                 AND (
-                    status IN ('aceito', 'rejeitado') 
+                    status = 'aceito'
                     OR (status = 'pendente' AND usuario1_id = ?)
                 )
             )

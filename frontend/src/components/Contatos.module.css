@@ -155,3 +155,34 @@
     background-color: #e64a19;
     transform: translateY(-2px);
 }
+
+/* Menu de contexto */
+.contextMenu {
+    position: absolute;
+    background-color: #37376D;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+.contextMenuItem {
+    background: none;
+    border: none;
+    color: #F5F5F5;
+    padding: 8px 16px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.contextMenuItem:hover {
+    background-color: #5555AA;
+}
+
+.contextMenuItem:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

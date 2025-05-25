@@ -36,15 +36,14 @@ function Home() {
     };
 
     const handleAcceptMatch = () => {
-        const currentUser = users[currentIndex];
-        aceitarMatch(
-            currentUser.id,
-            userIdDaSessao,
-            currentUser.id,
-            currentUser.idioma_comum || currentUser.idiomas_aprendendo,
-            () => animateAndGoNext("right")
-        );
-    };
+    const currentUser = users[currentIndex];
+    aceitarMatch(
+        currentUser.id, // suggestedUserId
+        userIdDaSessao, // userId
+        currentUser.idioma_comum || currentUser.idiomas_aprendendo.split(', ')[0], // idiomaComum
+        () => animateAndGoNext("right")
+    );
+};
 
     const handleRejectMatch = () => {
         animateAndGoNext("left");

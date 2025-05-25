@@ -20,6 +20,7 @@ router.delete("/:id", matchController.deleteMatch);
 
 router.post('/aceitar-ou-criar', matchController.aceitarOuCriarMatch);
 
+router.put("/:matchId/reject", matchController.desfazerMatch);
 
 
 module.exports = router;

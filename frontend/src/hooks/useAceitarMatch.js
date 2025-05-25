@@ -1,41 +1,41 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { useMatch } from '../context/matchContext'; // ajuste o caminho correto para o seu projeto
+// hooks/useAceitarMatch.js
+import { useState } from "react";
+import axios from "axios";
 
-function useAceitarMatch() {
+const useAceitarMatch = () => {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [erro, setErro] = useState(null);
     const [sucesso, setSucesso] = useState(false);
 
-    const { notificarMatch } = useMatch(); // <- PEGANDO do contexto!
-
-    const aceitarMatch = async (matchId, usuario1_id, usuario2_id, idioma_comum, onSuccessCallback) => {
+    const aceitarMatch = async (suggestedUserId, userId, idiomaComum, callback) => {
+        console.log("[useAceitarMatch] Iniciando:", { suggestedUserId, userId, idiomaComum });
         setLoading(true);
-        setError(null);
+        setErro(null);
         setSucesso(false);
 
         try {
-            await axios.post("http://localhost:5000/match/aceitar-ou-criar", {
-                usuario1_id,
-                usuario2_id,
-                idioma_comum,
-                status: "aceito",
+            const response = await axios.post("http://localhost:5000/match/aceitar-ou-criar", {
+                usuario1_id: userId,
+                usuario2_id: suggestedUserId,
             });
-
+            console.log("[useAceitarMatch] Resposta recebida:", response.data);
             setSucesso(true);
-            if (onSuccessCallback) {
-                onSuccessCallback(); // <- avança o card depois que o match é aceito
+            if (callback) {
+                console.log("[useAceitarMatch] Chamando callback");
+                callback();
             }
-            notificarMatch(); // <- NOTIFICANDO que teve um novo match
+            return response.data;
         } catch (err) {
-            console.error("Erro ao aceitar match:", err);
-            setError("Erro ao aceitar match");
+            console.error("[useAceitarMatch] Erro:", err);
+            setErro(err.response?.data?.message || "Erro ao aceitar match");
+            throw err;
         } finally {
+            console.log("[useAceitarMatch] Finalizando, setLoading(false)");
             setLoading(false);
         }
     };
 
-    return { aceitarMatch, loading, error, sucesso };
-}
+    return { aceitarMatch, loading, erro, sucesso };
+};
 
 export default useAceitarMatch;
