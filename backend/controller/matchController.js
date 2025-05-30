@@ -142,12 +142,28 @@ exports.obterMatches = async (req, res) => {
         console.log("id do user: '", userId, "'");
 
         const matches = await matchService.buscarMatches(userId);
-        res.json(matches);
+
+        // Filtrar sugestões que já têm match aceito
+        const matchesFiltrados = (
+            await Promise.all(matches.map(async (user) => {
+                const match = await matchModel.getMatchEntreUsuarios(userId, user.id);
+                console.log(`[DBG] Sugestão user_id: ${user.id}, match:`, match);
+                if (match && match.status === 'aceito') {
+                    console.warn(`[DBG] AVISO: Usuário ${user.id} com match aceito sugerido indevidamente!`);
+                    return null; // remove da lista
+                }
+                return user; // mantém na lista
+            }))
+        ).filter(Boolean); // remove os nulls
+
+        res.json(matchesFiltrados);
+
     } catch (error) {
         console.error("erro ao buscar matches: ", error);
         res.status(500).json({ error: "Erro interno do servidor" });
     }
 }
+
 
 
 
@@ -160,18 +176,19 @@ exports.aceitarOuCriarMatch = async (req, res) => {
         console.log("[aceitarOuCriarMatch] Iniciando:", { usuario1_id, usuario2_id });
 
         const idioma_comum = await matchModel.getIdiomaComumEntreUsuarios(usuario1_id, usuario2_id);
-        console.log("[aceitarOuCriarMatch] Idioma comum encontrado:", idioma_comum);
         if (!idioma_comum) {
             return res.status(400).json({ message: "Usuários não têm idioma em comum." });
         }
 
-        // Verificar se já existe um match entre os dois usuários
         const matchExistente = await matchModel.getMatchEntreUsuarios(usuario1_id, usuario2_id);
         console.log("[aceitarOuCriarMatch] Match existente:", matchExistente);
 
         if (matchExistente) {
+            if (matchExistente.status === "aceito") {
+                console.log("[aceitarOuCriarMatch] Match já aceito");
+                return res.status(200).json({ message: "Match já aceito.", matchId: matchExistente.id });
+            }
             if (matchExistente.status === "pendente") {
-                // Se já havia pendente, atualiza para aceito
                 await matchModel.put({
                     id: matchExistente.id,
                     usuario1_id: matchExistente.usuario1_id,
@@ -179,46 +196,37 @@ exports.aceitarOuCriarMatch = async (req, res) => {
                     idioma_comum,
                     status: "aceito",
                 });
-                console.log("[aceitarOuCriarMatch] Match atualizado para aceito:", matchExistente.id);
-                return res.status(200).json({ message: "Match aceito por ambos!", matchId: matchExistente.id });
-            } else if (matchExistente.status === "aceito") {
-                console.log("[aceitarOuCriarMatch] Match já aceito");
-                return res.status(200).json({ message: "Match já aceito por ambos.", matchId: matchExistente.id });
-            } else if (matchExistente.status === "rejeitado") {
-                // Atualizar o match rejeitado para pendente
-                console.log("[aceitarOuCriarMatch] Match rejeitado encontrado, atualizando para pendente");
+                console.log("[aceitarOuCriarMatch] Match aceito:", matchExistente.id);
+                return res.status(200).json({ message: "Match aceito com sucesso.", matchId: matchExistente.id });
+            }
+            if (matchExistente.status === "rejeitado") {
+                // Redefinir usuario1_id como quem está iniciando a solicitação
                 await matchModel.put({
                     id: matchExistente.id,
-                    usuario1_id: matchExistente.usuario1_id,
-                    usuario2_id: matchExistente.usuario2_id,
+                    usuario1_id: usuario1_id,
+                    usuario2_id: usuario2_id,
                     idioma_comum,
                     status: "pendente",
                 });
-                console.log("[aceitarOuCriarMatch] Match atualizado para pendente:", matchExistente.id);
-                return res.status(200).json({
-                    message: "Match reativado. Aguardando o outro usuário aceitar.",
-                    matchId: matchExistente.id,
-                });
+                console.log("[aceitarOuCriarMatch] Match rejeitado alterado para pendente:", matchExistente.id);
+                return res.status(200).json({ message: "Match pendente criado com sucesso.", matchId: matchExistente.id });
             }
         }
 
-        // Caso não exista match, criar um novo match pendente
-        console.log("[aceitarOuCriarMatch] Criando novo match pendente");
         const novoMatch = await matchModel.post({
             usuario1_id,
             usuario2_id,
             idioma_comum,
             status: "pendente",
         });
-        console.log("[aceitarOuCriarMatch] Novo match criado:", novoMatch.insertId);
-
+        console.log("[aceitarOuCriarMatch] Novo match pendente criado:", novoMatch.insertId);
         return res.status(201).json({
-            message: "Match enviado. Aguardando o outro usuário aceitar.",
+            message: "Match pendente criado com sucesso.",
             matchId: novoMatch.insertId,
         });
     } catch (error) {
         console.error("[aceitarOuCriarMatch] Erro:", error);
-        return res.status(500).json({ message: "Erro interno ao criar ou aceitar match." });
+        return res.status(500).json({ message: "Erro ao criar ou aceitar match." });
     }
 };
 
