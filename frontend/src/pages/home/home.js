@@ -5,6 +5,7 @@ import useBuscarMatches from "../../hooks/useBuscarMatches";
 import styles from "./home.module.css";
 import verificarSessaoUsuario from "../../utils/verificarSessaoUsuario";
 import useAceitarMatch from "../../hooks/useAceitarMatch";
+import { useMatch } from "../../context/matchContext"; // Importar o contexto
 
 function Home() {
     const { users, loading, error } = useBuscarMatches();
@@ -15,6 +16,7 @@ function Home() {
 
     const { aceitarMatch, loading: matchLoading, erro, sucesso } = useAceitarMatch();
     const userIdDaSessao = verificarSessaoUsuario();
+    const { notificarMatch } = useMatch(); // Usar o contexto
 
     const handleNext = () => {
         if (currentIndex < users.length - 1) {
@@ -22,8 +24,6 @@ function Home() {
             setBuscandoMais(false);
         } else {
             setBuscandoMais(true);
-            // Aqui podemos simular um delay ou buscar mais usuários no futuro
-
         }
     };
 
@@ -36,14 +36,17 @@ function Home() {
     };
 
     const handleAcceptMatch = () => {
-    const currentUser = users[currentIndex];
-    aceitarMatch(
-        currentUser.id, // suggestedUserId
-        userIdDaSessao, // userId
-        currentUser.idioma_comum || currentUser.idiomas_aprendendo.split(', ')[0], // idiomaComum
-        () => animateAndGoNext("right")
-    );
-};
+        const currentUser = users[currentIndex];
+        aceitarMatch(
+            currentUser.id, // suggestedUserId
+            userIdDaSessao, // userId
+            currentUser.idioma_comum || currentUser.idiomas_aprendendo.split(', ')[0], // idiomaComum
+            () => {
+                notificarMatch(); // Notificar o contexto para atualizar contatos
+                animateAndGoNext("right");
+            }
+        );
+    };
 
     const handleRejectMatch = () => {
         animateAndGoNext("left");
@@ -74,11 +77,11 @@ function Home() {
                                 <div
                                     key={user.id}
                                     className={`
-                        ${styles.card}
-                        ${swipeDirection === "right" ? styles.swipeRight : ""}
-                        ${swipeDirection === "left" ? styles.swipeLeft : ""}
-                        ${styles.topCard}
-                    `}
+                                        ${styles.card}
+                                        ${swipeDirection === "right" ? styles.swipeRight : ""}
+                                        ${swipeDirection === "left" ? styles.swipeLeft : ""}
+                                        ${styles.topCard}
+                                    `}
                                     style={{
                                         zIndex: 10,
                                         transform: "translateY(0)",
@@ -103,8 +106,20 @@ function Home() {
                                     <p>{user.bio || "Sem descrição"}</p>
 
                                     <div className={styles.actionButtons}>
-                                        <button onClick={handleRejectMatch} className={styles.rejectButton} aria-label="Rejeitar">❌</button>
-                                        <button onClick={handleAcceptMatch} className={styles.acceptButton} aria-label="Aceitar">💖</button>
+                                        <button
+                                            onClick={handleRejectMatch}
+                                            className={styles.rejectButton}
+                                            aria-label="Rejeitar"
+                                        >
+                                            ❌
+                                        </button>
+                                        <button
+                                            onClick={handleAcceptMatch}
+                                            className={styles.acceptButton}
+                                            aria-label="Aceitar"
+                                        >
+                                            💖
+                                        </button>
                                     </div>
                                 </div>
                             );
@@ -113,7 +128,7 @@ function Home() {
                         <div className={styles.semMaisUsuarios}>
                             {buscandoMais
                                 ? "Buscando mais sugestões..."
-                            : "Nenhuma nova sugestão no momento. Tente novamente mais tarde. 🙁"}
+                                : "Nenhuma nova sugestão no momento. Tente novamente mais tarde. 🙁"}
                         </div>
                     )}
                 </div>
@@ -122,27 +137,22 @@ function Home() {
                     {users[currentIndex] && (
                         <>
                             <h2>Detalhes do Perfil</h2>
-
                             <div className={styles.infoGroup}>
                                 <h3>Idiomas que está aprendendo</h3>
                                 <p className={styles.infoValue}>{users[currentIndex].idiomas_aprendendo}</p>
                             </div>
-
                             <div className={styles.infoGroup}>
                                 <h3>Idioma Nativo</h3>
                                 <p className={styles.infoValue}>{users[currentIndex].idioma_nativo}</p>
                             </div>
-
                             <div className={styles.infoGroup}>
                                 <h3>Interesses</h3>
                                 <p className={styles.infoValue}>{users[currentIndex].interesses}</p>
                             </div>
-
                             <div className={styles.infoGroup}>
                                 <h3>Gênero</h3>
                                 <p className={styles.infoValue}>{users[currentIndex].generos}</p>
                             </div>
-
                             <div className={styles.infoGroup}>
                                 <h3>País</h3>
                                 <p className={styles.infoValue}>{users[currentIndex].paises_origem}</p>
