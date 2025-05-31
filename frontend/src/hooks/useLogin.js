@@ -8,8 +8,8 @@ const useLogin = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [user, setUser] = useState(() => {
-        const savedUser = sessionStorage.getItem("user");
-        return savedUser ? JSON.parse(savedUser) : null;
+        const savedUserId = sessionStorage.getItem("userId");
+        return savedUserId ? { id: savedUserId } : null;
     });
 
     const navigate = useNavigate();
@@ -38,9 +38,9 @@ const useLogin = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setUser(data.user);
+                setUser({ id: data.user.id });  // só o id
                 sessionStorage.setItem("token", data.token);
-                sessionStorage.setItem("user", JSON.stringify(data.user));
+                sessionStorage.setItem("userId", data.user.id);
 
                 const userId = data.user.id;
                 console.log("User ID do login:", userId);
@@ -61,7 +61,6 @@ const useLogin = () => {
                     navigate(from, { replace: true });
                 }
             } else {
-                // Aqui tratamos o erro retornado pela API (mensagem como "Email ou senha incorretos.")
                 setError(data.message || "Erro ao fazer login.");
             }
         } catch (err) {
@@ -72,12 +71,11 @@ const useLogin = () => {
         }
     };
 
-
     const handleLogout = useCallback(() => {
         setUser(null);
         setCredentials({ email: "", senha: "" });
         sessionStorage.removeItem("token");
-        sessionStorage.removeItem("user");
+        sessionStorage.removeItem("userId");
         navigate("/login");
     }, [navigate]);
 
@@ -92,15 +90,15 @@ const useLogin = () => {
                 .then((res) => res.json())
                 .then((data) => {
                     if (data.user) {
-                        setUser(data.user);
-                        sessionStorage.setItem("user", JSON.stringify(data.user));
+                        setUser({ id: data.user.id });
+                        sessionStorage.setItem("userId", data.user.id);
                     } else {
                         handleLogout();
                     }
                 })
                 .catch(() => handleLogout());
         }
-    }, [handleLogout]); // `handleLogout` está no array de dependências, mas agora é estável
+    }, [handleLogout]);
 
     return {
         credentials,

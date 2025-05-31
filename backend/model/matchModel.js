@@ -62,11 +62,13 @@ exports.delete = (id) => {
 exports.getMatchesByUserId = (userId) => {
     return new Promise((resolve, reject) => {
         const sql = `
-            SELECT DISTINCT u.id,m.id as matchId, u.username, u.bio, u.foto_perfil
+            SELECT DISTINCT u.id, m.id AS matchId, u.username, u.bio, u.foto_perfil, p.nome AS pais, i.idioma, u.data_nascimento AS idade
             FROM matches m
             JOIN usuarios u 
                 ON (u.id = m.usuario1_id AND m.usuario2_id = ?)
                 OR (u.id = m.usuario2_id AND m.usuario1_id = ?)
+            LEFT JOIN paises p ON p.id = u.pais_origem_id
+            LEFT JOIN idiomas i ON i.id = u.idioma_nativo_id
             WHERE m.status = 'aceito'
         `;
         db.query(sql, [userId, userId], (err, results) => {

@@ -55,8 +55,9 @@
   padding: 15px;
   display: flex;
   flex-direction: column;
+  align-items: flex-start; /* para permitir align-self nas mensagens */
   gap: 15px;
-    background: linear-gradient(135deg, #17171F, #282845); /* Fundo com gradiente escuro */ /* Fundo do chat */
+  background: linear-gradient(135deg, #17171F, #282845);
 }
 
 /* Estilo base da mensagem */
@@ -65,28 +66,29 @@
   padding: 12px;
   border-radius: 15px;
   position: relative;
-  display: inline-block;
   font-size: 0.9rem;
+  word-wrap: break-word;
+  /* display inline-block removido para evitar conflito no alinhamento */
 }
 
-/* Mensagem do usuário logado (direita) */
+/* Mensagem do usuário logado (esquerda) */
 .me {
-  align-self: flex-end;
+  align-self: flex-start;
   background-color: #4CAF50; /* Verde vibrante */
-  border-bottom-right-radius: 0;
-  text-align: right;
+  border-bottom-left-radius: 0;
+  text-align: left;
 }
 
 .me p {
   color: #ffffff;
 }
 
-/* Mensagem do outro usuário (esquerda) */
+/* Mensagem do outro usuário (direita) */
 .other {
-  align-self: flex-start;
+  align-self: flex-end;
   background-color: #FFC107; /* Amarelo forte */
-  border-bottom-left-radius: 0;
-  text-align: left;
+  border-bottom-right-radius: 0;
+  text-align: right;
 }
 
 .other p {
@@ -95,9 +97,9 @@
 
 .messageContent {
   margin: 0;
-  word-wrap: break-word;
 }
 
+/* Horário da mensagem */
 .time {
   font-size: 0.75rem;
   color: #ccc;

@@ -1,63 +1,43 @@
 import { useState, useEffect } from "react";
+import verificarSessaoUsuario from "../utils/verificarSessaoUsuario";
 import axios from "axios";
 
-
 function useListInteressesUsuario() {
+  const [interesses, setInteresses] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const [interesses, setInteresses] = useState([]);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const userIdDaSessao = verificarSessaoUsuario();
 
+    if (!userIdDaSessao) {
+      setError("Usuário não está logado ou sessão inválida.");
+      setLoading(false);
+      return;
+    }
 
-    useEffect(() => {
+    const fetchInteressesUser = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await axios.get(`http://localhost:5000/usuarioInteresses/${userIdDaSessao}`);
+        setInteresses(res.data);
 
-        const userString = sessionStorage.getItem("user");
-
-        // Verifica se o usuário existe e tem o ID
-        if (!userString) {
-            setError('Usuário não encontrado.');
-            console.log("Erro: Usuário não encontrado.");
-            return;
+        if (res.data.length === 0) {
+          setError("Nenhum interesse encontrado para este usuário.");
         }
+      } catch (err) {
+        setError("Erro ao carregar interesses do usuário.");
+        console.error("Erro ao carregar interesses:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        // Converte o JSON para objeto
-        const user = JSON.parse(userString);
-        const userIdDaSessao = user?.id;
-        console.log("ID do usuário da sessão:", userIdDaSessao);
+    fetchInteressesUser();
+  }, []);
 
-        if (!userIdDaSessao) {
-            setError('ID de usuário não encontrado.');
-            console.log("Erro: ID de usuário não encontrado.");
-            return;
-        }
-
-
-        const fetchInteressesUser = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const res = await axios.get(`http://localhost:5000/usuarioInteresses/${userIdDaSessao}`);
-                setInteresses(res.data);
-
-                if (res.data.length === 0) {
-                    setError('Nenhum interesse encontrado.');
-                    console.log("Erro: Nenhum interesse encontrado.");
-                }
-
-            } catch (err) {
-                setError("Erro ao carregar perfil.");
-                console.error("Erro ao Carregar Interesses", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchInteressesUser();
-    }, []);
-
-
-    return { interesses, error, loading };
-
+  return { interesses, error, loading };
 }
 
-export default useListInteressesUsuario
+export default useListInteressesUsuario;
