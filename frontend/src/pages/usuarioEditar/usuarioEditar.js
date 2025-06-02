@@ -26,7 +26,7 @@ function UsuarioEditar() {
 
         if (id !== tempId) {
             toast.error("Erro você não tem acesso!");
-            navigate("/login");
+            navigate("/");
         }
     }, [id, navigate]);
 

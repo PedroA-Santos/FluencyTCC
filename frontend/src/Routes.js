@@ -28,12 +28,12 @@ const AppRoutes = () => {
                         <Route path="/perfil/:id" element={<Perfil />} />
                         <Route path="/salvarIdiomas" element={<SalvarIdiomas />} />
                         <Route path="/editarPerfil/:id" element={<EditarPerfil />} />
-                        <Route path="/usuarioCadastro2/:id" element={<CadastroUsuario2 />} />
                     </Route>
 
 
                     <Route path="/login" element={<Login />} />
                     <Route path="/usuarioCadastro" element={<CadastroUsuario />} />
+                    <Route path="/usuarioCadastro2/:userId" element={<CadastroUsuario2 />} />
 
                 </Routes>
             </MatchProvider>

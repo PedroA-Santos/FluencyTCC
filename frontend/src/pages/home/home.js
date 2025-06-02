@@ -1,55 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import Contatos from "../../components/Contatos";
 import useBuscarMatches from "../../hooks/useBuscarMatches";
 import styles from "./home.module.css";
 import verificarSessaoUsuario from "../../utils/verificarSessaoUsuario";
 import useAceitarMatch from "../../hooks/useAceitarMatch";
-import { useMatch } from "../../context/matchContext"; // Importar o contexto
+import { useMatch } from "../../context/matchContext";
 
 function Home() {
     const { users, loading, error } = useBuscarMatches();
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [swipeDirection, setSwipeDirection] = useState("");
     const [buscandoMais, setBuscandoMais] = useState(false);
-    const navigate = useNavigate();
+    const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [feedbackType, setFeedbackType] = useState(""); // "like" ou "dislike"
 
-    const { aceitarMatch, loading: matchLoading, erro, sucesso } = useAceitarMatch();
+    const navigate = useNavigate();
+    const { aceitarMatch } = useAceitarMatch();
     const userIdDaSessao = verificarSessaoUsuario();
-    const { notificarMatch } = useMatch(); // Usar o contexto
+    const { notificarMatch } = useMatch();
+
+    const showFeedback = (type) => {
+        setFeedbackType(type);
+        setFeedbackMessage(type === "like" ? "💖 Curtido!" : "❌ Rejeitado!");
+        setTimeout(() => {
+            setFeedbackMessage("");
+            setFeedbackType("");
+        }, 1500);
+    };
+
 
     const handleNext = () => {
         if (currentIndex < users.length - 1) {
-            setCurrentIndex((prevIndex) => prevIndex + 1);
+            setCurrentIndex((prev) => prev + 1);
             setBuscandoMais(false);
         } else {
             setBuscandoMais(true);
         }
     };
 
-    const animateAndGoNext = (direction) => {
-        setSwipeDirection(direction);
-        setTimeout(() => {
-            setSwipeDirection("");
-            handleNext();
-        }, 600);
-    };
-
     const handleAcceptMatch = () => {
         const currentUser = users[currentIndex];
         aceitarMatch(
-            currentUser.id, // suggestedUserId
-            userIdDaSessao, // userId
-            currentUser.idioma_comum || currentUser.idiomas_aprendendo.split(', ')[0], // idiomaComum
+            currentUser.id,
+            userIdDaSessao,
+            currentUser.idioma_comum || currentUser.idiomas_aprendendo.split(', ')[0],
             () => {
-                notificarMatch(); // Notificar o contexto para atualizar contatos
-                animateAndGoNext("right");
+                notificarMatch();
+                showFeedback("like");
+                handleNext();
             }
         );
     };
 
     const handleRejectMatch = () => {
-        animateAndGoNext("left");
+        showFeedback("dislike");
+        handleNext();
     };
 
     const getImagemPerfilCard = (foto_perfil) => {
@@ -61,8 +67,19 @@ function Home() {
     }
 
     if (loading) {
-        return <div className={styles.loading}>Carregando sugestões...</div>;
+        return (
+            <div className={styles.loading}>
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                    className={styles.loader}
+                />
+                Carregando sugestões...
+            </div>
+        );
     }
+
+    const currentUser = users[currentIndex];
 
     return (
         <div className={styles.mainContainer}>
@@ -70,97 +87,109 @@ function Home() {
 
             <div className={styles.stackContainer}>
                 <div className={styles.cardStack}>
-                    {!buscandoMais && currentIndex < users.length ? (
-                        (() => {
-                            const user = users[currentIndex];
-                            return (
-                                <div
-                                    key={user.id}
-                                    className={`
-                                        ${styles.card}
-                                        ${swipeDirection === "right" ? styles.swipeRight : ""}
-                                        ${swipeDirection === "left" ? styles.swipeLeft : ""}
-                                        ${styles.topCard}
-                                    `}
-                                    style={{
-                                        zIndex: 10,
-                                        transform: "translateY(0)",
-                                        opacity: 1,
-                                    }}
+                    <AnimatePresence mode="wait">
+                        {!buscandoMais && currentUser && (
+                            <motion.div
+                                key={currentUser.id}
+                                className={`${styles.card} ${styles.topCard}`}
+                                initial={{ x: 300, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: -300, opacity: 0 }}
+                                transition={{ duration: 0.6, type: "spring" }}
+                            >
+                                <motion.img
+                                    src={getImagemPerfilCard(currentUser.foto_perfil)}
+                                    alt={currentUser.username}
+                                    className={styles.profileImage}
+                                    whileHover={{ scale: 1.05 }}
+                                    onClick={() => navigate(`/perfil/${currentUser.id}`)}
+                                />
+                                <h2>{currentUser.username}</h2>
+                                <p>{currentUser.bio || "Sem descrição"}</p>
+
+                                <motion.div
+                                    className={styles.actionButtons}
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: 0.4 }}
                                 >
-                                    {swipeDirection === "right" && (
-                                        <div className={`${styles.swipeText} ${styles.liked}`}>Curtido 💖</div>
-                                    )}
-                                    {swipeDirection === "left" && (
-                                        <div className={`${styles.swipeText} ${styles.rejected}`}>Rejeitado ❌</div>
-                                    )}
+                                    <motion.button
+                                        onClick={handleRejectMatch}
+                                        className={styles.rejectButton}
+                                        whileTap={{ scale: 0.9 }}
+                                        whileHover={{ rotate: -10 }}
+                                    >
+                                        ❌
+                                    </motion.button>
+                                    <motion.button
+                                        onClick={handleAcceptMatch}
+                                        className={styles.acceptButton}
+                                        whileTap={{ scale: 0.9 }}
+                                        whileHover={{ rotate: 10 }}
+                                    >
+                                        💖
+                                    </motion.button>
+                                </motion.div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
-                                    <img
-                                        src={getImagemPerfilCard(user.foto_perfil)}
-                                        alt={user.username}
-                                        className={styles.profileImage}
-                                        onClick={() => navigate(`/perfil/${user.id}`)}
-                                    />
-
-                                    <h2>{user.username}</h2>
-                                    <p>{user.bio || "Sem descrição"}</p>
-
-                                    <div className={styles.actionButtons}>
-                                        <button
-                                            onClick={handleRejectMatch}
-                                            className={styles.rejectButton}
-                                            aria-label="Rejeitar"
-                                        >
-                                            ❌
-                                        </button>
-                                        <button
-                                            onClick={handleAcceptMatch}
-                                            className={styles.acceptButton}
-                                            aria-label="Aceitar"
-                                        >
-                                            💖
-                                        </button>
-                                    </div>
-                                </div>
-                            );
-                        })()
-                    ) : (
+                    {buscandoMais && (
                         <div className={styles.semMaisUsuarios}>
-                            {buscandoMais
-                                ? "Buscando mais sugestões..."
-                                : "Nenhuma nova sugestão no momento. Tente novamente mais tarde. 🙁"}
+                            Buscando mais sugestões...
                         </div>
                     )}
                 </div>
 
-                <div className={styles.userDetails}>
-                    {users[currentIndex] && (
+                <motion.div
+                    className={styles.userDetails}
+                    initial={{ x: 100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                >
+                    {currentUser && (
                         <>
                             <h2>Detalhes do Perfil</h2>
                             <div className={styles.infoGroup}>
                                 <h3>Idiomas que está aprendendo</h3>
-                                <p className={styles.infoValue}>{users[currentIndex].idiomas_aprendendo}</p>
+                                <p className={styles.infoValue}>{currentUser.idiomas_aprendendo}</p>
                             </div>
                             <div className={styles.infoGroup}>
                                 <h3>Idioma Nativo</h3>
-                                <p className={styles.infoValue}>{users[currentIndex].idioma_nativo}</p>
+                                <p className={styles.infoValue}>{currentUser.idioma_nativo}</p>
                             </div>
                             <div className={styles.infoGroup}>
                                 <h3>Interesses</h3>
-                                <p className={styles.infoValue}>{users[currentIndex].interesses}</p>
+                                <p className={styles.infoValue}>{currentUser.interesses}</p>
                             </div>
                             <div className={styles.infoGroup}>
                                 <h3>Gênero</h3>
-                                <p className={styles.infoValue}>{users[currentIndex].generos}</p>
+                                <p className={styles.infoValue}>{currentUser.generos}</p>
                             </div>
                             <div className={styles.infoGroup}>
                                 <h3>País</h3>
-                                <p className={styles.infoValue}>{users[currentIndex].paises_origem}</p>
+                                <p className={styles.infoValue}>{currentUser.paises_origem}</p>
                             </div>
                         </>
                     )}
-                </div>
+                </motion.div>
             </div>
+
+            <AnimatePresence>
+                {feedbackMessage && (
+                    <motion.div
+                        key="feedback"
+                        className={`${styles.feedbackMessage} ${feedbackType === "like" ? styles.like : styles.dislike
+                            }`}
+                        initial={{ opacity: 0, scale: 0.6 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.6 }}
+                        transition={{ duration: 0.4 }}
+                    >
+                        {feedbackMessage}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

@@ -1,14 +1,15 @@
 import React from "react";
-import { useParams } from "react-router-dom";
-import styles from "./UserDetalhes.module.css";
+import { useNavigate, useParams } from "react-router-dom";
 import useListContatos from "../hooks/useListContatos";
 import calcularIdade from "../utils/calcularIdade";
 import verificarSessaoUsuario from "../utils/verificarSessaoUsuario";
+import styles from "./UserDetalhes.module.css";
 
 function UserDetalhes() {
     const { matchId } = useParams();
-    const { contatos, loading, error } = useListContatos();
+    const { contatos } = useListContatos();
     const userIdDaSessao = verificarSessaoUsuario();
+    const navigate = useNavigate();
 
     const outroUsuario = contatos.find(
         contato =>
@@ -28,13 +29,21 @@ function UserDetalhes() {
 
     return (
         <div className={styles.userDetails}>
-            <h2>Detalhes do Perfil</h2>
+            <h2 className={styles.title}>Detalhes do Perfil</h2>
 
             <div className={styles.userPhotoWrapper}>
                 <img
                     className={styles.userPhoto}
                     src={imageUrl}
                     alt={`Foto de ${outroUsuario.username}`}
+                    onClick={() =>
+                        navigate(`/perfil/${outroUsuario.id}`, {
+                            state: {
+                                fromChat: true,
+                                matchId: matchId,
+                            },
+                        })
+                    }
                 />
             </div>
 

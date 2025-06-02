@@ -7,8 +7,8 @@ import { toast } from 'react-toastify';
 import styles from "./usuarioCadastro2.module.css";
 
 function UsuarioCadastro2() {
-    const { id } = useParams();
-    const { user, handleChange, handleSubmit, loading, success, error, handleImageChange } = useUpdateCadastroUsuario(id);
+    const { userId } = useParams();
+    const { user, handleChange, handleSubmit, loading, success, error, handleImageChange } = useUpdateCadastroUsuario(userId);
     const { interesses, loading: loadingInteresses, error: errorInteresses } = useListInteresses();
     const navigate = useNavigate();
 
@@ -18,13 +18,13 @@ function UsuarioCadastro2() {
     useEffect(() => {
         const tempId = sessionStorage.getItem("cadastroTempId");
 
-        if (id !== tempId) {
+        if (!tempId || userId !== tempId) {
             toast.error("Acesso não autorizado.");
-            navigate("/usuarioCadastro");
+            navigate('/')
         }
-    }, [id, navigate]);
+    }, [userId, navigate]);
 
-    if (!id || id === null) {
+    if (!userId || userId === null) {
         return <p>Erro: ID do usuário não encontrado.</p>;
     }
 

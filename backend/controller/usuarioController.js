@@ -284,15 +284,6 @@ exports.updateUsuarioStep2 = async (req, res) => {
     const { id } = req.params;
     const { username, bio, interesses } = req.body;
 
-    // ID do usuário autenticado (vem do token decodificado pelo middleware)
-    const usuarioAutenticadoId = req.user.id;
-
-    // Verificação de autorização
-    if (parseInt(id) !== usuarioAutenticadoId) {
-        return res.status(403).json({ message: "Você não tem permissão para editar este perfil." });
-    }
-
-    console.log("Executando updateUsuarioStep2 para ID:", id);
 
     if (!id) {
         return res.status(400).json({ message: "ID do usuário é obrigatório." });

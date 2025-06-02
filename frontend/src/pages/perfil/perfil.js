@@ -3,17 +3,21 @@ import Contatos from '../../components/Contatos';
 import usePerfilUsuario from '../../hooks/usePerfilUsuario';
 import useListInteressesUsuario from '../../hooks/useListInteressesUsuario';
 import verificarSessaoUsuario from '../../utils/verificarSessaoUsuario';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 function Perfil() {
-    const { id } = useParams(); // pegando ID da URL
-    const userIdLogado = verificarSessaoUsuario(); // ID do usuário logado
-    const isMeuPerfil = String(userIdLogado) === String(id); // verifica se é o próprio perfil
+    const { id } = useParams();
+    const userIdLogado = verificarSessaoUsuario();
+    const isMeuPerfil = String(userIdLogado) === String(id);
 
-    const { perfil, loading, error } = usePerfilUsuario(id); // passando o ID explicitamente
-    const { interesses, error: errorInteresses } = useListInteressesUsuario(id); // passando o ID
+    const { perfil, loading, error } = usePerfilUsuario(id);
+    const { interesses, error: errorInteresses } = useListInteressesUsuario(id);
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const fromChat = location.state?.fromChat;
+    const matchId = location.state?.matchId;
 
     if (loading) return <div>Carregando...</div>;
     if (error) return <div>{error}</div>;
@@ -21,56 +25,189 @@ function Perfil() {
     if (errorInteresses) return <div>Você não possui interesses no momento</div>;
     if (interesses.length === 0) return <div>Nenhum interesse encontrado.</div>;
 
+    const handleVoltarAoChat = () => {
+        navigate(`/chat/${matchId || ''}`);
+    };
+
     const imageUrl = perfil.foto_perfil
         ? `http://localhost:5000${perfil.foto_perfil}`
         : "/images/default-image.jpg";
 
+    // Variants para animações complexas
+    const fadeInUp = {
+        hidden: { opacity: 0, y: 50 },
+        visible: (i = 0) => ({
+            opacity: 1,
+            y: 0,
+            transition: {
+                delay: i * 0.2,
+                duration: 0.6,
+                type: 'spring',
+                stiffness: 100,
+            }
+        })
+    };
+
+    const zoomRotate = {
+        hidden: { scale: 0, rotate: -180, opacity: 0 },
+        visible: {
+            scale: 1,
+            rotate: 0,
+            opacity: 1,
+            transition: {
+                duration: 0.8,
+                type: 'spring',
+                stiffness: 90
+            }
+        }
+    };
+
+    const bounceIn = {
+        hidden: { scale: 0.8, opacity: 0 },
+        visible: {
+            scale: 1,
+            opacity: 1,
+            transition: {
+                duration: 0.6,
+                ease: [0.175, 0.885, 0.32, 1.275]
+            }
+        }
+    };
+
     return (
         <div className={styles.container}>
             <Contatos />
-            <div className={styles.profileCard}>
-                <img
+
+            <motion.div
+                className={styles.profileCard}
+                variants={fadeInUp}
+                initial="hidden"
+                animate="visible"
+                custom={0}
+            >
+                <motion.img
                     src={imageUrl}
                     alt={perfil.username}
                     className={styles.profileImage}
+                    variants={zoomRotate}
+                    initial="hidden"
+                    animate="visible"
+                    whileHover={{ scale: 1.1, rotate: 5 }}
                 />
 
-                <h1 className={styles.nameUser}>{perfil.username}</h1>
-                <p className={styles.bioUser}>"{perfil.bio}"</p>
+                <motion.h1
+                    className={styles.nameUser}
+                    variants={fadeInUp}
+                    initial="hidden"
+                    animate="visible"
+                    custom={1}
+                >
+                    {perfil.username}
+                </motion.h1>
 
-                <div className={styles.divider}></div>
+                <motion.p
+                    className={styles.bioUser}
+                    variants={fadeInUp}
+                    initial="hidden"
+                    animate="visible"
+                    custom={2}
+                >
+                    "{perfil.bio}"
+                </motion.p>
 
-                <div className={styles.infoGroup}>
+                <motion.div
+                    className={styles.divider}
+                    variants={bounceIn}
+                    initial="hidden"
+                    animate="visible"
+                />
+
+                <motion.div
+                    className={styles.infoGroup}
+                    variants={fadeInUp}
+                    initial="hidden"
+                    animate="visible"
+                    custom={3}
+                >
                     <p className={styles.infosUser}><strong>Idioma:</strong> {perfil.idioma}</p>
                     <p className={styles.infosUser}><strong>Gênero:</strong> {perfil.genero}</p>
                     <p className={styles.infosUser}><strong>País:</strong> {perfil.pais}</p>
-                </div>
+                </motion.div>
 
-                <div className={styles.divider}></div>
+                <motion.div
+                    className={styles.divider}
+                    variants={bounceIn}
+                    initial="hidden"
+                    animate="visible"
+                />
 
-                <h2 className={styles.interessesTitle}>Interesses</h2>
-                <div className={styles.interessesContainer}>
-                    {interesses.map(interesse => (
-                        <div key={interesse.id} className={styles.interesses}>
+                <motion.h2
+                    className={styles.interessesTitle}
+                    variants={fadeInUp}
+                    initial="hidden"
+                    animate="visible"
+                    custom={4}
+                >
+                    Interesses
+                </motion.h2>
+
+                <motion.div
+                    className={styles.interessesContainer}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    {interesses.map((interesse, i) => (
+                        <motion.div
+                            key={interesse.id}
+                            className={styles.interesses}
+                            whileHover={{ scale: 1.2, rotate: 2 }}
+                            variants={fadeInUp}
+                            custom={i + 5}
+                        >
                             <p>{interesse.interesse}</p>
-                        </div>
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
 
                 {isMeuPerfil && (
-                    <div className={styles.buttons}>
-                        <button
+                    <motion.div
+                        className={styles.buttons}
+                        variants={fadeInUp}
+                        initial="hidden"
+                        animate="visible"
+                        custom={interesses.length + 6}
+                    >
+                        <motion.button
                             className={styles.buttonCustom}
+                            whileTap={{ scale: 0.95 }}
+                            whileHover={{ scale: 1.05 }}
                             onClick={() => navigate(`/editarPerfil/${userIdLogado}`)}
                         >
                             Editar Perfil
-                        </button>
-                    </div>
-
+                        </motion.button>
+                    </motion.div>
                 )}
-            </div>
-        </div>
 
+                {fromChat && (
+                    <motion.div
+                        className={styles.buttons}
+                        variants={fadeInUp}
+                        initial="hidden"
+                        animate="visible"
+                        custom={interesses.length + 7}
+                    >
+                        <motion.button
+                            onClick={handleVoltarAoChat}
+                            className={styles.buttonCustom}
+                            whileTap={{ scale: 0.95 }}
+                            whileHover={{ scale: 1.05 }}
+                        >
+                            Voltar para o chat
+                        </motion.button>
+                    </motion.div>
+                )}
+            </motion.div>
+        </div>
     );
 }
 
