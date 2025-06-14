@@ -5,11 +5,14 @@ import useListContatos from "../../hooks/useListContatos";
 import verificarSessaoUsuario from "../../utils/verificarSessaoUsuario";
 import styles from "./chat.module.css";
 import io from "socket.io-client";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useMatch } from "../../context/matchContext";
 
 const Chat = () => {
   const { matchId } = useParams();
+  const navigate = useNavigate();
   const { contatos, loading, error } = useListContatos();
+  const { notificarMatch } = useMatch();
   const socketRef = useRef(null);
   const [mensagens, setMensagens] = useState([]);
   const [novaMensagem, setNovaMensagem] = useState("");
@@ -28,6 +31,7 @@ const Chat = () => {
   useEffect(() => {
     if (!user || !token) {
       console.error("Usuário ou token não encontrado.");
+      navigate("/login");
       return;
     }
 
@@ -48,6 +52,15 @@ const Chat = () => {
       setMensagens((prev) => [...prev, mensagem]);
     });
 
+    socketRef.current.on("matchAtualizado", (match) => {
+      console.log("Match atualizado recebido:", match);
+      notificarMatch();
+      if (match.matchId.toString() === matchId && match.status === "rejeitado") {
+        window.alert("Este match foi desfeito.");
+        navigate("/");
+      }
+    });
+
     socketRef.current.on("erro", (msg) => {
       console.error("Erro:", msg);
     });
@@ -56,10 +69,11 @@ const Chat = () => {
       socketRef.current.off("connect");
       socketRef.current.off("historico");
       socketRef.current.off("novaMensagem");
+      socketRef.current.off("matchAtualizado");
       socketRef.current.off("erro");
       socketRef.current.disconnect();
     };
-  }, [matchId]);
+  }, [matchId, notificarMatch, navigate]);
 
   const enviarMensagem = () => {
     if (novaMensagem.trim() && user && socketRef.current) {
@@ -79,7 +93,7 @@ const Chat = () => {
 
       <div className={styles.chatArea}>
         <header className={styles.header}>
-          <h2>{nome}</h2>
+          <h2>{nome || "Carregando..."}</h2>
         </header>
 
         <div className={styles.messages}>

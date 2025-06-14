@@ -1,3 +1,4 @@
+// backend/index.js
 const express = require('express');
 const app = express();
 const port = 5000;
@@ -9,6 +10,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const server = http.createServer(app);
 const configurarSocket = require("./socket/chatSocket");
+const { initNotifications } = require("./socket/notifications");
 
 const usuarioRoutes = require("./routes/usuarioRoutes");
 const idiomaRoutes = require("./routes/idiomaRoutes");
@@ -23,7 +25,7 @@ const paisRoutes = require("./routes/paisRoutes");
 
 app.use(cors({ origin: "http://localhost:3000" }));
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'Uploads')));
 
 app.use("/usuario", usuarioRoutes);
 app.use("/idioma", idiomaRoutes);
@@ -44,6 +46,9 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 });
+
+// Inicializar notificações
+initNotifications(io);
 
 // Configurar o Socket.IO
 configurarSocket(io);
