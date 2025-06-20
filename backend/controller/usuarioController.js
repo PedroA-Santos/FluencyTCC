@@ -284,7 +284,6 @@ exports.updateUsuarioStep2 = async (req, res) => {
     const { id } = req.params;
     const { username, bio, interesses } = req.body;
 
-    console.log("Executando updateUsuarioStep2 para ID:", id);
 
     if (!id) {
         return res.status(400).json({ message: "ID do usuário é obrigatório." });
@@ -295,22 +294,13 @@ exports.updateUsuarioStep2 = async (req, res) => {
         return res.status(404).json({ message: "Usuário não encontrado." });
     }
 
-
-    let foto_perfil;
+    let foto_perfil = usuarioExistente.foto_perfil;
 
     if (req.file) {
         foto_perfil = `/uploads/${req.file.filename}`;
-    } else {
-        foto_perfil = usuarioExistente.foto_perfil;
     }
 
-
     try {
-        const usuarioExistente = await usuarioModel.listFindById(id);
-        if (!usuarioExistente) {
-            return res.status(404).json({ message: "Usuário não encontrado." });
-        }
-
         // Verifica se o username já está sendo usado por outro usuário
         if (username && username !== usuarioExistente.username) {
             const userNameExistente = await usuarioModel.listByUsername(username);
@@ -320,23 +310,13 @@ exports.updateUsuarioStep2 = async (req, res) => {
             }
         }
 
-        // Atualiza as informações do perfil
+        // Atualiza perfil
         await usuarioModel.updateStep2({ id, username, bio, foto_perfil });
 
-        // Se houver interesses, atualiza a tabela usuario_interesses
+        // Atualiza interesses se enviados
         if (interesses && Array.isArray(interesses) && interesses.length > 0) {
-            console.log("Interesses são um array! Atualizando...");
-
-            // Remove interesses antigos antes de inserir os novos
             await usuarioInteresseModel.delete({ usuario_id: id });
-            console.log("Interesses antigos removidos.");
-
-            // Insere os novos interesses em lote
             await usuarioInteresseModel.postMultiple({ usuario_id: id, interesses });
-
-            console.log("Interesses inseridos com sucesso:", interesses);
-        } else {
-            console.log("Nenhum interesse válido foi enviado.");
         }
 
         return res.status(200).json({ message: "Perfil atualizado com sucesso!" });
@@ -346,7 +326,6 @@ exports.updateUsuarioStep2 = async (req, res) => {
         return res.status(500).json({ message: "Erro ao atualizar perfil." });
     }
 };
-
 
 
 

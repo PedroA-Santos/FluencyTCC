@@ -9,8 +9,8 @@ function IdiomasAprender() {
     const [selecionados, setSelecionados] = useState([]);
     const [niveles, setNiveles] = useState({});  // Para armazenar o nível de cada idioma
 
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    const userId = user?.id;
+    const userId = JSON.parse(sessionStorage.getItem("userId"));
+
 
     const handleCheckboxChange = (idiomaId) => {
         setSelecionados((prev) =>

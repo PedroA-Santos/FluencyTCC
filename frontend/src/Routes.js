@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
-import NavBar from '../src/components/Navbar';
 import Home from "./pages/home/home";
 import Idioma from "./pages/idioma/idioma";
 import Login from "./pages//login/login";
@@ -13,7 +12,7 @@ import CadastroUsuario2 from "./pages/usuario/usuarioCadastro2";
 import SalvarIdiomas from './pages/IdiomasAprender/idiomasAprender';
 import EditarPerfil from './pages/usuarioEditar/usuarioEditar';
 
-import { MatchProvider } from './context/matchContext'; // ajuste o caminho conforme sua pasta
+import { MatchProvider } from './context/matchContext';
 
 
 const AppRoutes = () => {
@@ -34,7 +33,8 @@ const AppRoutes = () => {
 
                     <Route path="/login" element={<Login />} />
                     <Route path="/usuarioCadastro" element={<CadastroUsuario />} />
-                    <Route path="/usuarioCadastro2/:id" element={<CadastroUsuario2 />} />
+                    <Route path="/usuarioCadastro2/:userId" element={<CadastroUsuario2 />} />
+
                 </Routes>
             </MatchProvider>
         </Router>

@@ -1,19 +1,30 @@
-import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { FaUserPlus } from 'react-icons/fa';
 import useUpdateCadastroUsuario from "../../hooks/useUpdateCadastroUsuario2";
 import useListInteresses from "../../hooks/useListInteresses";
+import { toast } from 'react-toastify';
 import styles from "./usuarioCadastro2.module.css";
 
 function UsuarioCadastro2() {
-    const { id } = useParams();
-    const { user, handleChange, handleSubmit, loading, success, error, handleImageChange } = useUpdateCadastroUsuario(id);
+    const { userId } = useParams();
+    const { user, handleChange, handleSubmit, loading, success, error, handleImageChange } = useUpdateCadastroUsuario(userId);
     const { interesses, loading: loadingInteresses, error: errorInteresses } = useListInteresses();
+    const navigate = useNavigate();
 
     const [interessesSelecionados, setInteressesSelecionados] = useState([]);
     const [image, setImage] = useState(null);
 
-    if (!id || id === null) {
+    useEffect(() => {
+        const tempId = sessionStorage.getItem("cadastroTempId");
+
+        if (!tempId || userId !== tempId) {
+            toast.error("Acesso não autorizado.");
+            navigate('/')
+        }
+    }, [userId, navigate]);
+
+    if (!userId || userId === null) {
         return <p>Erro: ID do usuário não encontrado.</p>;
     }
 

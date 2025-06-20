@@ -1,22 +1,34 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FaUserPlus } from 'react-icons/fa';
 import useEditPerfil from "../../hooks/useEditPerfil";
 import useListInteresses from "../../hooks/useListInteresses";
 import useListInteressesUsuario from '../../hooks/useListInteressesUsuario';
 import styles from "./usuarioEditar.module.css";
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function UsuarioEditar() {
     const { id } = useParams();
     const { user, handleChange, handleSubmit, loading, success, error, handleImageChange } = useEditPerfil(id);
     const { interesses, loading: loadingInteresses, error: errorInteresses } = useListInteresses();
     const { interesses: interessesUsuario, loading: loadingInteressesUsuario, error: errorInteressesUsuario } = useListInteressesUsuario(id);
+    const navigate = useNavigate();
 
     const [interessesSelecionados, setInteressesSelecionados] = useState([]);
     const [image, setImage] = useState(null);
     const imageUrl = user.foto_perfil
         ? `http://localhost:5000${user.foto_perfil}`
         : "/images/default-image.jpg";
+
+    useEffect(() => {
+        const tempId = sessionStorage.getItem("userId");
+
+        if (id !== tempId) {
+            toast.error("Erro você não tem acesso!");
+            navigate("/");
+        }
+    }, [id, navigate]);
 
     // Função para configurar a imagem de perfil pré-existente ou a nova imagem selecionada
     useEffect(() => {

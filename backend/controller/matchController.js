@@ -177,6 +177,7 @@ exports.obterMatches = async (req, res) => {
 
 
 
+
 //funçaõ que cria o match para se tornar um match aceito
 // controllers/matchController.js
 exports.aceitarOuCriarMatch = async (req, res) => {
@@ -186,7 +187,6 @@ exports.aceitarOuCriarMatch = async (req, res) => {
         console.log("[aceitarOuCriarMatch] Iniciando:", { usuario1_id, usuario2_id });
 
         const idioma_comum = await matchModel.getIdiomaComumEntreUsuarios(usuario1_id, usuario2_id);
-        console.log("[aceitarOuCriarMatch] Idioma comum encontrado:", idioma_comum);
         if (!idioma_comum) {
             return res.status(400).json({ message: "Usuários não têm idioma em comum." });
         }
@@ -195,6 +195,10 @@ exports.aceitarOuCriarMatch = async (req, res) => {
         console.log("[aceitarOuCriarMatch] Match existente:", matchExistente);
 
         if (matchExistente) {
+            if (matchExistente.status === "aceito") {
+                console.log("[aceitarOuCriarMatch] Match já aceito");
+                return res.status(200).json({ message: "Match já aceito.", matchId: matchExistente.id });
+            }
             if (matchExistente.status === "pendente") {
                 if (usuario1_id === matchExistente.usuario1_id) {
                     return res.status(400).json({
@@ -256,13 +260,13 @@ exports.aceitarOuCriarMatch = async (req, res) => {
 
         console.log("[aceitarOuCriarMatch] Novo match criado:", novoMatch.insertId);
         return res.status(201).json({
-            message: "Match enviado. Aguardando o outro usuário aceitar.",
+            message: "Match pendente criado com sucesso.",
             matchId: novoMatch.insertId,
         });
 
     } catch (error) {
         console.error("[aceitarOuCriarMatch] Erro:", error);
-        return res.status(500).json({ message: "Erro interno ao criar ou aceitar match." });
+        return res.status(500).json({ message: "Erro ao criar ou aceitar match." });
     }
 };
 

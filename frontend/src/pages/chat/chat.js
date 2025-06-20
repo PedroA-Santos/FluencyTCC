@@ -16,64 +16,68 @@ const Chat = () => {
   const socketRef = useRef(null);
   const [mensagens, setMensagens] = useState([]);
   const [novaMensagem, setNovaMensagem] = useState("");
+  const fimDasMensagensRef = useRef(null);
+
   const userIdDaSessao = verificarSessaoUsuario();
 
   const contato = contatos.find(
     (contato) =>
       contato.matchId.toString() === matchId && contato.id !== userIdDaSessao
   );
-  
+
   const nome = contato?.username;
 
-  const user = JSON.parse(sessionStorage.getItem("user"));
+  const user = JSON.parse(sessionStorage.getItem("userId"));
   const token = sessionStorage.getItem("token");
 
   useEffect(() => {
-    if (!user || !token) {
-      console.error("Usuário ou token não encontrado.");
+    if (!user || !token || !matchId) {
+      console.error("Usuário, token ou matchId não encontrado.");
       navigate("/login");
       return;
     }
 
-    socketRef.current = io("http://localhost:5000", {
+    // Limpa mensagens ao trocar de matchId
+    setMensagens([]);
+
+    // Conecta ao socket
+    const socket = io("http://localhost:5000", {
       query: { token },
     });
 
-    socketRef.current.on("connect", () => {
-      console.log("Conectado com ID:", socketRef.current.id);
-      socketRef.current.emit("entrarChat", { matchId });
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
+      console.log("Conectado com ID:", socket.id);
+      socket.emit("entrarChat", { matchId });
     });
 
-    socketRef.current.on("historico", (historico) => {
+    socket.on("historico", (historico) => {
       setMensagens(historico);
     });
 
-    socketRef.current.on("novaMensagem", (mensagem) => {
+    socket.on("novaMensagem", (mensagem) => {
       setMensagens((prev) => [...prev, mensagem]);
     });
 
-    socketRef.current.on("matchAtualizado", (match) => {
-      console.log("Match atualizado recebido:", match);
-      notificarMatch();
-      if (match.matchId.toString() === matchId && match.status === "rejeitado") {
-        window.alert("Este match foi desfeito.");
-        navigate("/");
-      }
-    });
-
-    socketRef.current.on("erro", (msg) => {
+    socket.on("erro", (msg) => {
       console.error("Erro:", msg);
     });
 
     return () => {
-      socketRef.current.off("connect");
-      socketRef.current.off("historico");
-      socketRef.current.off("novaMensagem");
-      socketRef.current.off("matchAtualizado");
-      socketRef.current.off("erro");
-      socketRef.current.disconnect();
+      socket.off("connect");
+      socket.off("historico");
+      socket.off("novaMensagem");
+      socket.off("erro");
+      socket.disconnect();
     };
-  }, [matchId, notificarMatch, navigate]);
+  }, [matchId, token, user]);
+
+  useEffect(() => {
+    if (fimDasMensagensRef.current) {
+      fimDasMensagensRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [mensagens]);
 
   const enviarMensagem = () => {
     if (novaMensagem.trim() && user && socketRef.current) {
@@ -98,11 +102,14 @@ const Chat = () => {
 
         <div className={styles.messages}>
           {mensagens.map((msg, index) => {
-            const isMinhaMensagem = msg.remetente_id === user?.id;
+            const isMinhaMensagem =
+              String(msg.remetente_id) === String(userIdDaSessao);
             return (
               <div
                 key={index}
-                className={`${styles.message} ${isMinhaMensagem ? styles.me : styles.other}`}
+                className={`${styles.message} ${
+                  isMinhaMensagem ? styles.me : styles.other
+                }`}
               >
                 <p className={styles.messageContent}>{msg.conteudo}</p>
                 <small className={styles.time}>
@@ -114,6 +121,7 @@ const Chat = () => {
               </div>
             );
           })}
+          <div ref={fimDasMensagensRef} />
         </div>
 
         <footer className={styles.footer}>
