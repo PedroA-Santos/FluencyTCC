@@ -61,6 +61,12 @@ function Home() {
     const getImagemPerfilCard = (foto_perfil) => {
         return foto_perfil ? `http://localhost:5000${foto_perfil}` : "/images/default-image.jpg";
     };
+    
+    useEffect(() => {
+        if (!loading && users.length === 0) {
+            setBuscandoMais(true);
+        }
+    }, [loading, users]);
 
     if (error) {
         return <div className={styles.errorMessage}>Erro ao carregar sugestões: {error}</div>;

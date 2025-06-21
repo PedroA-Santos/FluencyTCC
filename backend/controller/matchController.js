@@ -274,6 +274,7 @@ exports.aceitarOuCriarMatch = async (req, res) => {
 exports.desfazerMatch = async (req, res) => {
     const { matchId } = req.params;
     const { usuarioId } = req.body;
+    const idUsuario = Number(usuarioId);
 
     try {
         // Buscar o match pelo ID
@@ -284,7 +285,9 @@ exports.desfazerMatch = async (req, res) => {
         }
 
         // Verificar se o usuário é parte do match
-        if (match.usuario1_id !== usuarioId && match.usuario2_id !== usuarioId) {
+        if (match.usuario1_id !== idUsuario && match.usuario2_id !== idUsuario) {
+            console.log(`usuarioId: ${idUsuario}, usuario1_id: ${match.usuario1_id}, usuario2_id: ${match.usuario2_id}`);
+            
             return res.status(403).json({ message: "Você não tem permissão para desfazer este match." });
         }
 

@@ -61,7 +61,10 @@ function Contatos() {
     }
 
     if (error || perfilError || desfazerError) {
-        return <div style={{ color: "red" }}>Erro: {error || perfilError || desfazerError}</div>;    
+        console.log("components/Contatos: Erro: ", error, "perfilError: ", perfilError, "desfazerError: ", desfazerError);
+        
+        
+        return <div style={{ color: "red" }}>Erro: {error || perfilError || desfazerError}</div>;   
     }
     
     const imageUrl = perfil.foto_perfil

@@ -107,9 +107,8 @@ const Chat = () => {
             return (
               <div
                 key={index}
-                className={`${styles.message} ${
-                  isMinhaMensagem ? styles.me : styles.other
-                }`}
+                className={`${styles.message} ${isMinhaMensagem ? styles.me : styles.other
+                  }`}
               >
                 <p className={styles.messageContent}>{msg.conteudo}</p>
                 <small className={styles.time}>
@@ -129,6 +128,12 @@ const Chat = () => {
             type="text"
             value={novaMensagem}
             onChange={(e) => setNovaMensagem(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                enviarMensagem();
+              }
+            }}
             placeholder="Digite sua mensagem"
             className={styles.input}
           />

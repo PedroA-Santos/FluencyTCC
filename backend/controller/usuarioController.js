@@ -1,5 +1,6 @@
 const usuarioModel = require("../model/usuarioModel");
 const usuarioInteresseModel = require("../model/usuarioInteressesModel");
+const usuarioIdiomasModel = require("../model/usuarioIdiomasModel");
 const { validarCampos } = require("../utils/validarCampos");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -282,7 +283,7 @@ exports.postUsuarioStep1 = async (req, res) => {
 
 exports.updateUsuarioStep2 = async (req, res) => {
     const { id } = req.params;
-    const { username, bio, interesses } = req.body;
+    const { username, bio, interesses, idiomas } = req.body;
 
 
     if (!id) {
@@ -311,12 +312,18 @@ exports.updateUsuarioStep2 = async (req, res) => {
         }
 
         // Atualiza perfil
-        await usuarioModel.updateStep2({ id, username, bio, foto_perfil });
+        await usuarioModel.updateStep2({ id, username, bio, foto_perfil,  });
 
         // Atualiza interesses se enviados
         if (interesses && Array.isArray(interesses) && interesses.length > 0) {
             await usuarioInteresseModel.delete({ usuario_id: id });
             await usuarioInteresseModel.postMultiple({ usuario_id: id, interesses });
+        }
+
+        // atualiza idiomas se enviados
+        if (idiomas && Array.isArray(idiomas) && idiomas.length > 0) {
+            await usuarioIdiomasModel.delete({ usuario_id: id });
+            await usuarioIdiomasModel.postMultiple({ usuario_id: id, idiomas });
         }
 
         return res.status(200).json({ message: "Perfil atualizado com sucesso!" });
