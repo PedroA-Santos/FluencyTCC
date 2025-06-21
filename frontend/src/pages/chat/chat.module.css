@@ -71,28 +71,28 @@
   /* display inline-block removido para evitar conflito no alinhamento */
 }
 
-/* Mensagem do usuário logado (esquerda) */
+/* Mensagem do usuário logado (direita) */
 .me {
-  align-self: flex-start;
-  background-color: #4CAF50; /* Verde vibrante */
-  border-bottom-left-radius: 0;
+  align-self: flex-end;
+  background-color: #5B6F9E; /*  */
+  border-bottom-right-radius: 0;
   text-align: left;
 }
 
 .me p {
-  color: #ffffff;
+  color: #F1F1F1;
 }
 
-/* Mensagem do outro usuário (direita) */
+/* Mensagem do outro usuário (esquerda) */
 .other {
-  align-self: flex-end;
-  background-color: #FFC107; /* Amarelo forte */
-  border-bottom-right-radius: 0;
+  align-self: flex-start;
+  background-color: #8266B0; /* Lilás para combinar com o roxo do fundo */
+  border-bottom-left-radius: 0;
   text-align: right;
 }
 
 .other p {
-  color: #1F1F1F;
+  color: #F1F1F1;
 }
 
 .messageContent {

@@ -3,23 +3,40 @@ import { useState, useEffect } from "react";
 import { FaUserPlus } from 'react-icons/fa';
 import useEditPerfil from "../../hooks/useEditPerfil";
 import useListInteresses from "../../hooks/useListInteresses";
+import useListIdiomas from '../../hooks/useListIdiomas';
 import useListInteressesUsuario from '../../hooks/useListInteressesUsuario';
 import styles from "./usuarioEditar.module.css";
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useListIdiomasUsuario from "../../hooks/useListIdiomasUsuario";
 
 function UsuarioEditar() {
     const { id } = useParams();
     const { user, handleChange, handleSubmit, loading, success, error, handleImageChange } = useEditPerfil(id);
     const { interesses, loading: loadingInteresses, error: errorInteresses } = useListInteresses();
     const { interesses: interessesUsuario, loading: loadingInteressesUsuario, error: errorInteressesUsuario } = useListInteressesUsuario(id);
+    const { idiomas, loading: loadingIdiomas, error: errorIdiomas } = useListIdiomas();
+    const { idiomas: idiomasUsuario, loading: loadingIdiomasUsuario, error: errorIdiomasusuario } = useListIdiomasUsuario(id);
     const navigate = useNavigate();
 
     const [interessesSelecionados, setInteressesSelecionados] = useState([]);
+    const [idiomasSelecionados, setIdiomasSelecionados] = useState([]);
     const [image, setImage] = useState(null);
     const imageUrl = user.foto_perfil
         ? `http://localhost:5000${user.foto_perfil}`
         : "/images/default-image.jpg";
+
+    // Log para verificar dados de idiomas
+    useEffect(() => {
+        console.log("🔹 Dados de idiomas recebidos:", {
+            idiomas,
+            loadingIdiomas,
+            errorIdiomas,
+            idiomasUsuario,
+            loadingIdiomasUsuario,
+            errorIdiomasusuario
+        });
+    }, [idiomas, loadingIdiomas, errorIdiomas, idiomasUsuario, loadingIdiomasUsuario, errorIdiomasusuario]);
 
     useEffect(() => {
         const tempId = sessionStorage.getItem("userId");
@@ -30,7 +47,7 @@ function UsuarioEditar() {
         }
     }, [id, navigate]);
 
-    // Função para configurar a imagem de perfil pré-existente ou a nova imagem selecionada
+    // Configura interesses e idiomas selecionados
     useEffect(() => {
         if (user && user.foto_perfil) {
             if (typeof user.foto_perfil === "string") {
@@ -40,12 +57,20 @@ function UsuarioEditar() {
             }
         }
 
-        if (user && user.interesses) {
-            setInteressesSelecionados(user.interesses.map((interesse) => interesse.id));
+        if (interessesUsuario && interessesUsuario.length > 0) {
+            setInteressesSelecionados(interessesUsuario.map(i => i.id));
+            console.log("🔹 Interesses do usuário:", interessesUsuario);
         }
-    }, [user]);
 
-
+        if (idiomasUsuario && idiomasUsuario.length > 0) {
+            const selectedIds = idiomasUsuario.map(i => String(i.id));
+            setIdiomasSelecionados(selectedIds);
+            console.log("🔹 Idiomas do usuário:", idiomasUsuario);
+            console.log("🔹 Idiomas selecionados:", selectedIds);
+        } else {
+            console.log("🔹 Nenhum idioma encontrado em idiomasUsuario:", idiomasUsuario);
+        }
+    }, [interessesUsuario, idiomasUsuario, user]);
 
     if (!id || id === null) {
         return <p>Erro: ID do usuário não encontrado.</p>;
@@ -56,8 +81,19 @@ function UsuarioEditar() {
             const updatedInteresses = prevSelecionados.includes(interesseId)
                 ? prevSelecionados.filter((id) => id !== interesseId)
                 : [...prevSelecionados, interesseId];
-
+            console.log("🔹 Interesses selecionados após toggle:", updatedInteresses);
             return updatedInteresses;
+        });
+    };
+
+    const toggleIdioma = (idiomaId) => {
+        setIdiomasSelecionados((prevSelecionados) => {
+            const idAsString = String(idiomaId);
+            const updatedIdiomas = prevSelecionados.includes(idAsString)
+                ? prevSelecionados.filter((id) => id !== idAsString)
+                : [...prevSelecionados, idAsString];
+            console.log("🔹 Idiomas selecionados após toggle:", updatedIdiomas);
+            return updatedIdiomas;
         });
     };
 
@@ -81,9 +117,11 @@ function UsuarioEditar() {
             {error && <p>{error}</p>}
             {loading && <p>Carregando...</p>}
             {errorInteresses && <p>Erro ao carregar interesses: {errorInteresses}</p>}
+            {errorIdiomas && <p>Erro ao carregar idiomas: {errorIdiomas}</p>}
+            {errorIdiomasusuario && <p>Erro ao carregar idiomas do usuário: {errorIdiomasusuario}</p>}
 
-            <form onSubmit={(e) => handleSubmit(e, interessesSelecionados)} className={styles.form}>
-                <div className={styles.iinputFileContainer}>
+            <form onSubmit={(e) => handleSubmit(e, interessesSelecionados, idiomasSelecionados)} className={styles.form}>
+                <div className={styles.inputFileContainer}>
                     <input
                         type="file"
                         id="fileInput"
@@ -96,8 +134,6 @@ function UsuarioEditar() {
                     <label htmlFor="fileInput" className={styles.previewImage}>
                         {image ? (
                             <img src={image} alt="Pré-visualização" width="100" />
-
-
                         ) : (
                             <span className={styles.span}>
                                 <FaUserPlus size={50} color="#ffff" />
@@ -129,29 +165,67 @@ function UsuarioEditar() {
                     />
                 </div>
 
+                <div className={styles.idiomasSelecionadosContainer}>
+                    <h3 className={styles.tituloIdiomasSelecionados}>Idiomas Selecionados:</h3>
+                    <div className={styles.listaIdiomasSelecionados}>
+                        {idiomasSelecionados.map((id) => {
+                            const idioma = idiomas.find((item) => String(item.id) === String(id));
+                            console.log(`🔹 Renderizando idioma selecionado: ${idioma ? (idioma.nome || idioma.idioma) : "Desconhecido"}, ID: ${id}`);
+                            return (
+                                <span key={id} className={styles.idiomaSelecionado}>
+                                    {(idioma && (idioma.nome || idioma.idioma)) || "Idioma desconhecido"}
+                                </span>
+                            );
+                        })}
+                    </div>
+                </div>
+
                 <div className={styles.inputGroup}>
-                    <label>Interesses Atuais</label>
-                    {loadingInteressesUsuario && <p>Carregando interesses...</p>}
-                    {interessesUsuario.length === 0 && !loadingInteressesUsuario && (
-                        <p>Nenhum interesse encontrado.</p>
-                    )}
-                    {interessesUsuario.map((item) => (
-                        <span key={item.id} className={styles.interesseSelecionado}>
-                            {item.interesse}
-                        </span>
-                    ))}
+                    <label>Idiomas:</label>
+                    <div className={styles.interessesContainer}>
+                        {loadingIdiomas && <p>Carregando idiomas...</p>}
+                        {errorIdiomas && <p>Erro ao carregar idiomas: {errorIdiomas}</p>}
+                        {!loadingIdiomas && !errorIdiomas && (!idiomas || idiomas.length === 0) && <p>Nenhum idioma disponível.</p>}
+                        {idiomas && idiomas.map((item) => {
+                            const isSelected = idiomasSelecionados.includes(String(item.id));
+                            console.log(`🔹 Renderizando idioma: ${item.nome || item.idioma}, ID: ${item.id}, Selecionado: ${isSelected}`);
+                            return (
+                                <button
+                                    key={item.id}
+                                    type="button"
+                                    className={[styles.interesseButton, isSelected ? styles.selected : ''].join(' ')}
+                                    onClick={() => toggleIdioma(item.id)}
+                                >
+                                    {item.nome || item.idioma}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                <div className={styles.interessesSelecionadosContainer}>
+                    <h3 className={styles.tituloInteressesSelecionados}>Interesses Selecionados:</h3>
+                    <div className={styles.listaInteressesSelecionados}>
+                        {interessesSelecionados.map((id) => (
+                            <span key={id} className={styles.interesseSelecionado}>
+                                {interesses.find((item) => String(item.id) === String(id))?.interesse || "Interesse desconhecido"}
+                            </span>
+                        ))}
+                    </div>
                 </div>
 
 
                 <div className={styles.inputGroup}>
-                    <label>Atualizar Interesses:</label>
-                    <div className="interessesContainer">
+                    <label>Interesses:</label>
+                    <div className={styles.interessesContainer}>
                         {loadingInteresses && <p>Carregando interesses...</p>}
-                        {interesses.map((item) => (
+                        {errorInteresses && <p>Erro ao carregar interesses: {errorInteresses}</p>}
+                        {!loadingInteresses && !errorInteresses && (!interesses || interesses.length === 0) && <p>Nenhum interesse disponível.</p>}
+                        {interesses && interesses.map((item) => (
                             <button
                                 key={item.id}
                                 type="button"
-                                className={`${styles.interesseButton} ${interessesSelecionados.includes(item.id) ? styles.selected : ''}`}
+                                className={[styles.interesseButton, interessesSelecionados.includes(String(item.id)) ? styles.selected : ''].join(' ')}
                                 onClick={() => toggleInteresse(item.id)}
                             >
                                 {item.interesse}
@@ -159,19 +233,6 @@ function UsuarioEditar() {
                         ))}
                     </div>
                 </div>
-
-                {interessesSelecionados.length > 0 && (
-                    <div className={styles.interessesSelecionadosContainer}>
-                        <h3 className={styles.tituloInteressesSelecionados}>Interesses Selecionados:</h3>
-                        <div className={styles.listaInteressesSelecionados}>
-                            {interessesSelecionados.map((id) => (
-                                <span key={id} className={styles.interesseSelecionado}>
-                                    {interesses.find((item) => item.id === id)?.interesse}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                )}
 
                 <button type="submit" disabled={loading} className={styles.buttonSubmit}>
                     {loading ? "Salvando..." : "Salvar"}

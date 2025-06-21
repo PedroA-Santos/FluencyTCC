@@ -5,11 +5,14 @@ import useListContatos from "../../hooks/useListContatos";
 import verificarSessaoUsuario from "../../utils/verificarSessaoUsuario";
 import styles from "./chat.module.css";
 import io from "socket.io-client";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useMatch } from "../../context/matchContext";
 
 const Chat = () => {
   const { matchId } = useParams();
+  const navigate = useNavigate();
   const { contatos, loading, error } = useListContatos();
+  const { notificarMatch } = useMatch();
   const socketRef = useRef(null);
   const [mensagens, setMensagens] = useState([]);
   const [novaMensagem, setNovaMensagem] = useState("");
@@ -30,6 +33,7 @@ const Chat = () => {
   useEffect(() => {
     if (!user || !token || !matchId) {
       console.error("Usuário, token ou matchId não encontrado.");
+      navigate("/login");
       return;
     }
 
@@ -93,7 +97,7 @@ const Chat = () => {
 
       <div className={styles.chatArea}>
         <header className={styles.header}>
-          <h2>{nome}</h2>
+          <h2>{nome || "Carregando..."}</h2>
         </header>
 
         <div className={styles.messages}>
@@ -103,9 +107,8 @@ const Chat = () => {
             return (
               <div
                 key={index}
-                className={`${styles.message} ${
-                  isMinhaMensagem ? styles.me : styles.other
-                }`}
+                className={`${styles.message} ${isMinhaMensagem ? styles.me : styles.other
+                  }`}
               >
                 <p className={styles.messageContent}>{msg.conteudo}</p>
                 <small className={styles.time}>
@@ -125,6 +128,12 @@ const Chat = () => {
             type="text"
             value={novaMensagem}
             onChange={(e) => setNovaMensagem(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                enviarMensagem();
+              }
+            }}
             placeholder="Digite sua mensagem"
             className={styles.input}
           />
