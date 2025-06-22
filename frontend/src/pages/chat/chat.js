@@ -27,8 +27,11 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
+    console.log("isMobile:", isMobile, "detalhesAtivos:", detalhesAtivos);
     if (!isMobile) {
-      setDetalhesAtivos(true);
+      setDetalhesAtivos(true); // Painel visível por padrão no desktop
+    } else {
+      setDetalhesAtivos(false); // Painel fechado por padrão no mobile
     }
   }, [isMobile, setDetalhesAtivos]);
 
@@ -77,7 +80,7 @@ const Chat = () => {
       socketRef.current.off("erro");
       socketRef.current.disconnect();
     };
-  }, [matchId]);
+  }, [matchId, user, token, navigate]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -96,7 +99,7 @@ const Chat = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${detalhesAtivos ? styles.detalhesVisiveis : ""}`}>
       {/* Botão para abrir/fechar o menu de contatos */}
       <button
         ref={menuToggleRef}
@@ -116,7 +119,6 @@ const Chat = () => {
           info
         </button>
       )}
-
 
       {/* MENU LATERAL DE CONTATOS */}
       {!isMobile ? (
@@ -145,8 +147,7 @@ const Chat = () => {
             return (
               <div
                 key={index}
-                className={`${styles.message} ${isMinhaMensagem ? styles.me : styles.other
-                  }`}
+                className={`${styles.message} ${isMinhaMensagem ? styles.me : styles.other}`}
               >
                 <p className={styles.messageContent}>{msg.conteudo}</p>
                 <small className={styles.time}>
@@ -181,10 +182,7 @@ const Chat = () => {
       </div>
 
       {/* MENU LATERAL DE DETALHES */}
-      <div
-        className={`${styles.userDetalhesWrapper} ${!isMobile || detalhesAtivos ? styles.detalhesAtivos : ""
-          }`}
-      >
+      <div className={`${styles.userDetalhesWrapper} ${detalhesAtivos ? styles.detalhesAtivos : ""}`}>
         <UserDetalhes />
       </div>
     </div>

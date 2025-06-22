@@ -1,12 +1,9 @@
 .userDetails {
-    position: fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
-    right: 0;
-    top: 0;
     height: 100%;
-    width: 380px;
+    width: 100%; /* Ocupa toda a largura do userDetalhesWrapper */
     padding: 20px;
     border-left: 3px solid #FFC107;
     background: #282844;
@@ -92,7 +89,7 @@
 /* Responsividade tablets (769px a 1024px) */
 @media (max-width: 1024px) and (min-width: 769px) {
     .userDetails {
-        width: 300px;
+        width: 100%;
         padding: 18px;
         height: 100vh;
         box-shadow: -3px 0 10px rgba(0, 0, 0, 0.4);
@@ -121,18 +118,14 @@
 @media (max-width: 768px) {
     .userDetails {
         width: 100vw;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        pointer-events: none;
-        visibility: hidden;
+        height: 100vh;
+        padding: 20px;
+        transform: none; /* Remove transform, controlado pelo wrapper */
+        transition: none; /* Remove transição, controlada pelo wrapper */
     }
 
     .userDetails.menuAberto {
-        transform: translateX(0);
-        opacity: 1;
-        pointer-events: auto;
-        visibility: visible;
-        transition: transform 0.3s ease;
+        transform: none; /* Não precisa de transform, controlado pelo wrapper */
     }
 
     .userDetails h2 {

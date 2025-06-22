@@ -40,18 +40,28 @@
 
 /* Área do chat */
 .chatArea {
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+  z-index: 50;
 }
 
-/* Ajuste quando os detalhes estão visíveis no desktop */
-@media (min-width: 1025px) {
-  .container.detalhesVisiveis .chatArea {
-    max-width: calc(100vw - 300px);
-  }
+/* Detalhes do usuário */
+.userDetalhesWrapper {
+  width: 380px;
+  flex-shrink: 0;
+  height: 100vh;
+  background-color: #282844;
+  transition: transform 0.3s ease-in-out;
+  z-index: 40;
+  transform: translateX(0); /* Visível por padrão no desktop */
+}
+
+/* Quando os detalhes estão ativos, mostra o painel */
+.detalhesAtivos {
+  transform: translateX(0);
 }
 
 /* Mensagens */
@@ -79,7 +89,7 @@
 /* Mensagem do usuário logado (direita) */
 .me {
   align-self: flex-end;
-  background-color: #5B6F9E; /*  */
+  background-color: #5B6F9E;
   border-bottom-right-radius: 0;
   text-align: left;
 }
@@ -89,17 +99,6 @@
 }
 
 /* Mensagem do outro usuário (esquerda) */
-.other {
-  align-self: flex-start;
-  background-color: #8266B0; /* Lilás para combinar com o roxo do fundo */
-  border-bottom-left-radius: 0;
-  text-align: right;
-}
-
-.other p {
-  color: #F1F1F1;
-}
-
 .other {
   align-self: flex-start;
   background-color: #4CAF50;
@@ -164,29 +163,6 @@
   color: white;
 }
 
-/* Detalhes do usuário */
-.userDetalhesWrapper {
-  width: 370px;
-  transform: translateX(100%);
-  top: 0;
-  right: 0;
-  height: 100vh;
-  background-color: #f4f4f4;
-  transition:
-    transform 0.3s ease-in-out,
-    opacity 0.3s ease-in-out;
-  z-index: 100;
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Quando os detalhes estão ativos, mostra o painel */
-.detalhesAtivos {
-  transform: translateX(0);
-  pointer-events: auto;
-  opacity: 1;
-}
-
 /* BOTÃO DE ABRIR MENU */
 .menuToggle {
   display: none;
@@ -203,11 +179,10 @@
   border-radius: 6px;
   padding: 10px 14px;
   font-size: 1.1rem;
-  z-index: 1001;
+  z-index: 2100;
   cursor: pointer;
   height: 7%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  z-index: 2100;
 }
 
 .material-symbols-outlined {
@@ -219,7 +194,6 @@
     'opsz' 34;
 }
 
-
 /* RESPONSIVO */
 @media (max-width: 1024px) {
   .userDetalhesWrapper {
@@ -229,7 +203,7 @@
 
 @media (max-width: 768px) {
   .container {
-    flex-direction: row;
+    flex-direction: column;
     width: 100vw;
     overflow-x: hidden;
   }
@@ -246,7 +220,7 @@
     width: 280px;
     background: #17171F;
     overflow-y: auto;
-    transform: translateX(-110%);
+    transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
     z-index: 1100;
   }
@@ -267,24 +241,29 @@
     padding: 10px 14px;
     height: 7%;
     font-size: 1.1rem;
-    z-index: 1001;
+    z-index: 2100;
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    z-index: 2100;
   }
 
   .chatArea {
-    width: 25000vw;
+    width: 100%;
     height: 100vh;
     overflow-y: auto;
     position: relative;
-    /* Garante contexto interno */
-    z-index: 1;
-    /* Garantir que está abaixo do userDetails */
+    z-index: 50;
   }
 
-  /* Permite o painel de detalhes sobrepor no mobile */
-  .container.detalhesVisiveis .chatArea {
-    max-width: 100vw;
+  .userDetalhesWrapper {
+    width: 100vw;
+    position: fixed; /* Volta a fixed para deslizar sobre o chat no mobile */
+    top: 0;
+    right: 0;
+    transform: translateX(100%);
+    z-index: 60; /* Acima da chatArea para visibilidade */
+  }
+
+  .userDetalhesWrapper.detalhesAtivos {
+    transform: translateX(0);
   }
 }
