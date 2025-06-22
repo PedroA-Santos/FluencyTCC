@@ -1,15 +1,22 @@
 .container {
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100vw;
   height: 100vh;
+  margin: 0;
+  padding: 2em 1em;
   background: linear-gradient(180deg, #1a1a3d 0%, #37376D 100%);
+  box-sizing: border-box;
+  overflow: hidden;
 }
+
 
 .h1Login {
   color: #ffc107;
-  font-size: 3em;
+  font-size: 2.5em;
   margin-bottom: 1em;
   text-align: center;
   text-shadow: 0 0 8px rgba(255, 193, 7, 0.5);
@@ -19,24 +26,23 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin: 10px;
+  width: 100%;
+  max-width: 400px;
   background-color: #2a2a5d;
-  padding: 2em 3em;
+  padding: 2em;
   border-radius: 20px;
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6);
 }
 
 .form input {
-  margin: 10px;
+  margin: 10px 0;
   padding: 12px 15px;
   border: 1px solid #888;
   border-radius: 10px;
   font-size: 16px;
-  width: 300px;
+  width: 100%;
   background-color: #f5f5f5;
   color: #1a1a1a;
-  margin-bottom: 1.5em;
   transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -68,9 +74,10 @@
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  width: 60%;
+  width: 100%;
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+  margin-top: 1em;
 }
 
 .loginButton:hover {
@@ -87,8 +94,60 @@
   text-align: center;
   text-decoration: none;
   transition: color 0.3s ease;
+  text-decoration: underline;
 }
 
 .linkRegister:hover {
   color: #ffffff;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+
+  .container {
+    justify-content: center;
+  }
+
+  .h1Login {
+    font-size: 2em;
+  }
+
+  .form {
+    padding: 1.5em;
+  }
+
+  .loginButton {
+    font-size: 15px;
+
+  }
+
+  .form {
+    width: 70%;
+    align-items: center;
+
+  }
+
+  .form input {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .h1Login {
+    font-size: 1.8em;
+  }
+
+  .form input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .loginButton {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  .linkRegister {
+    font-size: 14px;
+  }
 }
