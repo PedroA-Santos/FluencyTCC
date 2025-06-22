@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/home/home";
@@ -13,29 +12,35 @@ import SalvarIdiomas from './pages/IdiomasAprender/idiomasAprender';
 import EditarPerfil from './pages/usuarioEditar/usuarioEditar';
 
 import { MatchProvider } from './context/matchContext';
+import { MenuProvider } from "./context/menuContext";
+import { DetailsProvider } from "./context/detailsContext";
 
 
 const AppRoutes = () => {
     return (
         <Router> {/* Envolva suas rotas com Router */}
             <MatchProvider>
-                <Routes>
-                    <Route element={<ProtectedRoute />}>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/idioma" element={<Idioma />} />
-                        <Route path="/chat/:matchId" element={<Chat />} />
-                        <Route path="/interesse" element={<Interesse />} />
-                        <Route path="/perfil/:id" element={<Perfil />} />
-                        <Route path="/salvarIdiomas" element={<SalvarIdiomas />} />
-                        <Route path="/editarPerfil/:id" element={<EditarPerfil />} />
-                    </Route>
+                <MenuProvider>
+                    <DetailsProvider>
+                        <Routes>
+                            <Route element={<ProtectedRoute />}>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/idioma" element={<Idioma />} />
+                                <Route path="/chat/:matchId" element={<Chat />} />
+                                <Route path="/interesse" element={<Interesse />} />
+                                <Route path="/perfil/:id" element={<Perfil />} />
+                                <Route path="/salvarIdiomas" element={<SalvarIdiomas />} />
+                                <Route path="/editarPerfil/:id" element={<EditarPerfil />} />
+                            </Route>
 
 
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/usuarioCadastro" element={<CadastroUsuario />} />
-                    <Route path="/usuarioCadastro2/:userId" element={<CadastroUsuario2 />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/usuarioCadastro" element={<CadastroUsuario />} />
+                            <Route path="/usuarioCadastro2/:userId" element={<CadastroUsuario2 />} />
 
-                </Routes>
+                        </Routes>
+                    </DetailsProvider>
+                </MenuProvider>
             </MatchProvider>
         </Router>
     );
