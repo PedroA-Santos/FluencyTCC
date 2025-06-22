@@ -1,4 +1,5 @@
 import styles from './perfil.module.css';
+import { useEffect } from 'react';
 import Contatos from '../../components/Contatos';
 import usePerfilUsuario from '../../hooks/usePerfilUsuario';
 import useListInteressesUsuario from '../../hooks/useListInteressesUsuario';
@@ -6,6 +7,7 @@ import verificarSessaoUsuario from '../../utils/verificarSessaoUsuario';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useMenu } from "../../context/menuContext";
+import useListIdiomasUsuario from '../../hooks/useListIdiomasUsuario';
 
 function Perfil() {
     const { id } = useParams();
@@ -15,14 +17,15 @@ function Perfil() {
     const { perfil, loading, error } = usePerfilUsuario(id);
     const { interesses, error: errorInteresses } = useListInteressesUsuario(id);
     const { menuAberto, setMenuAberto, menuToggleRef } = useMenu();
+    const { idiomas: idiomasUsuario, loading: loadingIdiomasUsuario, error: errorIdiomasUsuario } = useListIdiomasUsuario(id);
 
     const navigate = useNavigate();
     const location = useLocation();
     const fromChat = location.state?.fromChat;
     const matchId = location.state?.matchId;
 
-    if (loading) return <div>Carregando...</div>;
-    if (error) return <div>{error}</div>;
+    if (loading || loadingIdiomasUsuario) return <div>Carregando...</div>;
+    if (error || errorIdiomasUsuario) return <div>{error || errorIdiomasUsuario}</div>;
     if (!perfil) return <div>Perfil não encontrado.</div>;
     if (errorInteresses) return <div>Você não possui interesses no momento</div>;
     if (interesses.length === 0) return <div>Nenhum interesse encontrado.</div>;
@@ -77,7 +80,6 @@ function Perfil() {
 
     return (
         <div className={styles.container}>
-            {/* Botão ☰ para abrir/fechar menu lateral */}
             <button
                 ref={menuToggleRef}
                 className={styles.menuToggle}
@@ -86,7 +88,6 @@ function Perfil() {
                 ☰
             </button>
 
-            {/* Menu lateral */}
             <Contatos />
 
             <motion.div
@@ -140,7 +141,7 @@ function Perfil() {
                     animate="visible"
                     custom={3}
                 >
-                    <p className={styles.infosUser}><strong>Idioma:</strong> {perfil.idioma}</p>
+                    <p className={styles.infosUser}><strong>Idioma Nativo:</strong> {perfil.idioma}</p>
                     <p className={styles.infosUser}><strong>Gênero:</strong> {perfil.genero}</p>
                     <p className={styles.infosUser}><strong>País:</strong> {perfil.pais}</p>
                 </motion.div>
@@ -180,13 +181,41 @@ function Perfil() {
                     ))}
                 </motion.div>
 
+                <motion.h2
+                    className={styles.interessesTitle}
+                    variants={fadeInUp}
+                    initial="hidden"
+                    animate="visible"
+                    custom={interesses.length + 5}
+                >
+                    Estudando
+                </motion.h2>
+
+                <motion.div
+                    className={styles.interessesContainer}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    {idiomasUsuario.map((idioma, i) => (
+                        <motion.div
+                            key={idioma.id}
+                            className={styles.interesses}
+                            whileHover={{ scale: 1.2, rotate: 2 }}
+                            variants={fadeInUp}
+                            custom={interesses.length + i + 6}
+                        >
+                            <p>{idioma.idioma || idioma.nome || "Idioma desconhecido"}</p>
+                        </motion.div>
+                    ))}
+                </motion.div>
+
                 {isMeuPerfil && (
                     <motion.div
                         className={styles.buttons}
                         variants={fadeInUp}
                         initial="hidden"
                         animate="visible"
-                        custom={interesses.length + 6}
+                        custom={interesses.length + idiomasUsuario.length + 6}
                     >
                         <motion.button
                             className={styles.buttonCustom}
@@ -205,7 +234,7 @@ function Perfil() {
                         variants={fadeInUp}
                         initial="hidden"
                         animate="visible"
-                        custom={interesses.length + 7}
+                        custom={interesses.length + idiomasUsuario.length + 7}
                     >
                         <motion.button
                             onClick={handleVoltarAoChat}

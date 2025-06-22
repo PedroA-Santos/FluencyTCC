@@ -63,7 +63,7 @@ function Home() {
     const getImagemPerfilCard = (foto_perfil) => {
         return foto_perfil ? `http://localhost:5000${foto_perfil}` : "/images/default-image.jpg";
     };
-    
+
     useEffect(() => {
         if (!loading && users.length === 0) {
             setBuscandoMais(true);
@@ -88,7 +88,6 @@ function Home() {
 
     return (
         <div className={styles.mainContainer}>
-            {/* BOTÃO ☰ */}
             <button
                 ref={menuToggleRef}
                 className={styles.menuToggle}
@@ -97,7 +96,6 @@ function Home() {
                 ☰
             </button>
 
-            {/* MENU LATERAL */}
             <div className={`${styles.contatosContainer} ${menuAberto ? styles.menuAberto : ""}`}>
                 <Contatos
                     menuAberto={menuAberto}
@@ -106,7 +104,6 @@ function Home() {
                 />
             </div>
 
-            {/* STACK DE USUÁRIOS */}
             <div className={styles.stackContainer}>
                 <div className={styles.cardStack}>
                     <AnimatePresence mode="wait">
@@ -117,35 +114,43 @@ function Home() {
                                 initial={{ x: 300, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: -300, opacity: 0 }}
-                                transition={{ duration: 0.6, type: "spring" }}
+                                transition={{ duration: 0.5, type: "spring" }}
+                                drag="x"
+                                dragConstraints={{ left: 0, right: 0 }}
+                                dragElastic={0.5}
+                                onDragEnd={(e, { offset }) => {
+                                    if (offset.x > 100) {
+                                        handleAcceptMatch();
+                                    } else if (offset.x < -100) {
+                                        handleRejectMatch();
+                                    }
+                                }}
                             >
                                 <div className={styles.cardImageContainer}>
                                     <motion.img
                                         src={getImagemPerfilCard(currentUser.foto_perfil)}
                                         alt={currentUser.username}
                                         className={styles.profileImage}
-                                        whileHover={{ scale: 1.05 }}
+                                        whileHover={{ scale: 1.03 }}
                                         onClick={() => navigate(`/perfil/${currentUser.id}`)}
                                     />
-                                    <div className={styles.cardOverlay} />
-                                    <div className={styles.cardInfo}>
-                                        <h2>{currentUser.username}</h2>
-                                        <p>{currentUser.bio || "Sem descrição"}</p>
-                                        <div className={styles.userDetailsInsideCard}>
-                                            <h3>Interesses</h3>
-                                            <div className={styles.interessesContainer}>
-                                                <p className={styles.interessesTag}>{currentUser.interesses || "Sem interesses"}</p>
-
+                                    <div className={styles.cardOverlay}>
+                                        <div className={styles.cardInfo}>
+                                            <h2>{currentUser.username}</h2>
+                                            <p>{currentUser.bio || "Sem descrição"}</p>
+                                            <div className={styles.interesses}>
+                                                {currentUser.interesses
+                                                    ?.split(", ")
+                                                    .map((interesse, index) => (
+                                                        <span key={index} className={styles.interesseTag}>
+                                                            {interesse}
+                                                        </span>
+                                                    ))}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <motion.div
-                                    className={styles.actionButtons}
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{ delay: 0.4 }}
-                                >
+                                <div className={styles.actionButtons}>
                                     <motion.button
                                         onClick={handleRejectMatch}
                                         className={styles.rejectButton}
@@ -162,7 +167,7 @@ function Home() {
                                     >
                                         💖
                                     </motion.button>
-                                </motion.div>
+                                </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -185,10 +190,7 @@ function Home() {
                             <h3>Idioma Nativo</h3>
                             <p className={styles.infoValue}>{currentUser.idioma_nativo}</p>
                         </div>
-                        <div className={styles.infoGroup}>
-                            <h3>Interesses</h3>
-                            <p className={styles.infoValue}>{currentUser.interesses}</p>
-                        </div>
+                        
                         <div className={styles.infoGroup}>
                             <h3>Gênero</h3>
                             <p className={styles.infoValue}>{currentUser.generos}</p>

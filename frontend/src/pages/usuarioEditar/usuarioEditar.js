@@ -9,6 +9,9 @@ import styles from "./usuarioEditar.module.css";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useListIdiomasUsuario from "../../hooks/useListIdiomasUsuario";
+import { useMenu } from "../../context/menuContext";
+import Contatos from "../../components/Contatos";
+import useMobile from "../../hooks/useMobile";
 
 function UsuarioEditar() {
     const { id } = useParams();
@@ -18,6 +21,8 @@ function UsuarioEditar() {
     const { idiomas, loading: loadingIdiomas, error: errorIdiomas } = useListIdiomas();
     const { idiomas: idiomasUsuario, loading: loadingIdiomasUsuario, error: errorIdiomasusuario } = useListIdiomasUsuario(id);
     const navigate = useNavigate();
+    const { menuAberto, setMenuAberto, menuToggleRef } = useMenu();
+    const isMobile = useMobile();
 
     const [interessesSelecionados, setInteressesSelecionados] = useState([]);
     const [idiomasSelecionados, setIdiomasSelecionados] = useState([]);
@@ -26,7 +31,6 @@ function UsuarioEditar() {
         ? `http://localhost:5000${user.foto_perfil}`
         : "/images/default-image.jpg";
 
-    // Log para verificar dados de idiomas
     useEffect(() => {
         console.log("🔹 Dados de idiomas recebidos:", {
             idiomas,
@@ -47,7 +51,6 @@ function UsuarioEditar() {
         }
     }, [id, navigate]);
 
-    // Configura interesses e idiomas selecionados
     useEffect(() => {
         if (user && user.foto_perfil) {
             if (typeof user.foto_perfil === "string") {
@@ -111,6 +114,30 @@ function UsuarioEditar() {
 
     return (
         <div className={styles.container}>
+            {isMobile && (
+                <>
+                    <button
+                        ref={menuToggleRef}
+                        className={styles.menuToggle}
+                        onClick={() => setMenuAberto((prev) => !prev)}
+                    >
+                        ☰
+                    </button>
+                    <div className={`${styles.contatosContainer} ${menuAberto ? styles.menuAberto : ""}`}>
+                        <Contatos
+                            menuAberto={menuAberto}
+                            setMenuAberto={setMenuAberto}
+                            menuToggleRef={menuToggleRef}
+                        />
+                    </div>
+                </>
+            )}
+            {!isMobile && (
+                <div className={styles.contatosContainer}>
+                    <Contatos />
+                </div>
+            )}
+
             <h2 className={styles.title}>Perfil</h2>
 
             {success && <p>{success} Redirecionando...</p>}
@@ -130,7 +157,6 @@ function UsuarioEditar() {
                         accept="image/*"
                         className={styles.fileInput}
                     />
-                    <p>Foto de Perfil</p>
                     <label htmlFor="fileInput" className={styles.previewImage}>
                         {image ? (
                             <img src={image} alt="Pré-visualização" width="100" />
@@ -165,23 +191,8 @@ function UsuarioEditar() {
                     />
                 </div>
 
-                <div className={styles.idiomasSelecionadosContainer}>
-                    <h3 className={styles.tituloIdiomasSelecionados}>Idiomas Selecionados:</h3>
-                    <div className={styles.listaIdiomasSelecionados}>
-                        {idiomasSelecionados.map((id) => {
-                            const idioma = idiomas.find((item) => String(item.id) === String(id));
-                            console.log(`🔹 Renderizando idioma selecionado: ${idioma ? (idioma.nome || idioma.idioma) : "Desconhecido"}, ID: ${id}`);
-                            return (
-                                <span key={id} className={styles.idiomaSelecionado}>
-                                    {(idioma && (idioma.nome || idioma.idioma)) || "Idioma desconhecido"}
-                                </span>
-                            );
-                        })}
-                    </div>
-                </div>
-
                 <div className={styles.inputGroup}>
-                    <label>Idiomas:</label>
+                    <label className={styles.labelIdiomas}>Selecione os Idiomas:</label>
                     <div className={styles.interessesContainer}>
                         {loadingIdiomas && <p>Carregando idiomas...</p>}
                         {errorIdiomas && <p>Erro ao carregar idiomas: {errorIdiomas}</p>}
@@ -203,20 +214,25 @@ function UsuarioEditar() {
                     </div>
                 </div>
 
-                <div className={styles.interessesSelecionadosContainer}>
-                    <h3 className={styles.tituloInteressesSelecionados}>Interesses Selecionados:</h3>
-                    <div className={styles.listaInteressesSelecionados}>
-                        {interessesSelecionados.map((id) => (
-                            <span key={id} className={styles.interesseSelecionado}>
-                                {interesses.find((item) => String(item.id) === String(id))?.interesse || "Interesse desconhecido"}
-                            </span>
-                        ))}
+                <div className={styles.idiomasSelecionadosContainer}>
+                    <h3 className={styles.tituloIdiomasSelecionados}>Idiomas Selecionados:</h3>
+                    <div className={styles.listaIdiomasSelecionados}>
+                        {idiomasSelecionados.map((id) => {
+                            const idioma = idiomas.find((item) => String(item.id) === String(id));
+                            console.log(`🔹 Renderizando idioma selecionado: ${idioma ? (idioma.nome || idioma.idioma) : "Desconhecido"}, ID: ${id}`);
+                            return (
+                                <span key={id} className={styles.idiomaSelecionado}>
+                                    {(idioma && (idioma.nome || idioma.idioma)) || "Idioma desconhecido"}
+                                </span>
+                            );
+                        })}
                     </div>
                 </div>
 
 
+
                 <div className={styles.inputGroup}>
-                    <label>Interesses:</label>
+                    <label className={styles.labelIdiomas}>Selecione os Interesses:</label>
                     <div className={styles.interessesContainer}>
                         {loadingInteresses && <p>Carregando interesses...</p>}
                         {errorInteresses && <p>Erro ao carregar interesses: {errorInteresses}</p>}
@@ -233,6 +249,19 @@ function UsuarioEditar() {
                         ))}
                     </div>
                 </div>
+
+                <div className={styles.interessesSelecionadosContainer}>
+                    <h3 className={styles.tituloInteressesSelecionados}>Interesses Selecionados:</h3>
+                    <div className={styles.listaInteressesSelecionados}>
+                        {interessesSelecionados.map((id) => (
+                            <span key={id} className={styles.interesseSelecionado}>
+                                {interesses.find((item) => String(item.id) === String(id))?.interesse || "Interesse desconhecido"}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
+
 
                 <button type="submit" disabled={loading} className={styles.buttonSubmit}>
                     {loading ? "Salvando..." : "Salvar"}

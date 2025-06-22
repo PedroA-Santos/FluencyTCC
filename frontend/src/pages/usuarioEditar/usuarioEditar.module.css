@@ -2,72 +2,79 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     background-color: #37376D;
     min-height: 100vh;
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
+    padding-left: 270px; /* Adjust based on Contatos width (e.g., 250px + margin) */
 }
 
 .title {
     color: #FFC107;
-    font-size: 3em;
-    margin-bottom: 1em;
+    font-size: 2.5em;
+    margin: 0 auto 0.5em auto;
     text-align: center;
+    width: 100%;
 }
 
 .form {
     display: flex;
     flex-direction: column;
-    gap: 1em;
-    justify-content: center;
     align-items: center;
     width: 100%;
-    max-width: 400px;
+    max-width: 800px;
+    margin: 0 auto;
+    gap: 1em;
 }
 
 .inputFileContainer {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    max-width: 400px;
+    max-width: 300px;
+    margin: 0 auto;
 }
 
 p {
     color: #FFC107;
     text-align: center;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
+    margin: 0;
 }
 
 .inputGroup {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
-    max-width: 400px;
+    max-width: 300px;
 }
 
 .inputGroup label {
     color: #FFC107;
-    font-size: 1.2em;
+    font-size: 1.1em;
     margin-bottom: 5px;
+    text-align: center;
 }
 
 .inputGroup input,
 .inputGroup select {
     width: 100%;
-    padding: 10px;
+    max-width: 300px;
+    padding: 8px;
     border: none;
     border-bottom: 2px solid #ccc;
     background: transparent;
     color: white;
-    font-size: 16px;
+    font-size: 14px;
     outline: none;
     transition: border-color 0.3s;
-    appearance: none;
+    text-align: center;
 }
 
 .inputGroup input:focus,
@@ -77,21 +84,22 @@ p {
 
 .previewImage {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 160px;
-    height: 160px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     background-color: #2c2c59;
     cursor: pointer;
-    padding: 1em;
+    padding: 0.5em;
+    margin: 0 auto;
 }
 
 .previewImage img {
-    width: 160px;
-    height: 160px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .fileInput {
@@ -100,11 +108,10 @@ p {
 
 .span {
     color: #FFC107;
-    font-size: 2em;
+    font-size: 1.5em;
     text-align: center;
     cursor: pointer;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 0.5em;
@@ -114,37 +121,40 @@ p {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
-    padding: 20px;
-    margin-top: 20px;
-    max-width: 100%;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
     box-sizing: border-box;
 }
 
 @keyframes floatRandom {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(2px, -3px) rotate(1deg); }
-    50% { transform: translate(-2px, 2px) rotate(-1deg); }
-    75% { transform: translate(3px, 1px) rotate(1.5deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
-}
-
-.interesseButton:nth-child(odd) {
-    transform: rotate(-2deg) translateY(2px);
-}
-
-.interesseButton:nth-child(even) {
-    transform: rotate(2deg) translateY(-2px);
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(2px, -3px) rotate(1deg);
+    }
+    50% {
+        transform: translate(-2px, 2px) rotate(-1deg);
+    }
+    75% {
+        transform: translate(3px, 1px) rotate(1.5deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
 }
 
 .interesseButton {
     background-color: #FFC107;
     color: #ffffff;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    border-radius: 20px;
-    padding: 12px 20px;
-    margin: 5px;
+    border-radius: 15px;
+    padding: 8px 16px;
     border: none;
     cursor: pointer;
     box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.3);
@@ -152,116 +162,213 @@ p {
     animation: floatRandom 4s ease-in-out infinite;
     animation-delay: calc(0.2s * var(--i));
     transition: transform 0.2s ease-in-out;
+    min-width: 100px; /* Ensures buttons have a minimum width for consistency */
 }
 
 .interesseButton:hover {
-    transform: scale(1.1) rotate(2deg);
+    transform: scale(1.05) rotate(1deg);
     background-color: #ccc;
     color: #37376D;
 }
 
 .interesseButton.selected {
-    background-color: #FFC107;
+    background-color: #FFD54F;
     color: #2e2e5e;
 }
 
 .interessesSelecionadosContainer {
-    margin-top: 2em;
-    padding: 1em;
+    padding: 0.5em;
     background-color: #2e2e5e;
-    border-radius: 12px;
+    border-radius: 8px;
     width: 100%;
     max-width: 700px;
+    margin: 0 auto;
     text-align: center;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1em;
+    justify-content: center;
+    gap: 0.5em;
 }
 
 .tituloInteressesSelecionados {
     color: #FFC107;
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-weight: bold;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.3em;
+    text-align: center;
 }
 
 .listaInteressesSelecionados {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    align-items: center;
+    gap: 8px;
 }
 
 .interesseSelecionado {
-    background-color: #FFC107;
+    background-color: #FFD54F;
     color: #2e2e5e;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    border-radius: 20px;
-    padding: 8px 16px;
+    border-radius: 15px;
+    padding: 6px 12px;
     border: none;
     cursor: default;
-    box-shadow: 1px 3px 6px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease-in-out;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
     white-space: nowrap;
     display: inline-block;
+    min-width: 100px; /* Matches interesseButton for consistency */
 }
 
 .idiomasSelecionadosContainer {
-    margin-top: 2em;
-    padding: 1em;
-    background-color: #2c2c59; /* Ligeiramente diferente para distinção */
-    border-radius: 12px;
+    padding: 0.5em;
+    background-color: #2c2c59;
+    border-radius: 8px;
     width: 100%;
     max-width: 700px;
+    margin: 0 auto;
     text-align: center;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1em;
+    justify-content: center;
+    gap: 0.5em;
 }
 
 .tituloIdiomasSelecionados {
-    color: #FFC107; /* Cor ligeiramente diferente para distinção */
-    font-size: 1.5em;
+    color: #FFC107;
+    font-size: 1.2em;
     font-weight: bold;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.3em;
+    text-align: center;
 }
 
 .listaIdiomasSelecionados {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    align-items: center;
+    gap: 8px;
 }
 
 .idiomaSelecionado {
-    background-color: #FFC107; /* Cor diferente para distinção */
+    background-color: #FFD54F;
     color: #2c2c59;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    border-radius: 20px;
-    padding: 8px 16px;
+    border-radius: 15px;
+    padding: 6px 12px;
     border: none;
     cursor: default;
-    box-shadow: 1px 3px 6px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease-in-out;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
     white-space: nowrap;
     display: inline-block;
+    min-width: 100px; /* Matches interesseButton for consistency */
 }
 
 .buttonSubmit {
     width: 100%;
-    padding: 12px;
+    max-width: 300px;
+    padding: 10px;
     background-color: #148300;
     color: #ffffff;
     font-weight: bold;
     border: none;
-    border-radius: 10px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 14px;
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
+    margin: 0 auto;
+}
+
+.contatosContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px; /* Adjust based on actual Contatos width */
+    height: 100vh;
+    z-index: 1000;
+    background-color: #2c2c59;
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding-left: 20px;
+    }
+
+    .form {
+        max-width: 600px;
+    }
+
+    .interessesContainer,
+    .interessesSelecionadosContainer,
+    .idiomasSelecionadosContainer {
+        max-width: 600px;
+    }
+
+    .interesseButton,
+    .idiomaSelecionado,
+    .interesseSelecionado {
+        min-width: 90px;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .form {
+        max-width: 100%;
+    }
+
+    .interessesContainer,
+    .interessesSelecionadosContainer,
+    .idiomasSelecionadosContainer {
+        max-width: 100%;
+    }
+
+    .inputGroup {
+        max-width: 100%;
+    }
+
+    .inputGroup input,
+    .inputGroup select {
+        max-width: 100%;
+    }
+
+    .buttonSubmit {
+        max-width: 100%;
+    }
+
+    .menuToggle {
+        display: block;
+        position: fixed;
+        top: 3px;
+        left: 12px;
+        background-color: #434375;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 14px;
+        font-size: 1.1rem;
+        z-index: 1001;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .contatosContainer {
+        transform: translateX(-100%);
+    }
+
+    .contatosContainer.menuAberto {
+        transform: translateX(0);
+    }
 }

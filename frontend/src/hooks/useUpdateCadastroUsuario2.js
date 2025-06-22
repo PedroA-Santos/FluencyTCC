@@ -79,7 +79,7 @@ const useUpdateCadastroUsuario = (id) => {
             // Aguarda 2 segundos e redireciona o usuário para a página de login
             setTimeout(() => {
                 navigate('/login');
-            }, 2000);
+            }, 1000);
 
             // Reseta os campos do formulário
             setUser({ username: "", bio: "", foto_perfil: null });

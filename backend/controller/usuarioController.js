@@ -11,6 +11,12 @@ const path = require('path');
 
 const secretKey = process.env.SECRET_KEY;
 
+const hasEmotes = (text) => {
+    // Regex to detect common emoji Unicode ranges (e.g., U+1F600-U+1F64F, U+1F300-U+1F5FF, etc.)
+    const emojiRegex = /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1F004}\u{1F0CF}\u{1F170}-\u{1F251}]/u;
+    return emojiRegex.test(text);
+};
+
 exports.listAll = async (req, res) => {
     try {
         const usuarios = await usuarioModel.list();
@@ -205,13 +211,21 @@ exports.postUsuarioStep1 = async (req, res) => {
         return res.status(400).json({ message: "Preencha todos os campos obrigatórios corretamente." });
     }
 
+    // Validate no emotes in email and senha
+    if (hasEmotes(email)) {
+        return res.status(400).json({ message: "O email não pode conter emotes ou emojis." });
+    }
+    if (hasEmotes(senha)) {
+        return res.status(400).json({ message: "A senha não pode conter emotes ou emojis." });
+    }
+
     // Validação do formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         return res.status(400).json({ message: "Formato de email inválido." });
     }
 
-    //  Verifica se o email já está cadastrado
+    // Verifica se o email já está cadastrado
     try {
         const usuarioExistente = await usuarioModel.listByEmail(email);
         if (usuarioExistente) {
@@ -228,7 +242,7 @@ exports.postUsuarioStep1 = async (req, res) => {
         return res.status(400).json({ message: "A senha deve ter no mínimo 8 caracteres, incluindo 1 letra maiúscula e 1 número." });
     }
 
-    //  Validação da data de nascimento
+    // Validação da data de nascimento
     const hoje = new Date();
     const idadeMinima = 14;
     const idadeMaxima = 120;
@@ -246,13 +260,12 @@ exports.postUsuarioStep1 = async (req, res) => {
     }
 
     if (dataNascimentoObj > dataMinima) {
-        return res.status(400).json({ message: "Você deve ter pelo menos 18 anos." });
+        return res.status(400).json({ message: "Você deve ter pelo menos 14 anos." });
     }
 
     if (dataNascimentoObj < dataMaxima) {
         return res.status(400).json({ message: "Data de nascimento muito antiga." });
     }
-
 
     // Criar usuário com senha criptografada
     try {
@@ -274,7 +287,6 @@ exports.postUsuarioStep1 = async (req, res) => {
             data_nascimento,
             pais_origem_id
         });
-
     } catch (error) {
         console.error("Erro ao cadastrar usuário:", error);
         return res.status(500).json({ message: "Erro ao cadastrar usuário." });
@@ -284,7 +296,6 @@ exports.postUsuarioStep1 = async (req, res) => {
 exports.updateUsuarioStep2 = async (req, res) => {
     const { id } = req.params;
     const { username, bio, interesses, idiomas } = req.body;
-
 
     if (!id) {
         return res.status(400).json({ message: "ID do usuário é obrigatório." });
@@ -301,18 +312,37 @@ exports.updateUsuarioStep2 = async (req, res) => {
         foto_perfil = `/uploads/${req.file.filename}`;
     }
 
+    // Validate no emotes in username, bio, interesses, and idiomas
+    if (username && hasEmotes(username)) {
+        return res.status(400).json({ message: "O nome de usuário não pode conter emotes ou emojis." });
+    }
+    if (bio && hasEmotes(bio)) {
+        return res.status(400).json({ message: "A bio não pode conter emotes ou emojis." });
+    }
+    if (interesses && Array.isArray(interesses)) {
+        const hasEmoteInInteresses = interesses.some((interesse) => hasEmotes(interesse));
+        if (hasEmoteInInteresses) {
+            return res.status(400).json({ message: "Os interesses não podem conter emotes ou emojis." });
+        }
+    }
+    if (idiomas && Array.isArray(idiomas)) {
+        const hasEmoteInIdiomas = idiomas.some((idioma) => hasEmotes(idioma));
+        if (hasEmoteInIdiomas) {
+            return res.status(400).json({ message: "Os idiomas não podem conter emotes ou emojis." });
+        }
+    }
+
     try {
         // Verifica se o username já está sendo usado por outro usuário
         if (username && username !== usuarioExistente.username) {
             const userNameExistente = await usuarioModel.listByUsername(username);
-
             if (userNameExistente && userNameExistente.id !== parseInt(id)) {
                 return res.status(409).json({ message: "Este nome de usuário já está em uso." });
             }
         }
 
         // Atualiza perfil
-        await usuarioModel.updateStep2({ id, username, bio, foto_perfil,  });
+        await usuarioModel.updateStep2({ id, username, bio, foto_perfil });
 
         // Atualiza interesses se enviados
         if (interesses && Array.isArray(interesses) && interesses.length > 0) {
@@ -320,18 +350,33 @@ exports.updateUsuarioStep2 = async (req, res) => {
             await usuarioInteresseModel.postMultiple({ usuario_id: id, interesses });
         }
 
-        // atualiza idiomas se enviados
+        // Atualiza idiomas se enviados
         if (idiomas && Array.isArray(idiomas) && idiomas.length > 0) {
             await usuarioIdiomasModel.delete({ usuario_id: id });
             await usuarioIdiomasModel.postMultiple({ usuario_id: id, idiomas });
         }
 
         return res.status(200).json({ message: "Perfil atualizado com sucesso!" });
-
     } catch (error) {
         console.error("Erro ao atualizar perfil:", error);
         return res.status(500).json({ message: "Erro ao atualizar perfil." });
     }
+};
+
+exports.verificarIdiomasSelecionados = async (req, res) => {
+    const { id } = req.params;
+
+    db.query(
+        `SELECT * FROM usuarios_idiomas WHERE usuario_id = ?`,
+        [id],
+        (err, results) => {
+            if (err) return res.status(500).json({ error: err });
+
+            const selecionouIdiomas = results.length > 0;
+
+            return res.status(200).json({ selecionouIdiomas });
+        }
+    );
 };
 
 

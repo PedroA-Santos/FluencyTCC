@@ -3,18 +3,32 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #37376D;
-    height: 100vh;
+    background: linear-gradient(135deg, #2c2c59, #121212);
+    min-height: 100vh;
     width: 100vw;
     overflow-x: hidden;
     overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .title {
     color: #FFC107;
-    font-size: 3em;
-    margin-bottom: 1em;
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 1.5em;
     text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.instructionText {
+    color: #ddd;
+    font-size: 1.1em;
+    font-weight: 500;
+    margin-bottom: 1em;
+    text-align: left;
+    width: 100%;
 }
 
 .checkboxContainer {
@@ -22,106 +36,224 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    margin: 10px;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    padding: 15px 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background: rgba(44, 44, 89, 0.9);
+    border-radius: 15px;
+    padding: 20px 25px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 1.5em;
+    border: 1px solid rgba(255, 193, 7, 0.2);
 }
 
 .checkboxItem {
     display: flex;
     align-items: center;
-    margin: 10px 0;
-    gap: 10px; /* Espaçamento entre a checkbox e o label */
+    margin: 15px 0;
+    gap: 15px;
+    width: 100%;
+    transition: transform 0.2s ease;
 }
 
-.checkboxContainer label {
-    color: white;
-    font-weight: bold;
+.checkboxItem:hover {
+    transform: translateX(5px);
+}
+
+.checkboxLabel {
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: 500;
     cursor: pointer;
-    margin-right: 10px; /* Ajuste da margem para o espaço entre a checkbox e o texto */
+    flex: 1;
 }
 
 .checkbox {
     margin-right: 10px;
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     background-color: #FFC107;
     border-radius: 5px;
-    border: 1px solid #FFC107;
+    border: 2px solid #FFD54F;
+    cursor: pointer;
+    appearance: none;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+
+.checkbox:checked {
+    background-color: #FF9800;
+    border-color: #FF9800;
+}
+
+.checkbox:checked::after {
+    content: '✓';
+    color: #fff;
+    font-size: 1em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.checkbox:hover {
+    background-color: #FFD54F;
+    border-color: #FFD54F;
+    transform: scale(1.15);
+}
+
+.checkbox:focus {
+    box-shadow: 0 0 8px rgba(255, 193, 7, 0.8);
+}
+
+.levelSelect {
+    background: linear-gradient(90deg, #FFC107, #FF9800);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 1em;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Efeito ao passar o mouse sobre o checkbox */
-.checkbox:hover {
-    background-color: #ff9800;
-    border-color: #ff9800;
-    transform: scale(1.1);
+.levelSelect:hover {
+    background: linear-gradient(90deg, #FF9800, #FF5722);
+    transform: scale(1.05);
 }
 
-/* Efeito de foco */
-.checkbox:focus {
+.levelSelect:focus {
     outline: none;
-    box-shadow: 0 0 5px rgba(255, 193, 7, 0.7); /* Borda dourada ao focar */
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
 }
 
-/* Efeito de seleção do checkbox */
-.checkbox:checked {
-    background-color: #ff9800;
-    border-color: #ff9800;
-}
-
-/* Animação de transição ao marcar o checkbox */
-.checkbox:checked:hover {
-    background-color: #FF5722;
-    border-color: #FF5722;
-    transform: scale(1.1);
-}
-
-select {
-    background-color: #FFC107;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px;
-    font-size: 1em;
-    margin-top: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-}
-
-/* Efeito ao passar o mouse sobre o select */
-select:hover {
-    background-color: #ff9800;
-}
-
-/* Estilos para o botão */
 .button {
-    background-color: #FFC107;
+    background: linear-gradient(90deg, #FFC107, #FF9800);
     border: none;
-    padding: 10px 20px;
-    color: white;
-    font-size: 1em;
+    padding: 12px 25px;
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: 600;
     border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
     width: 100%;
+    
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     
 }
 
 .button:hover {
-    background-color: #ff9800;
+    background: linear-gradient(90deg, #FF9800, #FF5722);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* Texto de erro e sucesso */
+.button:disabled {
+    background: #666;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.loadingText,
+.errorText,
+.successText {
+    font-size: 1.1em;
+    margin-top: 1em;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+}
+
 .errorText {
-    color: red;
-    font-weight: bold;
+    color: #FF4444;
+    font-weight: 600;
+    animation: shake 0.5s ease-in-out;
 }
 
 .successText {
-    color: green;
-    font-weight: bold;
+    color: #4CAF50;
+    font-weight: 600;
+    animation: bounce 0.5s ease-in-out;
+}
+
+option{
+    background-color: #666;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 2em;
+        margin-bottom: 1em;
+    }
+
+    .checkboxContainer {
+        padding: 15px 20px;
+        max-width: 100%;
+    }
+
+    .checkboxItem {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .checkboxLabel {
+        font-size: 1em;
+    }
+
+    .levelSelect {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .button {
+        font-size: 1.1em;
+        padding: 10px 20px;
+        max-width: 100%;
+
+    }
+
+    .loadingText,
+    .errorText,
+    .successText {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.5em;
+    }
+
+    .checkboxContainer {
+        padding: 10px 15px;
+    }
+
+    .checkboxItem {
+        margin: 10px 0;
+    }
+
+    .button {
+        font-size: 1em;
+        padding: 8px 15px;
+    }
 }

@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import useListIdiomas from '../../hooks/useListIdiomas';
 import useSalvarIdiomas from '../../hooks/useSalvarIdiomas';
-import styles from './idiomasAprender.module.css';  // Supondo que você esteja usando CSS Module
+import styles from './idiomasAprender.module.css'; // Supondo que você esteja usando CSS Module
 
 function IdiomasAprender() {
     const { idiomas, loading: loadingIdiomas, error: erroIdiomas } = useListIdiomas();
     const { salvarIdiomas, loading, error, successMessage } = useSalvarIdiomas();
     const [selecionados, setSelecionados] = useState([]);
-    const [niveles, setNiveles] = useState({});  // Para armazenar o nível de cada idioma
-
+    const [niveles, setNiveles] = useState({}); // Para armazenar o nível de cada idioma
     const userId = JSON.parse(sessionStorage.getItem("userId"));
-
 
     const handleCheckboxChange = (idiomaId) => {
         setSelecionados((prev) =>
@@ -36,7 +34,7 @@ function IdiomasAprender() {
         // Preparando os dados para salvar
         const idiomasComNivel = selecionados.map((idiomaId) => ({
             idiomaId,
-            nivel: niveles[idiomaId] || 'Básico'  // Se não houver nível selecionado, assume 'Básico'
+            nivel: niveles[idiomaId] || 'Básico' // Se não houver nível selecionado, assume 'Básico'
         }));
 
         await salvarIdiomas(userId, idiomasComNivel);
@@ -52,7 +50,7 @@ function IdiomasAprender() {
             {!loadingIdiomas && idiomas.length > 0 && (
                 <form>
                     <div className={styles.checkboxContainer}>
-                        <p>Selecione os idiomas e seus respectivos níveis:</p>
+                        <p className={styles.instructionText}>Selecione os idiomas e seus respectivos níveis:</p>
                         {idiomas.map((idioma) => (
                             <div key={idioma.id} className={styles.checkboxItem}>
                                 <input
@@ -71,6 +69,7 @@ function IdiomasAprender() {
                                     <select
                                         value={niveles[idioma.id] || 'Básico'}
                                         onChange={(e) => handleNivelChange(idioma.id, e.target.value)}
+                                        className={styles.levelSelect}
                                     >
                                         <option value="Básico">Básico</option>
                                         <option value="Intermediário">Intermediário</option>

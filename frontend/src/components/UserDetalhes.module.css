@@ -3,12 +3,14 @@
     flex-direction: column;
     align-items: center;
     height: 100%;
-    width: 100%; /* Ocupa toda a largura do userDetalhesWrapper */
-    padding: 20px;
+    width: 100%;
+    padding: 25px;
     border-left: 3px solid #FFC107;
-    background: #282844;
+    background: linear-gradient(135deg, #2a2a4c, #1e1e3a);
     overflow-y: auto;
-    animation: fadeInRight 0.5s ease forwards;
+    border-radius: 10px 0 0 10px;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+    animation: fadeInRight 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 @keyframes fadeInRight {
@@ -16,7 +18,6 @@
         opacity: 0;
         transform: translateX(50px);
     }
-
     to {
         opacity: 1;
         transform: translateX(0);
@@ -24,93 +25,121 @@
 }
 
 .userDetails h2 {
-    margin-bottom: 0.8rem;
-    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
     color: #FFC107;
     font-weight: 700;
     text-align: center;
-    animation: fadeInRight 0.5s ease forwards;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    animation: fadeInRight 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
+    opacity: 0;
 }
 
 .userPhotoWrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    position: relative;
 }
 
 .userPhoto {
-    width: 140px;
-    height: 140px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #FFC107;
+    border: 4px solid #FFC107;
     cursor: pointer;
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    position: relative;
+    z-index: 1;
 }
 
 .userPhoto:hover {
-    transform: scale(1.05);
-    border-color: #FF5722;
+    transform: scale(1.1);
+    border-color: #FF9800;
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.6), 0 0 20px rgba(255, 152, 0, 0.4);
+}
+
+.userPhoto:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.8);
 }
 
 .infoGroup {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     width: 100%;
+    max-width: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.infoGroup:hover {
+    transform: translateY(-5px);
 }
 
 .infoLabel {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color: #B0B0B0;
     font-weight: 600;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.3rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .infoValue {
-    font-size: 0.9rem;
-    background-color: #25253F;
-    padding: 0.4rem 0.6rem;
-    border-radius: 6px;
-    color: #FFC107;
+    font-size: 1rem;
+    background: linear-gradient(90deg, #25253F, #1e1e33);
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    color: #FFD700;
     border: 1px solid #FFC107;
     text-align: center;
     word-wrap: break-word;
-    min-height: 18px;
+    min-height: 20px;
     width: 100%;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.infoValue:hover {
+    background: linear-gradient(90deg, #2e2e50, #25253F);
+    transform: scale(1.02);
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(255, 193, 7, 0.2);
 }
 
 /* Responsividade tablets (769px a 1024px) */
 @media (max-width: 1024px) and (min-width: 769px) {
     .userDetails {
         width: 100%;
-        padding: 18px;
+        padding: 20px;
         height: 100vh;
-        box-shadow: -3px 0 10px rgba(0, 0, 0, 0.4);
+        box-shadow: -3px 0 12px rgba(0, 0, 0, 0.4);
+        border-radius: 0;
     }
 
     .userDetails h2 {
-        font-size: 1.3rem;
-        margin-bottom: 0.7rem;
+        font-size: 1.4rem;
+        margin-bottom: 0.9rem;
     }
 
     .userPhoto {
-        width: 120px;
-        height: 120px;
+        width: 130px;
+        height: 130px;
     }
 
     .infoLabel {
-        font-size: 0.7rem;
+        font-size: 0.8rem;
     }
 
     .infoValue {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
+        padding: 0.5rem 0.7rem;
     }
 }
 
@@ -119,18 +148,16 @@
     .userDetails {
         width: 100vw;
         height: 100vh;
-        padding: 20px;
-        transform: none; /* Remove transform, controlado pelo wrapper */
-        transition: none; /* Remove transição, controlada pelo wrapper */
-    }
-
-    .userDetails.menuAberto {
-        transform: none; /* Não precisa de transform, controlado pelo wrapper */
+        padding: 15px;
+        border-left: none;
+        border-top: 3px solid #FFC107;
+        border-radius: 10px 10px 0 0;
+        box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.4);
     }
 
     .userDetails h2 {
-        font-size: 1.2rem;
-        margin-bottom: 0.6rem;
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
     }
 
     .userPhoto {
@@ -139,19 +166,19 @@
     }
 
     .infoLabel {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
     }
 
     .infoValue {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
     }
 }
 
 /* Celulares pequenos (até 400px) */
 @media (max-width: 400px) {
     .userDetails {
-        border-top: 3px solid #FFC107;
         padding: 10px;
+        border-top: 2px solid #FFC107;
     }
 
     .userPhoto {
@@ -160,14 +187,15 @@
     }
 
     .userDetails h2 {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
 
     .infoLabel {
-        font-size: 0.65rem;
+        font-size: 0.7rem;
     }
 
     .infoValue {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
     }
 }
