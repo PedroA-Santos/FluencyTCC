@@ -5,6 +5,7 @@ import useListInteressesUsuario from '../../hooks/useListInteressesUsuario';
 import verificarSessaoUsuario from '../../utils/verificarSessaoUsuario';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useMenu } from "../../context/menuContext";
 
 function Perfil() {
     const { id } = useParams();
@@ -13,6 +14,7 @@ function Perfil() {
 
     const { perfil, loading, error } = usePerfilUsuario(id);
     const { interesses, error: errorInteresses } = useListInteressesUsuario(id);
+    const { menuAberto, setMenuAberto, menuToggleRef } = useMenu();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -33,7 +35,6 @@ function Perfil() {
         ? `http://localhost:5000${perfil.foto_perfil}`
         : "/images/default-image.jpg";
 
-    // Variants para animações complexas
     const fadeInUp = {
         hidden: { opacity: 0, y: 50 },
         visible: (i = 0) => ({
@@ -76,6 +77,16 @@ function Perfil() {
 
     return (
         <div className={styles.container}>
+            {/* Botão ☰ para abrir/fechar menu lateral */}
+            <button
+                ref={menuToggleRef}
+                className={styles.menuToggle}
+                onClick={() => setMenuAberto((prev) => !prev)}
+            >
+                ☰
+            </button>
+
+            {/* Menu lateral */}
             <Contatos />
 
             <motion.div
