@@ -1,13 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import verificarSessaoUsuario from '../utils/verificarSessaoUsuario';
-import { useMatch } from '../context/matchContext'; // importa aqui também!
+import { useMatch } from '../context/matchContext';
 
 const useListContatos = () => {
   const [contatos, setContatos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { matchAtualizado } = useMatch(); // pega o contador de match
+  const { matchAtualizado } = useMatch();
 
   const userIdDaSessao = verificarSessaoUsuario(setError);
 
@@ -26,12 +26,17 @@ const useListContatos = () => {
       setLoading(false);
     }
     console.log("chamou o hook contatos");
-    
   }, [userIdDaSessao]);
 
   useEffect(() => {
     fetchContatos();
-  }, [fetchContatos, matchAtualizado]); // agora ele atualiza sempre que der um match novo!
+
+    const intervalId = setInterval(() => {
+      fetchContatos();
+    }, 60000); // a cada 60 segundos
+
+    return () => clearInterval(intervalId);
+  }, [fetchContatos, matchAtualizado]);
 
   return { contatos, error, loading };
 };

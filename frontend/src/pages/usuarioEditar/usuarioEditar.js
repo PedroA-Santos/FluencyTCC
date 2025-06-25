@@ -191,6 +191,21 @@ function UsuarioEditar() {
                     />
                 </div>
 
+                <div className={styles.idiomasSelecionadosContainer}>
+                    <h3 className={styles.tituloIdiomasSelecionados}>Idiomas Selecionados:</h3>
+                    <div className={styles.listaIdiomasSelecionados}>
+                        {idiomasSelecionados.map((id) => {
+                            const idioma = idiomas.find((item) => String(item.id) === String(id));
+                            console.log(`🔹 Renderizando idioma selecionado: ${idioma ? (idioma.nome || idioma.idioma) : "Desconhecido"}, ID: ${id}`);
+                            return (
+                                <span key={id} className={styles.idiomaSelecionado}>
+                                    {(idioma && (idioma.nome || idioma.idioma)) || "Idioma desconhecido"}
+                                </span>
+                            );
+                        })}
+                    </div>
+                </div>
+
                 <div className={styles.inputGroup}>
                     <label className={styles.labelIdiomas}>Selecione os Idiomas:</label>
                     <div className={styles.interessesContainer}>
@@ -214,22 +229,16 @@ function UsuarioEditar() {
                     </div>
                 </div>
 
-                <div className={styles.idiomasSelecionadosContainer}>
-                    <h3 className={styles.tituloIdiomasSelecionados}>Idiomas Selecionados:</h3>
-                    <div className={styles.listaIdiomasSelecionados}>
-                        {idiomasSelecionados.map((id) => {
-                            const idioma = idiomas.find((item) => String(item.id) === String(id));
-                            console.log(`🔹 Renderizando idioma selecionado: ${idioma ? (idioma.nome || idioma.idioma) : "Desconhecido"}, ID: ${id}`);
-                            return (
-                                <span key={id} className={styles.idiomaSelecionado}>
-                                    {(idioma && (idioma.nome || idioma.idioma)) || "Idioma desconhecido"}
-                                </span>
-                            );
-                        })}
+                <div className={styles.interessesSelecionadosContainer}>
+                    <h3 className={styles.tituloInteressesSelecionados}>Interesses Selecionados:</h3>
+                    <div className={styles.listaInteressesSelecionados}>
+                        {interessesSelecionados.map((id) => (
+                            <span key={id} className={styles.interesseSelecionado}>
+                                {interesses.find((item) => String(item.id) === String(id))?.interesse || "Interesse desconhecido"}
+                            </span>
+                        ))}
                     </div>
                 </div>
-
-
 
                 <div className={styles.inputGroup}>
                     <label className={styles.labelIdiomas}>Selecione os Interesses:</label>
@@ -249,18 +258,6 @@ function UsuarioEditar() {
                         ))}
                     </div>
                 </div>
-
-                <div className={styles.interessesSelecionadosContainer}>
-                    <h3 className={styles.tituloInteressesSelecionados}>Interesses Selecionados:</h3>
-                    <div className={styles.listaInteressesSelecionados}>
-                        {interessesSelecionados.map((id) => (
-                            <span key={id} className={styles.interesseSelecionado}>
-                                {interesses.find((item) => String(item.id) === String(id))?.interesse || "Interesse desconhecido"}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-
 
 
                 <button type="submit" disabled={loading} className={styles.buttonSubmit}>

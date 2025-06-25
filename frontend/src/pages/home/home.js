@@ -96,13 +96,7 @@ function Home() {
                 ☰
             </button>
 
-            <div className={`${styles.contatosContainer} ${menuAberto ? styles.menuAberto : ""}`}>
-                <Contatos
-                    menuAberto={menuAberto}
-                    setMenuAberto={setMenuAberto}
-                    menuToggleRef={menuToggleRef}
-                />
-            </div>
+            <Contatos />
 
             <div className={styles.stackContainer}>
                 <div className={styles.cardStack}>

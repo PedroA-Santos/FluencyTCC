@@ -217,7 +217,7 @@
     top: 0;
     left: 0;
     height: 100vh;
-    width: 280px;
+    width: 100vw;
     background: #17171F;
     overflow-y: auto;
     transform: translateX(-100%);

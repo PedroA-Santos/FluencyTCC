@@ -8,7 +8,8 @@
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
-    padding-left: 270px; /* Adjust based on Contatos width (e.g., 250px + margin) */
+    padding-left: 270px;
+    /* Adjust based on Contatos width (e.g., 250px + margin) */
 }
 
 .title {
@@ -134,15 +135,19 @@ p {
     0% {
         transform: translate(0, 0) rotate(0deg);
     }
+
     25% {
         transform: translate(2px, -3px) rotate(1deg);
     }
+
     50% {
         transform: translate(-2px, 2px) rotate(-1deg);
     }
+
     75% {
         transform: translate(3px, 1px) rotate(1.5deg);
     }
+
     100% {
         transform: translate(0, 0) rotate(0deg);
     }
@@ -162,7 +167,8 @@ p {
     animation: floatRandom 4s ease-in-out infinite;
     animation-delay: calc(0.2s * var(--i));
     transition: transform 0.2s ease-in-out;
-    min-width: 100px; /* Ensures buttons have a minimum width for consistency */
+    min-width: 100px;
+    /* Ensures buttons have a minimum width for consistency */
 }
 
 .interesseButton:hover {
@@ -220,7 +226,8 @@ p {
     box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
     white-space: nowrap;
     display: inline-block;
-    min-width: 100px; /* Matches interesseButton for consistency */
+    min-width: 100px;
+    /* Matches interesseButton for consistency */
 }
 
 .idiomasSelecionadosContainer {
@@ -267,7 +274,8 @@ p {
     box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
     white-space: nowrap;
     display: inline-block;
-    min-width: 100px; /* Matches interesseButton for consistency */
+    min-width: 100px;
+    /* Matches interesseButton for consistency */
 }
 
 .buttonSubmit {
@@ -289,7 +297,8 @@ p {
     position: fixed;
     top: 0;
     left: 0;
-    width: 250px; /* Adjust based on actual Contatos width */
+    width: 250px;
+    /* Adjust based on actual Contatos width */
     height: 100vh;
     z-index: 1000;
     background-color: #2c2c59;
@@ -351,24 +360,34 @@ p {
     .menuToggle {
         display: block;
         position: fixed;
-        top: 3px;
-        left: 12px;
+        top: 5px;
+        left: 15px;
         background-color: #434375;
         color: white;
         border: none;
         border-radius: 6px;
         padding: 10px 14px;
+        height: 7%;
         font-size: 1.1rem;
-        z-index: 1001;
+        z-index: 2100;
         cursor: pointer;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     .contatosContainer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background: #17171F;
+        overflow-y: auto;
         transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1100;
     }
 
-    .contatosContainer.menuAberto {
+    .menuAberto {
         transform: translateX(0);
     }
 }
